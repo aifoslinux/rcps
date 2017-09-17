@@ -1,6 +1,6 @@
 PKG=alacritty
-VER=0.1.0-20170812
-SRC=git+https://github.com/jwilm/alacritty.git
+VER=0.1.0-20170917
+SRC=git+https://github.com/jwilm/alacritty.git#commit=eb231b3
 
 build() {
     cargo build --release

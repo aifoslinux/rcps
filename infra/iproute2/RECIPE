@@ -1,5 +1,5 @@
 PKG=iproute2
-VER=4.12.0
+VER=4.13.0
 SRC=http://www.kernel.org/pub/linux/utils/net/$PKG/$PKG-$VER.tar.xz
 
 build() {
@@ -8,7 +8,6 @@ build() {
     sed -i -e 's:-Werror::' Makefile
 
     $PATCH/musl-fixes.patch
-    $PATCH/iproute2-4.12.0-musl.patch
 
     ./configure --prefix=$prefix \
                 --host=$CHOST \

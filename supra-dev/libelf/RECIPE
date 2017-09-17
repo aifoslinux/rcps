@@ -1,6 +1,6 @@
 PKG=libelf
-VER=0.169
-SRC=https://fedorahosted.org/releases/e/l/elfutils/$VER/elfutils-$VER.tar.bz2
+VER=0.170
+SRC=https://sourceware.org/elfutils/ftp/$VER/elfutils-$VER.tar.bz2
 
 build() {
     cat > src/error.h <<-EOF
@@ -35,34 +35,25 @@ EOF
 
     cp src/error.h lib/ 
 
-    cat > lib/libintl.h <<-EOF
-    #ifndef LIBINTL_H
-    #define LIBINTL_H
-    #define _(x) (x)
-    #endif
-EOF
-
     $PATCH/fix-uninitialized.patch
-    $PATCH/musl-accessperms.patch
     $PATCH/musl-canonicalize_file_name.patch
+    $PATCH/musl-fts-obstack.patch
     $PATCH/musl-cdefs.patch
     $PATCH/musl-macros.patch
     $PATCH/musl-qsort_r.patch
     $PATCH/musl-strerror_r.patch
-    $PATCH/no-werror.patch
+    $PATCH/musl-strndupa.patch
 
     autoreconf -fiv
 
+    CFLAGS+=" -Wno-null-dereference"
     CFLAGS="$CFLAGS -Wno-unused-result -Wno-format-nonliteral -fPIC" \
     ./configure --prefix=$prefix \
                 --host=$CHOST \
                 --sysconfdir=$cfgdir \
                 --localstatedir=$vardir \
                 --program-prefix="eu-" \
-                --disable-werror \
-                --disable-nls 
-
-    cd libelf
+                --disable-nls
     make
     make DESTDIR=$PKG_DIR install
 }

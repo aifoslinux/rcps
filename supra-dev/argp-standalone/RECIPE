@@ -6,6 +6,8 @@ build() {
     $PATCH/gnu89-inline.patch
     $PATCH/001-throw-in-funcdef.patch
 
+    export CFLAGS="$CFLAGS -fPIC"
+
     ./configure --prefix=$prefix \
                 --host=$CHOST
     make
