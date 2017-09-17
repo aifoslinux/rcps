@@ -1,0 +1,21 @@
+PKG=autoconf
+VER=2.69
+SRC=ftp://ftp.gnu.org/gnu/$PKG/$PKG-$VER.tar.xz
+
+build() {
+    $PATCH/autoconf-2.69-perl-5.22-autoscan.patch
+    $PATCH/autoconf-2.69-libtool-compatibility.patch
+
+    $PATCH/autoconf.texi.2.65.patch
+
+    sed -i -e 's/-linux-newlib\*/-linux-newlib\* | -linux-musl\*/' build-aux/config.sub 
+    sed -i -e 's/linux-newlib\*/linux-newlib\* | linux-musl\*/' build-aux/config.sub 
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST
+    make
+    make DESTDIR=$PKG_DIR install
+
+    # conflict with bintuils
+    rm -f $DAT_DIR/info/standards.info
+}

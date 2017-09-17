@@ -1,0 +1,15 @@
+PKG=tar
+VER=1.29
+SRC=ftp://ftp.gnu.org/gnu/$PKG/$PKG-$VER.tar.xz
+
+build() {
+    export FORCE_UNSAFE_CONFIGURE=1
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --libexecdir=$libdir/$PKG \
+                --localstatedir=$vardir \
+                --disable-nls
+    make
+    make DESTDIR=$PKG_DIR install
+}

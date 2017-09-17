@@ -1,0 +1,8 @@
+PKG=dmenu
+VER=4.7
+SRC=http://dl.suckless.org/tools/dmenu-$VER.tar.gz
+
+build() {
+    make X11INC=$incdir/X11 X11LIB=$libdir/X11 FREETYPEINC=$incdir/freetype2
+    make PREFIX=$prefix DESTDIR=$PKG_DIR install
+}

@@ -1,0 +1,7 @@
+PKG=apm
+VER=0.12.0
+SRC=https://github.com/aifoslinux/apm/archive/$PKG-$VER.tar.gz
+
+build() {
+    sh install.sh rootdir=$PKG_DIR
+}

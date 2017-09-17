@@ -1,0 +1,19 @@
+PKG=libndp
+VER=1.6
+SRC=$PKG-$VER.tar.gz::https://github.com/jpirko/$PKG/archive/v${VER}.tar.gz
+
+build() {
+    $PATCH/fix-fd_set.patch
+    $PATCH/0001-remove-bash-dependency.patch
+
+    ./autogen.sh
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --libexecdir=$libdir \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}

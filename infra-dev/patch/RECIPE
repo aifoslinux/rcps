@@ -1,0 +1,12 @@
+PKG=patch
+VER=2.7.5
+SRC=ftp://ftp.gnu.org/gnu/$PKG/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST
+    make
+    make DESTDIR=$PKG_DIR install
+
+    rm -rf $LIB_DIR
+}

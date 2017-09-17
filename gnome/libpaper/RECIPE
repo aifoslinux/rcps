@@ -1,0 +1,28 @@
+PKG=libpaper
+VER=1.1.24
+SRC=http://ftp.de.debian.org/debian/pool/main/libp/$PKG/${PKG}_${VER}+nmu5.tar.gz
+
+build() {
+    autoreconf -vfi
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --sbindir=$bindir
+    make
+    make DESTDIR=$PKG_DIR install
+
+    # add systemwide default papersize read by many office applications
+    install -dm 755 $CFG_DIR
+    echo '# Simply write the paper name. See papersize(5) for possible values' > $CFG_DIR/papersize
+
+    # add libpaper.d directory other packages can use to store files
+    install -dm 755 $CFG_DIR/libpaper.d
+
+    # add localisation
+    pushd debian/po
+    for i in `ls *.po`; do
+        install -dm 755 $DAT_DIR/locale/${i%.po}/LC_MESSAGES/;
+        msgfmt $i -o $DAT_DIR/locale/${i%.po}/LC_MESSAGES/${PKG}.mo;
+    done
+    popd
+}

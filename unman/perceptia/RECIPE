@@ -1,0 +1,12 @@
+PKG=perceptia
+VER=0.5.0
+SRC=$PKG-$VER.tar.gz::https://github.com/$PKG/$PKG/archive/v${VER}.tar.gz
+
+build() {
+    #cargo build --all --release
+
+    install -d $BIN_DIR $CFG_DIR/perceptia
+    install -m755 target/release/perceptia $BIN_DIR
+    install -m755 target/release/perceptiactl $BIN_DIR
+    install -m644 $RCP_DIR/default.yaml $CFG_DIR/perceptia
+}

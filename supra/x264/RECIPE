@@ -1,0 +1,12 @@
+PKG=x264
+VER=20170720-2245
+SRC=http://download.videolan.org/pub/videolan/x264/snapshots/$PKG-snapshot-$VER-stable.tar.bz2
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --enable-shared \
+                --enable-pic
+    make
+    make DESTDIR=$PKG_DIR install
+}

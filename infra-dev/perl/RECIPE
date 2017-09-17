@@ -1,0 +1,51 @@
+PKG=perl
+VER=5.26.0
+SRC=http://www.cpan.org/src/5.0/$PKG-$VER.tar.bz2
+
+build() {
+    ./Configure -des \
+                -Dusethreads \
+                -Duseshrplib \
+                -Duselargefiles \
+                -Dd_semctl_semun \
+                -Ud_csh -Dusenm \
+                -Doptimize="${CFLAGS}" \
+                -Dprefix=$prefix \
+                -Dvendorprefix=$prefix \
+                -Dprivlib=$datdir/perl5/core_perl \
+                -Darchlib=$libdir/perl5/core_perl \
+                -Dsitelib=$datdir/perl5/site_perl \
+                -Dsitearch=$libdir/perl5/site_perl \
+                -Dvendorlib=$datdir/perl5/vendor_perl \
+                -Dvendorarch=$libdir/perl5/vendor_perl \
+                -Dscriptdir=$bindir/core_perl \
+                -Dsitescript=$bindir/site_perl \
+                -Dvendorscript=$bindir/vendor_perl \
+                -Dinc_version_list=none \
+                -Dman1dir=$datdir/man/man1 \
+                -Dman3dir=$datdir/man/man3 \
+                -Dman1ext=1 -Dman3ext=3pm \
+                -Dcccdlflags='-fPIC' \
+                -Dccdlflags='-rdynamic' \
+                -Dlddlflags="-shared ${LDFLAGS}" \
+                -Dldflags="${LDFLAGS}"
+    make libperl.so && make
+    make DESTDIR=$PKG_DIR install
+
+    sed -e '/^man1ext=/ s/1perl/1p/' -e '/^man3ext=/ s/3perl/3pm/' \
+        -e "/^cf_email=/ s/'.*'/''/" \
+        -e "/^perladmin=/ s/'.*'/''/" \
+        -i $LIB_DIR/perl5/core_perl/Config_heavy.pl
+
+    sed -e '/(makepl_arg =>/   s/""/"INSTALLDIRS=site"/' \
+        -e '/(mbuildpl_arg =>/ s/""/"installdirs=site"/' \
+        -i $DAT_DIR/perl5/core_perl/CPAN/FirstTime.pm
+
+    install -d -m755 $BIN_DIR/vendor_perl
+    install -d -m755 $BIN_DIR/site_perl
+
+    rm $BIN_DIR/perl$VER
+
+    find $PKG_DIR -name perllocal.pod -delete
+    find $PKG_DIR -name .packlist -delete
+}

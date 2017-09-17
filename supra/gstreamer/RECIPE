@@ -1,0 +1,15 @@
+PKG=gstreamer
+VER=1.12.2
+SRC=http://gstreamer.freedesktop.org/src/$PKG/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --libexecdir=$libdir \
+                --enable-gtk-doc \
+                --disable-static 
+    make
+    make DESTDIR=$PKG_DIR install
+}

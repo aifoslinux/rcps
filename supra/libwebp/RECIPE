@@ -1,0 +1,16 @@
+PKG=libwebp
+VER=0.6.0
+SRC=http://downloads.webmproject.org/releases/webp/$PKG-$VER.tar.gz
+
+build() {
+    autoreconf -fiv
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --enable-swap-16bit-csp \
+                --enable-experimental \
+                --enable-libwebp{mux,demux,decoder,extras} \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}

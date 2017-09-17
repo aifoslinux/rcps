@@ -1,0 +1,16 @@
+PKG=libatasmart
+VER=0.19
+SRC=http://0pointer.de/public/$PKG-$VER.tar.xz
+
+build() {
+    $PATCH/config.patch
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --sbindir=$bindir \
+                --localstatedir=$vardir \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}

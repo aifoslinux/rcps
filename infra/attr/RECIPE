@@ -1,0 +1,28 @@
+PKG=attr
+VER=2.4.47
+SRC=https://download.savannah.gnu.org/releases/$PKG/$PKG-$VER.src.tar.gz
+
+build() {
+    $PATCH/config.patch
+    $PATCH/fix-decls.patch
+    $PATCH/fix-throw.patch
+
+    export INSTALL_USER=root INSTALL_GROUP=root
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --exec-prefix=$prefix \
+                --sbindir=$bindir \
+                --bindir=$bindir \
+                --libdir=$libdir \
+                --libexecdir=$libdir \
+                --includedir=$incdir \
+                --mandir=$datdir/man \
+                --datadir=$datdir \
+                --disable-gettext
+    make
+    make DIST_ROOT=$PKG_DIR install install-lib install-dev
+
+    chmod 0755 $LIB_DIR/libattr.so.*.*.*
+    rm -rf $DAT_DIR/man/man2
+}

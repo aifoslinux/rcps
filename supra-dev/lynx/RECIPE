@@ -1,0 +1,20 @@
+PKG=lynx
+VER=2.8.8
+SRC=http://invisible-mirror.net/archives/lynx/tarballs/$PKG${VER}rel.2.tar.bz2
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --mandir=$datdir/man \
+                --localstatedir=$vardir \
+                --enable-ipv6
+    make \
+        helpdir=$datdir/doc/lynx/help \
+        docdir=$datdir/doc/lynx
+
+    make DESTDIR=$PKG_DIR install \
+        install-help install-doc \
+        helpdir=$datdir/doc/lynx/help \
+        docdir=$datdir/doc/lynx
+}

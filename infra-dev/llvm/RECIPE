@@ -1,0 +1,36 @@
+PKG=llvm
+VER=5.0.0
+SRC=http://llvm.org/releases/$VER/$PKG-$VER.src.tar.xz
+
+build() {
+    $PATCH/cmake-fix-libLLVM-name.patch
+    $PATCH/disable-FileSystemTest.CreateDir-perms-assert.patch
+    $PATCH/disable-llvm-symbolizer-test.patch
+
+    case $CTARGET in
+        *-musl)
+            $PATCH/llvm-fix-build-with-musl-libc.patch
+            ;;
+        *-gnu)
+            # glibc-2.26 fix
+            export CXXFLAGS="$CXXFLAGS -D_GLIBCXX_USE_C99_MATH=1"
+            ;;
+    esac
+
+    cd $BLD_DIR
+
+    CC=gcc CXX=g++ \
+    cmake -DCMAKE_INSTALL_PREFIX=$prefix \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DLLVM_BUILD_LLVM_DYLIB=ON \
+          -DLLVM_DYLIB_EXPORT_ALL=ON \
+          -DLLVM_LINK_LLVM_DYLIB=ON \
+          -DLLVM_ENABLE_RTTI=ON \
+          -DLLVM_ENABLE_FFI=ON \
+          -DLLVM_ENABLE_DOXYGEN=OFF \
+          -DFFI_INCLUDE_DIR=$incdir \
+          -DLLVM_BINUTILS_INCDIR=$incdir \
+          -Wno-dev $SRC_DIR
+    make
+    make DESTDIR=$PKG_DIR install
+}

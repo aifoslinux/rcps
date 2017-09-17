@@ -1,0 +1,56 @@
+PKG=rxvt-unicode
+VER=9.22
+SRC=http://dist.schmorp.de/$PKG/$PKG-$VER.tar.bz2
+
+build() {
+    $PATCH/rxvt-unicode-kerning.patch
+    $PATCH/gentables.patch
+
+    _URL=https://raw.githubusercontent.com/mina86/urxvt-tabbedex/master/tabbedex
+    curl -L -o tabbedex $_URL
+
+    case $CTARGET in
+        *-musl)
+            conf_opts="--disable-utmp --disable-wtmp"
+            ;;
+    esac
+
+    ./configure --prefix=$prefix \
+                --host=$HOST \
+                --with-terminfo=$datdir/terminfo \
+                --enable-256-color \
+                --enable-combining \
+                --enable-fading \
+                --enable-font-styles \
+                --enable-iso14755 \
+                --enable-keepscrolling \
+                --enable-mousewheel \
+                --enable-text-blink \
+                --enable-next-scroll \
+                --enable-perl \
+                --enable-pointer-blank \
+                --enable-rxvt-scroll \
+                --enable-selectionscrolling \
+                --enable-slipwheeling \
+                --enable-smart-resize \
+                --enable-startup-notification \
+                --enable-transparency \
+                --enable-unicode3 \
+                --disable-lastlog \
+                --enable-xft \
+                --enable-xim \
+                --enable-pixbuf \
+                --enable-frills \
+                $conf_opts
+    make
+
+    export TERMINFO=$DAT_DIR/terminfo
+    install -d $TERMINFO
+
+    make DESTDIR=$PKG_DIR install
+
+    install -Dm644 $RCP_DIR/urxvt.desktop $DAT_DIR/applications/urxvt.desktop
+    install -Dm644 $RCP_DIR/urxvtc.desktop $DAT_DIR/applications/urxvtc.desktop
+
+    install -m644 tabbedex $LIB_DIR/urxvt/perl/tabbedex
+}

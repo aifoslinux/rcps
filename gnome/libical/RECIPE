@@ -1,0 +1,17 @@
+PKG=libical
+VER=2.0.0
+SRC=https://github.com/$PKG/$PKG/releases/download/v${VER}/$PKG-$VER.tar.gz
+
+build() {
+    cd $BLD_DIR
+
+    cmake \
+        -DCMAKE_INSTALL_PREFIX=$prefix \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_LIBDIR=$libdir \
+        -DCMAKE_INSTALL_INCLUDEDIR=$incdir \
+        -DSHARED_ONLY=true \
+        $SRC_DIR
+    make
+    make DESTDIR=$PKG_DIR install
+}

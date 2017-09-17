@@ -1,0 +1,22 @@
+PKG=pyurllib3
+VER=1.21.1
+SRC=$PKG-$VER.tar.gz::https://github.com/shazow/urllib3/archive/$VER.tar.gz
+
+build() {
+    cp -r $SRC_DIR $SRC_DIR-py2
+
+    cd $SRC_DIR-py2
+    python2 setup.py build
+
+    cd $SRC_DIR
+    python3 setup.py build
+
+    cd $SRC_DIR-py2
+    python2 setup.py install --root=$PKG_DIR
+
+    cd $SRC_DIR
+    python3 setup.py install --root=$PKG_DIR
+
+    mv $PKG_DIR/usr/* $PKG_DIR/
+    rm -r $PKG_DIR/usr
+}

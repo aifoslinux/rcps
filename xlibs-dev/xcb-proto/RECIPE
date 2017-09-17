@@ -1,0 +1,10 @@
+PKG=xcb-proto
+VER=1.12
+SRC=http://xcb.freedesktop.org/dist/$PKG-$VER.tar.bz2
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST
+    make
+    make DESTDIR=$PKG_DIR install
+}

@@ -1,0 +1,42 @@
+PKG=linux-lts
+VER=4.9.50
+SRC=https://www.kernel.org/pub/linux/kernel/v4.x/linux-$VER.tar.xz
+
+build() {
+    cp -v $RCP_DIR/config .config
+    #make bzImage
+    #install -Dm644 arch/x86/boot/bzImage $PKG_DIR/boot/vmlinuz-lts
+
+    # don't run depmod on 'make install'.
+    sed -i '2iexit 0' scripts/depmod.sh
+
+    make prepare
+    yes "" | make config >/dev/null
+
+    make ${MAKEFLAGS} bzImage modules
+
+    KVER=$(make LOCALVERSION= kernelrelease)
+
+    mkdir -p $PKG_DIR/{lib/modules,lib/firmware,boot}
+
+    make INSTALL_MOD_PATH=$PKG_DIR modules_install
+
+    rm -f $LIB_DIR/modules/$KVER/{source,build}
+    rm -rf $LIB_DIR/firmware
+
+    depmod -b $PKG_DIR -F System.map $KVER
+
+    install -Dm644 arch/x86/boot/bzImage $PKG_DIR/boot/vmlinuz-lts
+
+    install -D -m644 vmlinux $LIB_DIR/modules/$KVER/build/vmlinux
+
+    install -Dm755 /dev/stdin $PKG_DIR/$PKG_RUN_DIR/$PKG/P_ADD <<END
+#!/bin/sh
+/bin/mkinitramfs $KVER
+END
+
+    install -Dm755 /dev/stdin $PKG_DIR/$PKG_RUN_DIR/$PKG/P_UPD <<END
+#!/bin/sh
+/bin/mkinitramfs $KVER
+END
+}

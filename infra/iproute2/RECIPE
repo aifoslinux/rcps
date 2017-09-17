@@ -1,0 +1,28 @@
+PKG=iproute2
+VER=4.12.0
+SRC=http://www.kernel.org/pub/linux/utils/net/$PKG/$PKG-$VER.tar.xz
+
+build() {
+    sed -i '/^TARGETS=/s: arpd : :' misc/Makefile
+    sed -i 's:/usr/local:/usr:' tc/m_ipt.c include/iptables.h
+    sed -i -e 's:-Werror::' Makefile
+
+    $PATCH/musl-fixes.patch
+    $PATCH/iproute2-4.12.0-musl.patch
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --libdir=$libdir \
+                --sbindir=$bindir \
+                --mandir=$datdir/man \
+                --localstatedir=$vardir
+    make LIBDIR=$libdir
+    make DESTDIR=$PKG_DIR install
+
+    mv $PKG_DIR/sbin $BIN_DIR
+    mv $PKG_DIR/usr/include $INC_DIR
+    mv $PKG_DIR/usr/lib $LIB_DIR
+    mv $PKG_DIR/usr/share $DAT_DIR
+    rm -r $PKG_DIR/usr
+}

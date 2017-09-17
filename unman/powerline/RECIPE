@@ -1,0 +1,28 @@
+PKG=powerline
+VER=2.6
+SRC=$PKG-$VER.tar.gz::https://github.com/$PKG/$PKG/archive/$VER.tar.gz
+
+build() {
+    $PATCH/gcc7.patch
+
+    python2 setup.py build
+    python2 setup.py install --skip-build --root=$PKG_DIR --optimize=1
+
+    python3 setup.py build
+    python3 setup.py install --skip-build --root=$PKG_DIR --optimize=1
+
+
+    install -dm755 $CFG_DIR/fonts/conf.d
+    install -Dm644 font/PowerlineSymbols.otf $DAT_DIR/fonts/OTF/PowerlineSymbols.otf
+    install -Dm644 font/10-powerline-symbols.conf $CFG_DIR/fonts/conf.avail/10-powerline-symbols.conf
+    ln -s ../conf.avail/10-powerline-symbols.conf $CFG_DIR/fonts/conf.d/10-powerline-symbols.conf
+
+    install -Dm644 powerline/bindings/vim/plugin/powerline.vim \
+                   $DAT_DIR/vim/vimfiles/plugin/powerline.vim
+
+    install -Dm644 powerline/bindings/bash/powerline.sh \
+                   $DAT_DIR/powerline/bindings/bash/powerline.sh
+
+    mv $PKG_DIR/usr/* $PKG_DIR
+    rm -r $PKG_DIR/usr
+}

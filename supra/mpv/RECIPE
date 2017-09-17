@@ -1,0 +1,26 @@
+PKG=mpv
+VER=0.26.0
+SRC=$PKG-$VER.tar.gz::https://github.com/mpv-player/$PKG/archive/v${VER}.tar.gz
+
+build() {
+    $PATCH/001-opengl-wayland.patch
+    $PATCH/002-opengl-wayland.patch
+    $PATCH/003-opengl-wayland.patch
+
+    ./bootstrap.py
+
+    ./waf configure --prefix=$prefix \
+                    --confdir=$cfgdir/mpv \
+                    --mandir=$datdir/man \
+                    --enable-libass \
+                    --enable-alsa \
+                    --enable-encoding \
+                    --enable-libarchive \
+                    --enable-libmpv-shared \
+                    --enable-zsh-comp \
+                    --disable-dvdnav
+    ./waf build
+    ./waf install --destdir=$PKG_DIR
+
+    install -m644 DOCS/{encoding.rst,tech-overview.txt} $DAT_DIR/doc/mpv
+}

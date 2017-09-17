@@ -1,0 +1,2 @@
+TARGET="/share/glib-2.0/schemas/.*.gschema.xml"
+RUNCMD="/bin/glib-compile-schemas /share/glib-2.0/schemas"

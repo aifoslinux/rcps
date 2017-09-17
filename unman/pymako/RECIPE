@@ -1,0 +1,12 @@
+PKG=pymako
+VER=1.0.6
+SRC=https://pypi.io/packages/source/M/Mako/Mako-$VER.tar.gz
+
+build() {
+    python2 setup.py build
+    python2 setup.py install --prefix=/usr --root=$PKG_DIR --optimize=1
+
+    # --prefix=$prefix = invalid prefix error
+    mv $PKG_DIR/usr/* $PKG_DIR/
+    rm -r $PKG_DIR/usr
+}

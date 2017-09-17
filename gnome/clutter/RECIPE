@@ -1,0 +1,19 @@
+PKG=clutter
+VER=1.26.2
+SRC=https://download.gnome.org/sources/$PKG/${VER:0:4}/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --enable-introspection \
+                --enable-egl-backend \
+                --enable-gdk-backend \
+                --enable-x11-backend \
+                --enable-evdev-input \
+                --enable-wayland-backend \
+                --enable-wayland-compositor \
+                --enable-gtk-doc
+    make
+    make DESTDIR=$PKG_DIR install
+}

@@ -1,0 +1,11 @@
+--- a/widgets/window.c	2017-07-07 16:03:23.119711677 +0200
++++ b/widgets/window.c	2017-07-07 16:08:41.763467142 +0200
+@@ -18,7 +18,7 @@
+  *
+  */
+ 
+-#include <gdk/gdkx.h>
++//#include <gdk/gdkx.h>
+ #include "luah.h"
+ #include "widgets/common.h"
+ 

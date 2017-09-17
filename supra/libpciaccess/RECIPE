@@ -1,0 +1,11 @@
+PKG=libpciaccess
+VER=0.13.5
+SRC=http://xorg.freedesktop.org/releases/individual/lib/$PKG-$VER.tar.bz2
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir
+    make
+    make DESTDIR=$PKG_DIR install
+}

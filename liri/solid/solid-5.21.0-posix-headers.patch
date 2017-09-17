@@ -1,0 +1,12 @@
+sys/types.h is required to use dev_t in POSIX environments.
+
+--- solid-5.21.0/src/solid/devices/backends/udisks2/udisksblock.old	2016-04-03 22:08:10.000000000 +0100
++++ solid-5.21.0/src/solid/devices/backends/udisks2/udisksblock.h	2016-07-21 08:19:08.410880257 +0100
+@@ -22,6 +22,7 @@
+ #define UDISKS2BLOCK_H
+ 
+ #include <solid/devices/ifaces/block.h>
++#include <sys/types.h>
+ #include "udisksdeviceinterface.h"
+ 
+ namespace Solid

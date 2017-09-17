@@ -1,0 +1,15 @@
+PKG=desktop-file-utils
+VER=0.23
+SRC=https://www.freedesktop.org/software/$PKG/releases/$PKG-$VER.tar.xz
+
+build() {
+    autoreconf -fiv
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST
+    make
+    make DESTDIR=$PKG_DIR install
+
+    install -Dm644 $RCP_DIR/update-desktop-database.hook \
+            $DAT_DIR/apm/hooks/update-desktop-database.hook
+}

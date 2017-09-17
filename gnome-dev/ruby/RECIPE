@@ -1,0 +1,17 @@
+PKG=ruby
+VER=2.4.1
+SRC=http://cache.ruby-lang.org/pub/$PKG/${VER:0:3}/$PKG-$VER.tar.bz2
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --sharedstatedir=$vardir/lib \
+                --enable-shared \
+                --with-dbm-type=gdbm_compat
+    make
+    make DESTDIR=$PKG_DIR install
+
+    install -D -m644 $RCP_DIR/gemrc $CFG_DIR/gemrc
+}

@@ -1,0 +1,16 @@
+PKG=xkeyboard-config
+VER=2.21
+SRC=http://xorg.freedesktop.org/archive/individual/data/$PKG/$PKG-$VER.tar.bz2
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --with-xkb-base=$datdir/X11/xkb \
+                --with-xkb-rules-symlink=xorg \
+                --enable-compat-rules=yes
+    make
+    make DESTDIR=$PKG_DIR install
+
+    rm -f $DAT_DIR/X11/xkb/compiled
+    install -m755 -d $VAR_DIR/lib/xkb
+}

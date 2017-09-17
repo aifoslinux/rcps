@@ -1,0 +1,14 @@
+PKG=automake
+VER=1.15.1
+SRC=ftp://ftp.gnu.org/gnu/$PKG/$PKG-$VER.tar.xz
+
+build() {
+    $PATCH/config.patch
+
+    ./bootstrap
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST
+    make
+    make DESTDIR=$PKG_DIR install
+}

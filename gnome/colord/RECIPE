@@ -1,0 +1,41 @@
+PKG=colord
+VER=1.3.5
+SRC=http://www.freedesktop.org/software/$PKG/releases/$PKG-$VER.tar.xz
+#SRC=git+https://github.com/hughsie/colord.git
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --libexecdir=$libdir/$PKG \
+                --disable-static \
+                --disable-systemd-login \
+                --disable-argyllcms-sensor \
+                --disable-bash-completion \
+                --enable-libcolordcompat \
+                --enable-vala \
+                --with-daemon-user=colord
+    make
+    make DESTDIR=$PKG_DIR install
+
+    #cd $BLD_DIR
+
+    #meson --prefix=$prefix \
+    #      --buildtype=release \
+    #      --localstatedir=$vardir \
+    #      --libexecdir=lib/$PKG \
+    #      -Denable-systemd=false \
+    #      -Denable-man=false \
+    #      -Denable-bash-completion=false \
+    #      -Denable-argyllcms-sensor=false \
+    #      -Denable-libcolordcompat=true \
+    #      -Denable-vala=true \
+    #      -Dwith-daemon-user=colord \
+    #      $SRC_DIR
+    #ninja
+    #DESTDIR=$PKG_DIR ninja install
+
+    # the build system has no colord user, so the chown fails
+    chown -R 124:124 $VAR_DIR/lib/colord
+}

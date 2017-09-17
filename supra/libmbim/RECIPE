@@ -1,0 +1,13 @@
+PKG=libmbim
+VER=1.14.2
+SRC=http://www.freedesktop.org/software/$PKG/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --libexecdir=$libdir \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}

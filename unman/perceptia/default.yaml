@@ -1,0 +1,27 @@
+aesthetics:
+  background_path: /share/sway/Sway_Wallpaper_Blue_1920x1080.png
+exhibitor:
+  compositor:
+    move_step: 10
+  strategist:
+    choose_target: anchored_but_popups
+input:
+  touchpad_scale: 0.5
+  touchpad_pressure_threshold: 50
+  mouse_scale: 0.5
+keyboard:
+  layout: sv-latin1
+keybindings:
+  insert:
+    - key: T
+      mods: [lctl, lalt]
+      execute: [termite]
+    - key: W
+      mods: [lctl, lalt]
+      execute: [firefox]
+    - key: S
+      mods: [lctl, lalt]
+      execute: ["perceptiactl", "screenshot"]
+    - key: space
+      mods: [lalt]
+      action: toggle_anchorization

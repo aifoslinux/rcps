@@ -1,0 +1,19 @@
+PKG=libnl
+VER=3.3.0
+SRC=https://github.com/thom311/$PKG/releases/download/libnl${VER//./_}/$PKG-$VER.tar.gz
+
+build() {
+    $PATCH/libnl-3.3.0_rc1-musl.patch
+
+    autoreconf -fiv
+    sed -i '/<linux\/if_bridge.h>/i#define _LINUX_IN6_H' lib/route/link/bridge.c
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --sbindir=$bindir \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}

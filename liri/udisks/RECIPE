@@ -1,0 +1,17 @@
+PKG=udisks
+VER=2.6.5
+SRC=https://github.com/storaged-project/$PKG/releases/download/$PKG-$VER/$PKG-$VER.tar.bz2
+
+build() {
+    $PATCH/O_CLOEXEC.patch
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --sbindir=$bindir \
+                --libexecdir=$libdir \
+                --localstatedir=$vardir \
+                --enable-compile-warnings=minimum
+    make
+    make DESTDIR=$PKG_DIR install
+}

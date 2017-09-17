@@ -1,0 +1,33 @@
+PKG=webkitgtk
+VER=2.16.6
+SRC=http://webkitgtk.org/releases/$PKG-$VER.tar.xz
+
+build() {
+    $PATCH/no-expansion-to-defined.patch
+    $PATCH/musl-fixes.patch
+    $PATCH/icu59.patch
+    $PATCH/gcc7-memcpy.patch
+
+    rm -r Source/ThirdParty/gtest/
+
+    export CFLAGS="$CFLAGS -Wno-expansion-to-defined"
+    export CXXFLAGS="$CXXDFLAGS -Wno-expansion-to-defined"
+
+    cd $BLD_DIR
+
+    cmake -DPORT=GTK \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_SKIP_RPATH=ON \
+          -DCMAKE_INSTALL_PREFIX=$prefix \
+          -DLIB_INSTALL_DIR=$libdir \
+          -DLIBEXEC_INSTALL_DIR=$libdir/webkit2gtk-4.0 \
+          -DCMAKE_INSTALL_DATADIR=$datdir \
+          -DCMAKE_INSTALL_INCLUDEDIR=$incdir \
+          -DENABLE_GTKDOC=ON \
+          -DENABLE_GLES2=ON \
+          -DENABLE_GEOLOCATION=OFF \
+          -DENABLE_PLUGIN_PROCESS_GTK2=OFF \
+          $SRC_DIR
+    make
+    make DESTDIR=$PKG_DIR install
+}

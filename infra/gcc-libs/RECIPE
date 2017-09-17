@@ -1,0 +1,42 @@
+PKG=gcc-libs
+VER=7.2.0
+SRC=ftp://gcc.gnu.org/pub/gcc/releases/gcc-$VER/gcc-$VER.tar.xz
+
+build() {
+    sed -i '/m64=/s/lib64/lib/' gcc/config/i386/t-linux64
+    sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" {libiberty,gcc}/configure
+
+    cd $BLD_DIR
+
+    case $CTARGET in
+        *-musl)
+            conf_opts="--disable-libmpx --disable-libmudflap --disable-libsanitizer"
+            ;;
+    esac
+
+    $SRC_DIR/configure --prefix=$prefix \
+                       --build=$CBUILD \
+                       --host=$CHOST \
+                       --libdir=$libdir \
+                       --libexecdir=$libdir \
+                       --enable-languages=c,c++,fortran,lto \
+                       --enable-shared \
+                       --enable-lto \
+                       --enable-clocale=gnu \
+                       --enable-threads=posix \
+                       --enable-__cxa_atexit \
+                       --disable-multilib \
+                       --disable-nls \
+                       --disable-werror \
+                       --with-system-zlib \
+                       --with-linker-hash-style=gnu \
+                       --enable-checking=release \
+                       $conf_opts
+    make
+    make DESTDIR=$PKG_DIR install
+
+    rm -rf $BIN_DIR
+    rm -rf $LIB_DIR/gcc
+    rm -rf $INC_DIR
+    rm -rf $DAT_DIR
+}

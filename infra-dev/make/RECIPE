@@ -1,0 +1,12 @@
+PKG=make
+VER=4.2.1
+SRC=ftp://ftp.gnu.org/gnu/$PKG/$PKG-$VER.tar.bz2
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --disable-nls \
+                --without-guile
+    make
+    make DESTDIR=$PKG_DIR install
+}

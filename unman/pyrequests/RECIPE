@@ -1,0 +1,24 @@
+PKG=pyrequests
+VER=2.18.1
+SRC=https://files.pythonhosted.org/packages/source/r/requests/requests-$VER.tar.gz
+
+build() {
+    $PATCH/certs.patch
+
+    cp -r $SRC_DIR $SRC_DIR-py2
+
+    cd $SRC_DIR-py2
+    python2 setup.py build
+
+    cd $SRC_DIR
+    python3 setup.py build
+
+    cd $SRC_DIR-py2
+    python2 setup.py install --root=$PKG_DIR --skip-build -O1
+
+    cd $SRC_DIR
+    python3 setup.py install --root=$PKG_DIR --skip-build -O1
+
+    mv $PKG_DIR/usr/* $PKG_DIR/
+    rm -r $PKG_DIR/usr
+}

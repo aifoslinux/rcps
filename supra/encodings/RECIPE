@@ -1,0 +1,13 @@
+PKG=encodings
+VER=1.0.4
+SRC=http://xorg.freedesktop.org/archive/individual/font/$PKG-$VER.tar.bz2
+
+build() {
+    $PATCH/config.patch
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --with-encodingsdir=$datdir/fonts/encodings
+    make
+    make DESTDIR=$PKG_DIR install
+}

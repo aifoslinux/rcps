@@ -1,0 +1,18 @@
+PKG=docbook-xsl
+VER=1.79.1
+SRC=http://downloads.sourceforge.net/docbook/$PKG-$VER.tar.bz2
+
+build() {
+    _pkgroot=$DAT_DIR/xml/docbook/xsl-stylesheets-$VER
+
+    install -dm755 ${_pkgroot}
+    install -m644 VERSION VERSION.xsl ${_pkgroot}
+
+    for fn in assembly common eclipse epub epub3 fo highlighting html htmlhelp javahelp lib \
+            manpages params profiling roundtrip template website xhtml xhtml-1_1 xhtml5; do
+        install -dm755 ${_pkgroot}/${fn}
+        install -m644 ${fn}/*.{xml,xsl,dtd,ent} ${_pkgroot}/${fn} || true  # ignore missing files
+    done
+
+    install -dm755 $CFG_DIR/xml
+}

@@ -1,0 +1,14 @@
+PKG=musl-fts
+VER=1.2.7
+SRC=$PKG-$VER.tar.gz::https://github.com/pullmoll/$PKG/archive/v${VER}.tar.gz
+
+build() {
+    sed -i "/pkgconfig_DATA/i pkgconfigdir=\$(libdir)/pkgconfig" Makefile.am
+
+    ./bootstrap.sh
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST
+    make
+    make DESTDIR=$PKG_DIR install
+}

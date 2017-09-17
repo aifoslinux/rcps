@@ -1,0 +1,10 @@
+PKG=libuev
+VER=1.5.2
+SRC=https://github.com/troglobit/$PKG/releases/download/v${VER}/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST
+    make
+    make DESTDIR=$PKG_DIR install
+}

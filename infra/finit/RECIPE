@@ -1,0 +1,37 @@
+PKG=finit
+VER=3.0-rc2
+SRC=git+https://github.com/troglobit/$PKG.git#commit=9b5f238
+
+build() {
+    NOCONFIGURE=1 ./autogen.sh
+
+    sed -i -e 's,ensure,ensure=/etc/machine-id,' plugins/dbus.c
+    sed -i -e 's,dbus/pid,dbus.pid,' plugins/dbus.c
+    sed -i -e 's,/sbin/,/bin/,' plugins/procps.c
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sbindir=$bindir \
+                --enable-rw-rootfs \
+                --enable-progress \
+                --enable-dbus-plugin \
+                --enable-alsa-utils-plugin \
+                --with-hostname="ai\os" \
+                --with-heading="AI\OS"
+    make
+    make DESTDIR=$PKG_DIR install
+
+    install -Dm644 $RCP_DIR/finit.cfg $CFG_DIR/finit.conf
+
+    # tty
+    install -Dm644 $RCP_DIR/tty.finitd $CFG_DIR/finit.d/available/tty.conf
+    ln -s available/tty.conf $CFG_DIR/finit.d/tty.conf
+
+    # keymap
+    install -Dm644 $RCP_DIR/keymap.finitd $CFG_DIR/finit.d/available/keymap.conf
+    ln -s available/keymap.conf $CFG_DIR/finit.d/keymap.conf
+
+    # modules
+    install -Dm644 $RCP_DIR/modules.finitd $CFG_DIR/finit.d/available/modules.conf
+    ln -s available/modules.conf $CFG_DIR/finit.d/modules.conf
+}

@@ -1,0 +1,34 @@
+PKG=ffmpeg
+VER=3.3.4
+SRC=http://ffmpeg.org/releases/ffmpeg-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --disable-debug \
+                --disable-static \
+                --disable-stripping \
+                --enable-avresample \
+                --enable-avfilter \
+                --enable-fontconfig \
+                --enable-gpl \
+                --enable-libass \
+                --enable-libfreetype \
+                --enable-libfribidi \
+                --enable-libmp3lame \
+                --enable-libopus \
+                --enable-libpulse \
+                --enable-libtheora \
+                --enable-libvorbis \
+                --enable-libvpx \
+                --enable-libwebp \
+                --enable-libx264 \
+                --enable-libx265 \
+                --enable-shared \
+                --enable-version3
+    make
+    make tools/qt-faststart
+    make doc/ff{mpeg,play,server}.1
+
+    make DESTDIR=$PKG_DIR install install-man
+    install -Dm755 tools/qt-faststart $BIN_DIR
+}

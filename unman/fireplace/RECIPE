@@ -1,0 +1,27 @@
+PKG=fireplace
+VER=3.1.2
+SRC=$PKG-$VER.tar.gz::https://github.com/Drakulix/$PKG/archive/v${VER}.tar.gz
+
+build() {
+    export CARGO_HOME="$SRC_DIR/.cargo"
+
+    #$PATCH/wlc-sys.patch
+    #sed -i -e 's, feature(optin_builtin_traits),,' \
+    #    .cargo/registry/src/github.com-1ecc6299db9ec823/wlc-2.0.1/src/lib.rs
+
+    find . -type f -exec sed -i 's,slog-journald = "1.0",,g' {} +
+
+    cd fireplace
+
+    cargo build --release
+
+    install -Dm755 target/release/fireplace $BIN_DIR/fireplace
+    install -Dm644 fireplace.yaml $CFG_DIR/fireplace/fireplace.yaml
+    #install -Dm644 fireplace.desktop $DAT_DIR/wayland-sessions/fireplace.desktop
+
+    install -m755 $RCP_DIR/start_fireplace.sh $BIN_DIR/start_fireplace
+    install -Dm644 $RCP_DIR/fireplace.desktop $DAT_DIR/wayland-sessions/fireplace.desktop
+
+    install -m755 $RCP_DIR/start_fireplace-gb_se.sh $BIN_DIR/start_fireplace-gb_se
+    install -Dm644 $RCP_DIR/fireplace-gb_se.desktop $DAT_DIR/wayland-sessions/fireplace-gb_se.desktop
+}

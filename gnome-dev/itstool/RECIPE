@@ -1,0 +1,11 @@
+PKG=itstool
+VER=2.0.2
+SRC=http://files.itstool.org/$PKG/$PKG-$VER.tar.bz2
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir
+    make
+    make DESTDIR=$PKG_DIR install
+}

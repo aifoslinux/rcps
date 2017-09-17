@@ -1,0 +1,11 @@
+PKG=expat
+VER=2.2.3
+SRC=http://downloads.sourceforge.net/$PKG/$PKG-$VER.tar.bz2
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --mandir=$datdir/man
+    make
+    make DESTDIR=$PKG_DIR install
+}

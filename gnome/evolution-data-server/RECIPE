@@ -1,0 +1,21 @@
+PKG=evolution-data-server
+VER=3.24.5
+SRC=https://download.gnome.org/sources/$PKG/${VER:0:4}/$PKG-$VER.tar.xz
+
+build() {
+    cd $BLD_DIR
+
+    CFLAGS="$CFLAGS -I/include/gnu-libiconv" \
+    cmake -G Ninja \
+        -DCMAKE_INSTALL_PREFIX="" \
+        -DSYSCONF_INSTALL_DIR=$cfgdir \
+        -DLIBEXEC_INSTALL_DIR=$libdir/$PKG \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DENABLE_INTROSPECTION=ON \
+        -DENABLE_VALA_BINDINGS=ON \
+        -DENABLE_UOA=OFF \
+        -DENABLE_GTK_DOC=ON \
+        $SRC_DIR
+    ninja
+    DESTDIR=$PKG_DIR ninja install
+}

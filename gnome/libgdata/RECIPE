@@ -1,0 +1,12 @@
+PKG=libgdata
+VER=0.17.8
+SRC=https://download.gnome.org/sources/$PKG/${VER:0:4}/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}

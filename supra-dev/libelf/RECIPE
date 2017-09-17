@@ -1,0 +1,68 @@
+PKG=libelf
+VER=0.169
+SRC=https://fedorahosted.org/releases/e/l/elfutils/$VER/elfutils-$VER.tar.bz2
+
+build() {
+    cat > src/error.h <<-EOF
+    #ifndef _ERROR_H_
+    #define _ERROR_H_
+
+    #include <stdarg.h>
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <string.h>
+    #include <errno.h>
+
+    static unsigned int error_message_count = 0;
+
+    static inline void error(int status, int errnum, const char* format, ...)
+    {
+        va_list ap;
+        fprintf(stderr, "%s: ", program_invocation_name);
+        va_start(ap, format);
+        vfprintf(stderr, format, ap);
+        va_end(ap);
+        if (errnum)
+            fprintf(stderr, ": %s", strerror(errnum));
+        fprintf(stderr, "\n");
+        error_message_count++;
+        if (status)
+            exit(status);
+    }
+
+    #endif  /* _ERROR_H_ */
+EOF
+
+    cp src/error.h lib/ 
+
+    cat > lib/libintl.h <<-EOF
+    #ifndef LIBINTL_H
+    #define LIBINTL_H
+    #define _(x) (x)
+    #endif
+EOF
+
+    $PATCH/fix-uninitialized.patch
+    $PATCH/musl-accessperms.patch
+    $PATCH/musl-canonicalize_file_name.patch
+    $PATCH/musl-cdefs.patch
+    $PATCH/musl-macros.patch
+    $PATCH/musl-qsort_r.patch
+    $PATCH/musl-strerror_r.patch
+    $PATCH/no-werror.patch
+
+    autoreconf -fiv
+
+    CFLAGS="$CFLAGS -Wno-unused-result -Wno-format-nonliteral -fPIC" \
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --program-prefix="eu-" \
+                --disable-werror \
+                --disable-nls 
+
+    cd libelf
+    make
+    make DESTDIR=$PKG_DIR install
+}

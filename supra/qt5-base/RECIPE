@@ -1,0 +1,54 @@
+PKG=qt5-base
+VER=5.9.1
+SRC=http://download.qt.io/official_releases/qt/${VER%.*}/$VER/submodules/${PKG/5-/}-opensource-src-$VER.tar.xz
+
+build() {
+    case $CTARGET in
+        *-gnu)
+            # glibc-2.26 fix
+            export CFLAGS="$CFLAGS -D_GLIBCXX_USE_C99_MATH=1"
+            ;;
+    esac
+
+    # Build qmake using Arch {C,LD}FLAGS
+    # This also sets default {C,CXX,LD}FLAGS for projects built using qmake
+    sed -i -e "s|^\(QMAKE_CFLAGS_RELEASE.*\)|\1 ${CFLAGS}|" \
+        mkspecs/common/gcc-base.conf
+    sed -i -e "s|^\(QMAKE_LFLAGS_RELEASE.*\)|\1 ${LDFLAGS}|" \
+        mkspecs/common/g++-unix.conf
+
+    # Fix missing private includes https://bugreports.qt.io/browse/QTBUG-37417
+    sed -e '/CMAKE_NO_PRIVATE_INCLUDES\ \=\ true/d' -i mkspecs/features/create_cmake.prf
+    # Fix accessibility build 
+    $PATCH/qtbase-5.9.1-atspi.patch
+
+    ./configure -confirm-license \
+                -opensource \
+                -prefix $prefix \
+                -sysconfdir $cfgdir/xdg \
+                -bindir $bindir \
+                -docdir $datdir/doc/qt \
+                -headerdir $incdir/qt \
+                -archdatadir $libdir/qt \
+                -datadir $datdir/qt \
+                -examplesdir $datdir/doc/qt/examples \
+                -system-sqlite \
+                -openssl-linked \
+                -nomake examples \
+                -no-rpath \
+                -optimized-qmake \
+                -dbus-linked \
+                -system-harfbuzz \
+                -no-use-gold-linker \
+                -reduce-relocations ${SSE2}
+    make
+    make INSTALL_ROOT=$PKG_DIR install
+
+    # Drop QMAKE_PRL_BUILD_DIR because reference the build dir
+    find $LIB_DIR -type f -name '*.prl' \
+        -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
+
+    # Fix wrong qmake path in pri file
+    sed -i "s|$SRC_DIR/qtbase|/|" \
+        $LIB_DIR/qt/mkspecs/modules/qt_lib_bootstrap_private.pri
+}

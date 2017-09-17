@@ -1,0 +1,4 @@
+#!/bin/sh
+if [ -f /bin/xmlcatalog ]; then
+    xmlcatalog --noout --del file:///etc/xml/docbook-xml /etc/xml/catalog
+fi

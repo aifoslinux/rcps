@@ -1,0 +1,51 @@
+PKG=krb5
+VER=1.15.1
+SRC=https://web.mit.edu/kerberos/dist/$PKG/${VER%.*}/$PKG-$VER.tar.gz
+
+build() {
+    $PATCH/krb5-libressl.patch
+    $PATCH/mit-krb5_krb5-config_LDFLAGS.patch
+
+    sed -i "/KRB5ROOT=/s/\/local//" src/util/ac_check_krb5.m4
+
+    cd src
+
+    export CFLAGS+=" -fPIC -fno-strict-aliasing -fno-strict-overflow"
+    export CPPFLAGS+="$CPPFLAGS -fPIC -I/usr/include/et"
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir/lib \
+                --sbindir=$bindir \
+                --enable-shared \
+                --disable-static \
+                --disable-rpath \
+                --with-system-et \
+                --with-system-ss \
+                --without-tcl \
+                --enable-dns-for-realm \
+                --with-ldap \
+                --without-system-verto \
+                WARN_CFLAGS=
+    make
+    make DESTDIR=$PKG_DIR install
+
+    mkdir -p $DAT_DIR/doc/$PKG/examples
+    mv $DAT_DIR/examples/$PKG/* $DAT_DIR/doc/$PKG/examples
+    install -m644 plugins/kdb/ldap/libkdb_ldap/kerberos.{ldif,schema} \
+        $DAT_DIR/doc/$PKG/examples
+    rm -r $DAT_DIR/examples
+
+    install -dm 755 $VAR_DIR/lib/krb5kdc
+    install -pm 644 config-files/kdc.conf $VAR_DIR/lib/krb5kdc/kdc.conf
+
+    install -dm 755 $CFG_DIR
+    install -pm 644 config-files/krb5.conf $CFG_DIR/krb5.conf
+
+    install -dm 755 $DAT_DIR/aclocal
+    install -m 644 util/ac_check_krb5.m4 $DAT_DIR/aclocal
+
+    rm -r $DAT_DIR/man/cat{1,5,8}
+    rm -r $VAR_DIR/lib/run
+}

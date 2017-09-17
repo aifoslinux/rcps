@@ -1,0 +1,14 @@
+PKG=librsvg
+VER=2.40.18
+#SRC=https://download.gnome.org/sources/$PKG/${VER:0:4}/$PKG-$VER.tar.xz
+SRC=git+https://git.gnome.org/browse/librsvg#commit=63ddae4
+
+build() {
+    NOCONFIGURE=1 ./autogen.sh
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}

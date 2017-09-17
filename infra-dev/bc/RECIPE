@@ -1,0 +1,18 @@
+PKG=bc
+VER=1.07.1
+SRC=https://ftp.gnu.org/gnu/$PKG/$PKG-$VER.tar.gz
+
+build() {
+    sed -i -e 's/lib bc dc doc/lib bc dc/' Makefile.in
+    sed -i -e 's/lib bc dc doc/lib bc dc/' Makefile.am
+
+    autoreconf -fiv
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --mandir=$datdir/man \
+                --infodir=$datdir/info
+    make
+    make DESTDIR=$PKG_DIR install
+}

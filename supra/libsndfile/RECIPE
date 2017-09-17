@@ -1,0 +1,11 @@
+PKG=libsndfile
+VER=1.0.28
+SRC=http://www.mega-nerd.com/$PKG/files/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --disable-sqlite
+    make
+    make DESTDIR=$PKG_DIR install
+}

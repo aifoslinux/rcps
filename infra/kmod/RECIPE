@@ -1,0 +1,18 @@
+PKG=kmod
+VER=24
+SRC=https://www.kernel.org/pub/linux/utils/kernel/$PKG/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --disable-manpages \
+                --with-zlib \
+                --with-xz
+    make
+    make DESTDIR=$PKG_DIR install
+
+    for m in depmod lsmod modinfo modprobe insmod rmmod; do
+        ln -s kmod $BIN_DIR/$m
+    done
+}

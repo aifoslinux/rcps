@@ -1,0 +1,18 @@
+PKG=fontconfig
+VER=2.12.5
+SRC=http://www.fontconfig.org/release/$PKG-$VER.tar.gz
+
+build() {
+    # regenerate hash functions
+    rm -f src/fcobjshash.h
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --disable-docs
+    make
+    make DESTDIR=$PKG_DIR install
+
+    install -Dm644 $RCP_DIR/fontconfig.hook $DAT_DIR/apm/hooks/fontconfig.hook
+}

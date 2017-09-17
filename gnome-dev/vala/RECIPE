@@ -1,0 +1,11 @@
+PKG=vala
+VER=0.36.4
+SRC=https://download.gnome.org/sources/$PKG/${VER:0:4}/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --enable-vapigen
+    make
+    make DESTDIR=$PKG_DIR install
+}

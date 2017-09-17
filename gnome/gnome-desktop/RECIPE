@@ -1,0 +1,15 @@
+PKG=gnome-desktop
+VER=3.24.2
+SRC=https://download.gnome.org/sources/$PKG/${VER:0:4}/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --libexecdir=$libdir/$PKG \
+                --enable-gtk-doc \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}

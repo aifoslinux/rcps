@@ -1,0 +1,23 @@
+PKG=eudev
+VER=3.2.4
+SRC=http://dev.gentoo.org/~blueness/$PKG/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --sbindir=$bindir \
+                --with-rootrundir=$rundir \
+                --enable-split-usr \
+                --enable-kmod \
+                --disable-hwdb
+    make
+    make DESTDIR=$PKG_DIR install
+
+    # fix  "Symbolic link loop"
+    rm -f $BIN_DIR/udevadm
+    install -m755 src/udev/udevadm $BIN_DIR/udevadm
+
+    sed -i 's#GROUP="tape"#GROUP="disk"#g' $LIB_DIR/udev/rules.d/*.rules
+    sed -i 's#GROUP="dialout"#GROUP="tty"#g' $LIB_DIR/udev/rules.d/*.rules
+}

@@ -1,0 +1,13 @@
+PKG=libblockdev
+VER=2.11
+SRC=https://github.com/storaged-project/$PKG/archive/$PKG-$VER-1.tar.gz
+
+build() {
+    ./autogen.sh
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --without-lvm_dbus
+    make
+    make DESTDIR=$PKG_DIR install
+}

@@ -1,0 +1,11 @@
+PKG=perl-xml-parser
+VER=2.44
+SRC=http://search.cpan.org/CPAN/authors/id/T/TO/TODDR/XML-Parser-$VER.tar.gz
+
+build() {
+    perl Makefile.PL INSTALLDIRS=vendor
+    make
+    make DESTDIR=$PKG_DIR install
+
+    rm -r $LIB_DIR/perl5/core_perl
+}

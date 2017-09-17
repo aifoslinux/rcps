@@ -1,0 +1,32 @@
+PKG=elogind
+VER=234.3
+SRC=$PKG-$VER.tar.gz::https://github.com/$PKG/$PKG/archive/v${VER}.tar.gz
+
+build() {
+    autoreconf -fiv
+    intltoolize
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --libdir=$libdir \
+                --with-rootprefix=$prefix \
+                --with-rootlibexecdir=$libdir/elogind \
+                --with-udevrulesdir=$libdir/udev/rules.d \
+                --with-cgroup-controller=elogind \
+                --enable-pam \
+                --enable-acl \
+                --enable-debug=elogind \
+                --disable-nls \
+                --disable-smack \
+                --disable-tests
+    make
+    make DESTDIR=$PKG_DIR install
+
+    sed -i -e 's,system-auth,system-login,' $CFG_DIR/pam.d/elogind-user
+
+    install -Dm644 $RCP_DIR/$PKG.finitd $CFG_DIR/finit.d/available/$PKG.conf
+
+    sed -i -e 's,Exec=/lib/elogind/elogind --daemon,Exec=/bin/false,' \
+        $DAT_DIR/dbus-1/system-services/org.freedesktop.login1.service
+}

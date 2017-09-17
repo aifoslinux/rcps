@@ -1,0 +1,13 @@
+PKG=yelp-xsl
+VER=3.20.1
+SRC=https://download.gnome.org/sources/$PKG/${VER:0:4}/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --enable-doc
+    make
+    make DESTDIR=$PKG_DIR install
+}

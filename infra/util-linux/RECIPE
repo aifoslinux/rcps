@@ -1,0 +1,32 @@
+PKG=util-linux
+VER=2.30.1
+SRC=https://www.kernel.org/pub/linux/utils/$PKG/v2.30/$PKG-$VER.tar.xz
+
+build() {
+    sed -i -e 's/\/sbin/\/bin/' configure
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --bindir=$bindir \
+                --sbindir=$bindir \
+                --libdir=$libdir \
+                --localstatedir=$rundir \
+                --without-systemd \
+                --without-python \
+                --without-readline \
+                --disable-nls \
+                --disable-tls \
+                --enable-write \
+                --enable-vipw \
+                --enable-newgrp \
+                --enable-chfn-chsh
+    make
+    make DESTDIR=$PKG_DIR install
+
+    chmod 4755 $BIN_DIR/{newgrp,ch{sh,fn}}
+
+    install -d $CFG_DIR/pam.d
+    install -t $CFG_DIR/pam.d -m644 $RCP_DIR/{chfn,chsh,login,su}
+
+    rm -rf $PKG_DIR/usr
+}

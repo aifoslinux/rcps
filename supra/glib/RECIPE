@@ -1,0 +1,27 @@
+PKG=glib
+VER=2.52.3
+SRC=https://download.gnome.org/sources/$PKG/${VER:0:4}/$PKG-$VER.tar.xz
+
+build() {
+    $PATCH/gobject_init_on_demand.patch
+    $PATCH/quark_init_on_demand.patch
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --libdir=$libdir \
+                --datadir=$datdir \
+                --localedir=$datdir \
+                --with-pcre=system
+    make
+    make DESTDIR=$PKG_DIR install
+
+    case $CTARGET in
+        *-musl)
+            # datadir localedir doesn't work
+            mv $LIB_DIR/locale $DAT_DIR/
+            ;;
+    esac
+
+    install -t $DAT_DIR/apm/hooks/ -Dm644 $RCP_DIR/*.hook
+}

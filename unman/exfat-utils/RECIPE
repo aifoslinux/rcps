@@ -1,0 +1,14 @@
+PKG=exfat-utils
+VER=1.2.7
+SRC=$PKG-$VER.tar.gz::https://github.com/relan/exfat/archive/v${VER}.tar.gz
+
+build() {
+    autoreconf -fiv
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --sbindir=$bindir
+    make CCFLAGS="${CFLAGS} -std=c99" LINKFLAGS="${LDFLAGS}"
+    make DESTDIR=$PKG_DIR install
+}

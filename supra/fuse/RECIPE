@@ -1,0 +1,22 @@
+PKG=fuse
+VER=2.9.7
+SRC=https://github.com/libfuse/libfuse/releases/download/$PKG-$VER/$PKG-$VER.tar.gz
+
+build() {
+    autoreconf -fiv
+
+    export MOUNT_FUSE_PATH=$bindir
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --libdir=$libdir \
+                --enable-lib \
+                --enable-util \
+                --disable-example \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+
+    rm -rf $CFG_DIR/init.d
+    rm -rf $PKG_DIR/dev
+}

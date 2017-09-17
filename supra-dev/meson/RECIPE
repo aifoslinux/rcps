@@ -1,0 +1,15 @@
+PKG=meson
+VER=0.42.0
+SRC=$PKG-$VER.tar.gz::https://github.com/mesonbuild/$PKG/archive/$VER.tar.gz
+
+build() {
+    python3 setup.py build
+    python3 setup.py install --root=$PKG_DIR --optimize=1 --skip-build
+
+    mv $PKG_DIR/usr/* $PKG_DIR/
+    rm -r $PKG_DIR/usr
+
+    install -Dm 644 syntax-highlighting/vim/ftdetect/meson.vim -t $DAT_DIR/vim/vimfiles/ftdetect
+    install -Dm 644 syntax-highlighting/vim/indent/meson.vim -t $DAT_DIR/vim/vimfiles/indent
+    install -Dm 644 syntax-highlighting/vim/syntax/meson.vim -t $DAT_DIR/vim/vimfiles/syntax
+}

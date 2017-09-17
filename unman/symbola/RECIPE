@@ -1,0 +1,10 @@
+PKG=symbola
+VER=9.17
+#SRC=http://users.teilar.gr/~g1951d/Symbola.zip
+
+build() {
+    curl -L -o $SRC_DIR/Symbola.zip http://users.teilar.gr/~g1951d/Symbola.zip
+    cd $SRC_DIR
+    bsdtar -xpf Symbola.zip
+    install -Dm644 Symbola.ttf $DAT_DIR/fonts/TTF/Symbola.ttf
+}

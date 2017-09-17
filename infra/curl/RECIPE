@@ -1,0 +1,14 @@
+PKG=curl
+VER=7.55.1
+SRC=http://curl.haxx.se/download/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --without-libidn \
+                --disable-ldap \
+                --enable-ipv6 \
+                --with-ca-bundle=$cfgdir/ssl/certs/ca-certificates.crt
+    make
+    make DESTDIR=$PKG_DIR install
+}

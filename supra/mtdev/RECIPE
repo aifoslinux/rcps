@@ -1,0 +1,15 @@
+PKG=mtdev
+VER=1.1.5
+SRC=http://bitmath.org/code/mtdev/$PKG-$VER.tar.bz2
+
+build() {
+    $PATCH/config.patch
+
+    autoreconf -fiv
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir
+    make
+    make DESTDIR=$PKG_DIR install
+}

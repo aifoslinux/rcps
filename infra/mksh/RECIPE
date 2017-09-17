@@ -1,0 +1,12 @@
+PKG=mksh
+VER=56b
+SRC=https://www.mirbsd.org/MirOS/dist/mir/mksh/$PKG-R$VER.tgz
+
+build() {
+    sh Build.sh -r
+
+    install -Dm755 mksh $PKG_DIR/bin/mksh
+    install -Dm644 mksh.1 $DAT_DIR/man/man1/mksh.1
+    install -Dm644 dot.mkshrc $CFG_DIR/mkshrc
+    install -Dm644 $RCP_DIR/skel.mkshrc $CFG_DIR/skel/.mkshrc
+}

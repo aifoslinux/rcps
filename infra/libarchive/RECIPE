@@ -1,0 +1,13 @@
+PKG=libarchive
+VER=3.3.2
+SRC=https://libarchive.org/downloads/$PKG-$VER.tar.gz
+
+build() {
+    $PATCH/libressl.patch
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --without-xml2
+    make
+    make DESTDIR=$PKG_DIR install
+}

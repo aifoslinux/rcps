@@ -1,0 +1,10 @@
+PKG=luajit
+VER=2.0.5
+SRC=http://luajit.org/download/LuaJIT-$VER.tar.gz
+
+build() {
+    export CFLAGS="$CFLAGS -fPIC"
+
+    make amalg PREFIX=$prefix
+    make DESTDIR=$PKG_DIR PREFIX=$prefix install
+}

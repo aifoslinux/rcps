@@ -1,0 +1,12 @@
+PKG=lcms2
+VER=2.8
+SRC=http://downloads.sourceforge.net/sourceforge/lcms/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}

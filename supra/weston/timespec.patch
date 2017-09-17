@@ -1,0 +1,10 @@
+--- a/shared/timespec-util.h	2017-08-05 20:04:40.397103337 +0200
++++ b/shared/timespec-util.h	2017-08-05 20:04:55.307246986 +0200
+@@ -26,6 +26,7 @@
+ #ifndef TIMESPEC_UTIL_H
+ #define TIMESPEC_UTIL_H
+ 
++#include <time.h>
+ #include <stdint.h>
+ #include <assert.h>
+ 

@@ -1,0 +1,8 @@
+PKG=libtermkey
+VER=0.20
+SRC=http://www.leonerd.org.uk/code/$PKG/$PKG-$VER.tar.gz
+
+build() {
+    make PREFIX=$prefix
+    make PREFIX=$prefix DESTDIR=$PKG_DIR install
+}

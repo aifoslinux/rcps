@@ -1,0 +1,25 @@
+PKG=net-tools
+VER=1.60-20170719
+SRC=git+git://git.code.sf.net/p/$PKG/code
+
+build() {
+    #git archive --format=tar --remote=git://git.code.sf.net/p/net-tools/code master | xz > net-tools-$VER.tar.xz
+
+    $PATCH/musl-fixes.patch
+    $PATCH/fix-headers.patch
+
+    case "$CTARGET" in
+        *-musl)
+            sed -i -e "s/#ifndef __GLIBC__/#if 0/" mii-tool.c
+            ;;
+    esac
+
+    sed -i "s#/sbin#/bin#" Makefile
+    sed -i "s#/usr##" man/Makefile
+
+    yes "" | make -j1
+    make -j1 DESTDIR=$PKG_DIR install
+
+    rm $BIN_DIR/{hostname,*domainname}
+    rm -r $DAT_DIR/man/man1
+}

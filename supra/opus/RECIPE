@@ -1,0 +1,14 @@
+PKG=opus
+VER=1.2.1
+SRC=https://archive.mozilla.org/pub/$PKG/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --enable-custom-modes \
+                --enable-ambisonics \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}

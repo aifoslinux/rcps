@@ -1,0 +1,17 @@
+PKG=nano
+VER=2.8.7
+SRC=http://www.nano-editor.org/dist/v2.8/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --enable-nanorc \
+                --disable-nls
+    make
+    make DESTDIR=$PKG_DIR install
+
+    install -Dm644 doc/sample.nanorc $CFG_DIR/nanorc
+
+    rm -rf $LIB_DIR
+}

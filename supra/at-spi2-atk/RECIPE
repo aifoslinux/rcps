@@ -1,0 +1,15 @@
+PKG=at-spi2-atk
+VER=2.24.1
+SRC=https://download.gnome.org/sources/$PKG/${VER:0:4}/$PKG-$VER.tar.xz
+
+build() {
+    autoreconf -fiv
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --disable-schemas-compile
+    make
+    make DESTDIR=$PKG_DIR install
+}

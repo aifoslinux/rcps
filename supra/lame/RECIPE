@@ -1,0 +1,14 @@
+PKG=lame
+VER=3.99.5
+SRC=http://downloads.sourceforge.net/$PKG/$PKG-$VER.tar.gz
+
+build() {
+    $PATCH/config.patch
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --enable-nasm \
+                --enable-shared
+    make
+    make DESTDIR=$PKG_DIR install
+}

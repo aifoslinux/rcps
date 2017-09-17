@@ -1,0 +1,2 @@
+TARGET="/share/icons/.*/"
+RUNCMD="/bin/gtk-update-icon-cache -q -t -f /share/icons/hicolor"

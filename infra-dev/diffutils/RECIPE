@@ -1,0 +1,14 @@
+PKG=diffutils
+VER=3.6
+SRC=ftp://ftp.gnu.org/gnu/$PKG/$PKG-$VER.tar.xz
+
+build() {
+    sed -i -e 's/cegcc\*/cegcc\* | linux-musl\*/' lib/gnulib.mk
+    autoreconf -fiv
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --disable-nls
+    make
+    make DESTDIR=$PKG_DIR install
+}

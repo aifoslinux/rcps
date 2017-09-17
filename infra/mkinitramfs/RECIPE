@@ -1,0 +1,9 @@
+PKG=mkinitramfs
+VER=1.0
+
+build() {
+    mkdir -p $BIN_DIR $DAT_DIR/mkinitramfs
+
+    install -m644 $RCP_DIR/init.sh $DAT_DIR/mkinitramfs/init
+    install -m755 $RCP_DIR/mkinitramfs.sh $BIN_DIR/mkinitramfs
+}

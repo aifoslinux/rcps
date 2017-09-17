@@ -1,0 +1,11 @@
+PKG=libcroco
+VER=0.6.12
+SRC=https://download.gnome.org/sources/$PKG/${VER:0:3}/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}

@@ -1,0 +1,21 @@
+PKG=qt5-gstreamer
+VER=1.2.0-20170806
+SRC=git+git://anongit.freedesktop.org/gstreamer/${PKG/5/}
+
+build() {
+    $PATCH/qt-gstreamer-1.2.0-boost157.patch
+
+    cd $BLD_DIR
+
+    cmake $SRC_DIR \
+        -DCMAKE_INSTALL_PREFIX="$prefix" \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_LIBDIR=$libdir \
+        -DCMAKE_INSTALL_INCLUDEDIR=$incdir \
+        -DCMAKE_DISABLE_FIND_PACKAGE_Qt5Declarative=ON \
+        -DQTGSTREAMER_EXAMPLES=OFF \
+        -DQT_VERSION=5
+    make
+    sed -i -e 's,//lib/gstreamer-1.0,/lib/gstreamer-1.0,' elements/gstqtvideosink/cmake_install.cmake
+    make DESTDIR=$PKG_DIR install
+}

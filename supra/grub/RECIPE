@@ -1,0 +1,77 @@
+PKG=grub
+VER=2.02
+SRC=https://ftp.gnu.org/gnu/$PKG/$PKG-$VER.tar.xz
+
+build() {
+    $PATCH/10_linux.patch
+
+    sed 's|/usr/share/fonts/dejavu|/share/fonts/dejavu /share/fonts/TTF|g' -i configure.ac
+
+    FILE=unifont-10.0.06.bdf.gz
+    curl -L -o /src/arc/$FILE http://ftp.gnu.org/gnu/unifont/unifont-10.0.06/$FILE
+    gunzip -c /src/arc/$FILE > unifont.bdf
+
+    autoreconf -fiv
+
+    unset CFLAGS
+    unset CPPFLAGS
+    unset CXXFLAGS
+    unset LDFLAGS
+    unset MAKEFLAGS
+
+    cp -r $SRC_DIR $BLD_DIR/$PKG-$VER-bios
+    cp -r $SRC_DIR $BLD_DIR/$PKG-$VER-efi
+
+    cd $BLD_DIR/$PKG-$VER-bios
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --sbindir=$bindir \
+                --disable-werror \
+                --enable-grub-mkfont \
+                --enable-grub-mount \
+                --enable-device-mapper \
+                --enable-efiemu \
+                --with-platform="pc" \
+                --with-bootdir="/boot" \
+                --with-grubdir="grub"
+    make
+
+    cd $BLD_DIR/$PKG-$VER-efi
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --sbindir=$bindir \
+                --disable-werror \
+                --enable-grub-mkfont \
+                --enable-grub-mount \
+                --enable-device-mapper \
+                --disable-efiemu \
+                --with-platform="efi" \
+                --with-bootdir="/boot" \
+                --with-grubdir="grub"
+    make
+
+    cd $BLD_DIR/$PKG-$VER-bios
+    make DESTDIR=$PKG_DIR install
+
+    cd $BLD_DIR/$PKG-$VER-efi
+    make DESTDIR=$PKG_DIR install
+
+    grub_modules="all_video backtrace boot btrfs cat chain configfile echo efifwsetup \
+                  efinet ext2 fat font gfxmenu gfxterm gzio halt hfsplus iso9660 jpeg \
+                  linux loadenv loopback lvm mdraid09 mdraid1x minicmd multiboot2 multiboot \
+                  normal part_apple part_msdos part_gpt password_pbkdf2 png reboot search \
+                  search_fs_uuid search_fs_file search_label serial sleep syslinuxcfg test \
+                  tftp video xfs usb usbserial_common usbserial_pl2303 usbserial_ftdi \
+                  usbserial_usbdebug"
+
+    ./grub-mkimage -O x86_64-efi -o grubx64.efi -p /EFI/boot -d grub-core $grub_modules
+
+    install -D -m0755 grubx64.efi $PKG_DIR/boot/efi/ai\\os/grubx64.efi
+    install -D -m0644 unicode.pf2 $PKG_DIR/boot/efi/ai\\os/fonts/unicode.pf2
+ 
+    install -D -m0644 $RCP_DIR/grub.default $CFG_DIR/default/grub
+
+    install -D -m0755 $RCP_DIR/setup-grub.sh $BIN_DIR/setup-grub
+}

@@ -1,0 +1,13 @@
+PKG=cpio
+VER=2.12
+SRC=ftp://ftp.gnu.org/gnu/cpio/cpio-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix
+    make
+    make DESTDIR=$PKG_DIR install
+
+    rm -rf $LIB_DIR
+    rm -rf $PKG_DIR/libexec
+    rm -f $DAT_DIR/man/man8/rmt.8
+}

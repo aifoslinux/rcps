@@ -1,0 +1,17 @@
+PKG=libffi
+VER=3.2.1
+SRC=ftp://sourceware.org/pub/$PKG/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --includedir=$incdir \
+                --enable-pax_emutramp
+    make
+    make DESTDIR=$PKG_DIR install
+
+    mv $LIB_DIR/$PKG-$VER/include $INC_DIR
+    rm -rf $LIB_DIR/$PKG-$VER
+
+    sed -i 's@^includedir=.*@includedir='${incdir}'@' $LIB_DIR/pkgconfig/libffi.pc
+}

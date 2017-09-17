@@ -1,0 +1,11 @@
+PKG=gmp
+VER=6.1.2
+SRC=ftp://ftp.gmplib.org/pub/$PKG-$VER/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --enable-cxx
+    make
+    make DESTDIR=$PKG_DIR install
+}

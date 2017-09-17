@@ -1,0 +1,34 @@
+--- a/gedit/gedit-app-x11.h	2017-07-07 13:55:35.025705292 +0200
++++ b/gedit/gedit-app-x11.h	2017-07-07 13:58:58.857887099 +0200
+@@ -1,5 +1,5 @@
+ /*
+- * gedit-app-x11.h
++ * gedit-app-inherit.h
+  * This file is part of gedit
+  *
+  * Copyright (C) 2010 - Jesse van den Kieboom
+@@ -20,19 +20,19 @@
+  * Boston, MA  02110-1301  USA
+  */
+ 
+-#ifndef GEDIT_APP_X11_H
+-#define GEDIT_APP_X11_H
++#ifndef __GEDIT_APP_INHERIT_H__
++#define __GEDIT_APP_INHERIT_H_
+ 
+ #include "gedit-app.h"
+ 
+ G_BEGIN_DECLS
+ 
+-#define GEDIT_TYPE_APP_X11		(gedit_app_x11_get_type ())
++#define GEDIT_TYPE_APP_INHERIT      (gedit_app_inherit_get_type ())
+ 
+-G_DECLARE_FINAL_TYPE (GeditAppX11, gedit_app_x11, GEDIT, APP_X11, GeditApp)
++G_DECLARE_FINAL_TYPE (GeditAppInherit, gedit_app_inherit, GEDIT, APP_INHERIT, GeditApp)
+ 
+ G_END_DECLS
+ 
+-#endif /* GEDIT_APP_X11_H */
++#endif /* __GEDIT_APP_INHERIT_H__ */
+ 
+ /* ex:set ts=8 noet: */

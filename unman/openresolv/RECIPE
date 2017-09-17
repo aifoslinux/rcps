@@ -1,0 +1,13 @@
+PKG=openresolv
+VER=3.9.0
+SRC=http://roy.marples.name/downloads/$PKG/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --libexecdir=$libdir \
+                --sbindir=$bindir \
+                --sysconfdir=$cfgdir
+    make
+    make DESTDIR=$PKG_DIR install
+}

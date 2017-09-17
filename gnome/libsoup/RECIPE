@@ -1,0 +1,13 @@
+PKG=libsoup
+VER=2.58.2
+SRC=https://download.gnome.org/sources/$PKG/${VER:0:4}/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}

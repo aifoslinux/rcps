@@ -1,0 +1,13 @@
+PKG=pycairo
+VER=1.14.0
+SRC=$PKG-$VER.tar.gz::https://github.com/pygobject/$PKG/archive/v${VER}.tar.gz
+
+build() {
+    python2 setup.py build
+    python3 setup.py build
+    python2 setup.py install --skip-build --root=$PKG_DIR --optimize='1'
+    python3 setup.py install --skip-build --root=$PKG_DIR --optimize='1'
+
+    mv $PKG_DIR/usr/* $PKG_DIR/
+    rm -r $PKG_DIR/usr
+}

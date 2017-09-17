@@ -1,0 +1,8 @@
+PKG=xmltoman
+VER=0.4
+SRC=http://downloads.sourceforge.net/project/$PKG/$PKG/$PKG-$VER.tar.gz/$PKG-$VER.tar.gz
+
+build() {
+    make PREFIX=$prefix
+    make PREFIX=$prefix DESTDIR=$PKG_DIR install
+}

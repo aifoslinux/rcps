@@ -1,0 +1,12 @@
+PKG=pkgconf
+VER=1.3.8
+SRC=https://distfiles.dereferenced.org/$PKG/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST
+    make
+    make DESTDIR=$PKG_DIR install
+
+    ln -s pkgconf $BIN_DIR/pkg-config
+}

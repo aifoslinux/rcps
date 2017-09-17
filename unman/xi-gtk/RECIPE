@@ -1,0 +1,13 @@
+PKG=xi-gtk
+VER=20170813
+SRC=git+https://github.com/eyelash/$PKG.git
+
+build() {
+    cd $BLD_DIR
+
+    meson --prefix $prefix \
+          --buildtype release \
+          $SRC_DIR
+    ninja
+    DESTDIR=$PKG_DIR ninja install
+}

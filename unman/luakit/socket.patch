@@ -1,0 +1,11 @@
+--- a/widgets/socket.c	2017-07-07 16:11:14.095389194 +0200
++++ b/widgets/socket.c	2017-07-07 16:32:34.346205849 +0200
+@@ -21,7 +21,7 @@
+ #include "luah.h"
+ #include "widgets/common.h"
+ #include <stdlib.h>
+-#include <gtk/gtkx.h>
++#include <gtk/gtksocket.h>
+ 
+ static void
+ plug_added_cb(GtkSocket* UNUSED(socket), widget_t *w)

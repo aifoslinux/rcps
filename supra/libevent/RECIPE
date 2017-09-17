@@ -1,0 +1,14 @@
+PKG=libevent
+VER=2.1.8
+SRC=https://github.com/$PKG/$PKG/releases/download/release-$VER-stable/$PKG-$VER-stable.tar.gz
+
+build() {
+    $PATCH/libressl.patch
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}

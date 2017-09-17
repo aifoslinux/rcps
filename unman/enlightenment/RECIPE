@@ -1,0 +1,20 @@
+PKG=enlightenment
+VER=0.21.9
+SRC=http://download.enlightenment.org/rel/apps/$PKG/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --enable-wayland \
+                --enable-xwayland
+    make
+    make DESTDIR=$PKG_DIR install
+
+    sed -i -e 's,/bin/shutdown -h now,/bin/poweroff,' \
+           -e 's,/bin/shutdown -r now,/bin/reboot,' \
+           -e 's,/cfg/acpi/sleep.sh force,/bin/loginctl suspend,' \
+           -e 's,/cfg/acpi/hibernate.sh force,/bin/loginctl hibernate,' \
+           -e 's,/usr/,/,g' \
+        $CFG_DIR/$PKG/sysactions.conf
+}

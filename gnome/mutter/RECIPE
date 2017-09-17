@@ -1,0 +1,23 @@
+PKG=mutter
+VER=3.24.4
+SRC=https://download.gnome.org/sources/$PKG/${VER:0:4}/$PKG-$VER.tar.xz
+
+build() {
+    $PATCH/startup-notification.patch
+    $PATCH/mutter-3.24.3-support-elogind.patch
+
+    autoreconf -fiv
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --libexecdir=$libdir/$PKG \
+                --disable-static \
+                --disable-schemas-compile \
+                --enable-compile-warnings=minimum \
+                --enable-gtk-doc \
+                --enable-egl-device
+    make
+    make DESTDIR=$PKG_DIR install
+}

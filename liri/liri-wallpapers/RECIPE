@@ -1,0 +1,20 @@
+PKG=liri-wallpapers
+VER=20170806
+SRC=git+https://github.com/lirios/wallpapers.git
+
+build() {
+    git submodule update --init
+
+    qbs setup-toolchains --type gcc $bindir/g++ gcc
+    qbs setup-qt $bindir/qmake qt5
+    qbs config profiles.qt5.baseProfile gcc
+
+    qbs build \
+        --no-install \
+        -d $PKG-build \
+        profile:qt5 \
+        qbs.installRoot:$prefix \
+        qbs.installPrefix:""
+
+    qbs install -d $PKG-build --no-build -v --install-root $PKG_DIR profile:qt5
+}

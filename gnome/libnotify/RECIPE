@@ -1,0 +1,14 @@
+PKG=libnotify
+VER=0.7.7
+SRC=https://download.gnome.org/sources/$PKG/${VER:0:3}/$PKG-$VER.tar.xz
+
+build() {
+    autoreconf -fiv
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --enable-gtk-doc \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}

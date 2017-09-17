@@ -1,0 +1,12 @@
+PKG=libtasn1
+VER=4.12
+SRC=http://ftp.gnu.org/gnu/$PKG/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir
+    make
+    make DESTDIR=$PKG_DIR install
+}

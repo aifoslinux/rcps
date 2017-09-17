@@ -1,0 +1,22 @@
+PKG=db
+VER=5.3.28
+SRC=http://download.oracle.com/berkeley-db/$PKG-$VER.tar.gz
+
+build() {
+    $PATCH/config.patch
+
+    cd build_unix
+    ../dist/configure --prefix=$prefix \
+                      --host=$CHOST \
+                      --enable-compat185 \
+                      --enable-shared \
+                      --enable-static \
+                      --enable-cxx \
+                      --enable-dbm \
+                      --disable-static
+    make LIBSO_LIBS=-lpthread
+    make DESTDIR=$PKG_DIR install
+
+    mkdir -p $DAT_DIR/doc
+    mv $PKG_DIR/docs $DAT_DIR/doc/$PKG
+}

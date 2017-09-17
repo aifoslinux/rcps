@@ -1,0 +1,19 @@
+PKG=vim
+VER=8.0.1066
+SRC=$PKG-$VER.tar.gz::http://github.com/vim/vim/archive/v${VER}.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --enable-perlinterp=dynamic \
+                --enable-pythoninterp=dynamic \
+                --enable-python3interp=dynamic \
+                --disable-nls \
+                --enable-multibyte \
+                --enable-gui=gtk3 \
+                --with-compiledby='AI\OS'
+    make
+    make DESTDIR=$PKG_DIR install
+
+    install -Dm644 $RCP_DIR/vimrc $CFG_DIR/vim/vimrc
+}

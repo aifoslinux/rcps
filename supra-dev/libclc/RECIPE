@@ -1,0 +1,12 @@
+PKG=libclc
+VER=0.2.0_20170727
+SRC=git+https://llvm.org/git/$PKG.git
+
+build() {
+    sed -i -e 's,clang++,g++,' configure.py
+    sed -i 's/"python < $in >/sys.executable + " < $in >/g' configure.py
+
+    python ./configure.py --prefix=$prefix
+    make
+    make DESTDIR=$PKG_DIR install
+}

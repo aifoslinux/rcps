@@ -1,0 +1,17 @@
+PKG=coreutils
+VER=8.28
+SRC=ftp://ftp.gnu.org/gnu/$PKG/$PKG-$VER.tar.xz
+
+build() {
+    export FORCE_UNSAFE_CONFIGURE=1
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --libexecdir=$libdir \
+                --disable-nls \
+                --enable-no-install-program=groups,kill,uptime
+    make
+    make DESTDIR=$PKG_DIR install
+
+    install -m755 $RCP_DIR/enter-chroot.sh $BIN_DIR/enter-chroot
+    install -m755 $RCP_DIR/setup-chroot.sh $BIN_DIR/setup-chroot
+}

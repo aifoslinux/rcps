@@ -1,0 +1,28 @@
+PKG=filesystem
+VER=20170910
+BAK="$cfgdir/group
+     $cfgdir/gshadow
+     $cfgdir/passwd
+     $cfgdir/shadow"
+
+build() {
+    cd $PKG_DIR
+
+    mkdir bin boot etc dev home lib root proc run share sys tmp mnt var
+
+    mkdir -p pkg/{arc,inf,lst} src/{arc,rcp}
+
+    mkdir var/{cache,man,lib,log}
+    cd var; ln -s ../run run; cd ..
+
+    for f in fstab group gshadow hosts host.conf hostname issue passwd resolv.conf securetty shadow shells; do
+        cp -a $RCP_DIR/$f etc
+    done
+
+    chmod 600 etc/{gshadow,shadow}
+    chmod 0750 root
+    chmod 555 proc sys
+    chmod 1777 tmp
+
+    ln -s . usr
+}

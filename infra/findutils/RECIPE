@@ -1,0 +1,16 @@
+PKG=findutils
+VER=4.6.0
+SRC=ftp://ftp.gnu.org/gnu/$PKG/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --libexecdir=$libdir \
+                --disable-nls
+    make
+    make DESTDIR=$PKG_DIR install
+
+    rm -r $LIB_DIR
+}

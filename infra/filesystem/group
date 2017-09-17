@@ -1,0 +1,15 @@
+root:x:0:
+bin:x:1:
+tty:x:2:
+disk:x:3:
+kmem:x:4:
+wheel:x:5:
+man:x:6:
+audio:x:10:
+video:x:11:
+network:x:12:
+cdrom:x:13:
+input:x:14:
+lp:x:15:
+uucp:x:16:
+users:x:100:

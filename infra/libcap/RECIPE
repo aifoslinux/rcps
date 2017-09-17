@@ -1,0 +1,12 @@
+PKG=libcap
+VER=2.25
+SRC=https://kernel.org/pub/linux/libs/security/linux-privs/libcap2/$PKG-$VER.tar.xz
+
+build() {
+    $PATCH/libcap-2.25-gperf.patch
+
+    sed -i "/SBINDIR/s#sbin#bin#" Make.Rules
+
+    make KERNEL_HEADERS=$incdir
+    make prefix=$prefix lib=$libdir DESTDIR=$PKG_DIR RAISE_SETFCAP=no install
+}

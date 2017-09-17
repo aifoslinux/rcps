@@ -1,0 +1,10 @@
+PKG=xi-core
+VER=0.2.0-20170813
+SRC=git+https://github.com/google/xi-editor.git
+
+build() {
+    cd rust
+    cargo build --release
+
+    install -Dm755 target/release/xi-core $BIN_DIR/xi-core
+}

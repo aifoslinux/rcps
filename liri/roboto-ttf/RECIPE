@@ -1,0 +1,8 @@
+PKG=roboto-ttf
+VER=2.136
+SRC=https://github.com/google/roboto/releases/download/v${VER}/roboto-hinted.zip
+
+build() {
+    install -dm755 $DAT_DIR/fonts/TTF
+    install -m644 *.ttf $DAT_DIR/fonts/TTF/
+}

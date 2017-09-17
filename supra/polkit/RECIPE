@@ -1,0 +1,29 @@
+PKG=polkit
+VER=0.113
+SRC=https://www.freedesktop.org/software/$PKG/releases/$PKG-$VER.tar.gz
+
+build() {
+    $PATCH/polkit-0.113-elogind.patch
+    $PATCH/polkit-0.113-make-netgroup-support-optional.patch
+
+    autoreconf -fiv
+    sed -e 's,/sys/fs/cgroup/systemd/,/sys/fs/cgroup,g' -i configure
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --libexecdir=$libdir/polkit-1 \
+                --with-mozjs=mozjs-17.0 \
+                --enable-libsystemd-login=no \
+                --enable-libelogind=yes \
+                --with-authfw=pam \
+                --with-os-type=gentoo \
+                --disable-static \
+                --enable-gtk-doc
+    make
+    make DESTDIR=$PKG_DIR install
+
+    chown root:102 $PKG_DIR/{etc,share}/polkit-1/rules.d
+    chmod 750      $PKG_DIR/{etc,share}/polkit-1/rules.d
+}

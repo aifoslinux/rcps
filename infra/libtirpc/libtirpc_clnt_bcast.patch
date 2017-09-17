@@ -1,0 +1,81 @@
+--- a/src/clnt_bcast.c	2017-05-21 17:32:10.061955824 +0200
++++ b/src/clnt_bcast.c	2017-05-21 17:32:04.721917708 +0200
+@@ -40,7 +40,6 @@
+  */
+ #include <sys/socket.h>
+ #include <sys/types.h>
+-#include <sys/queue.h>
+ 
+ #include <net/if.h>
+ #include <netinet/in.h>
+@@ -97,18 +96,18 @@
+  * also here it will get two responses ... inefficient and clumsy.
+  */
+ 
+-#define	TAILQ_NEXT(elm, field)	((elm)->field.tqe_next)
+-
+-#define	TAILQ_FIRST(head)	((head)->tqh_first)
+-
+ 
+ struct broadif {
+ 	int index;
+ 	struct sockaddr_storage broadaddr;
+-	TAILQ_ENTRY(broadif) link;
++	struct broadif *next;
++	struct broadif **prev;
+ };
+ 
+-typedef TAILQ_HEAD(, broadif) broadlist_t;
++typedef struct {
++	struct broadif *first;
++	struct broadif **last;
++} broadlist_t;
+ 
+ int __rpc_getbroadifs(int, int, int, broadlist_t *);
+ void __rpc_freebroadifs(broadlist_t *);
+@@ -179,7 +178,10 @@
+ 			free(bip);
+ 			continue;
+ 		}
+-		TAILQ_INSERT_TAIL(list, bip, link);
++		bip->next = NULL;
++		bip->prev = list->last;
++		*list->last = bip;
++		list->last = &bip->next;
+ 		count++;
+ 	}
+ 	freeifaddrs(ifp);
+@@ -193,10 +195,10 @@
+ {
+ 	struct broadif *bip, *next;
+ 
+-	bip = TAILQ_FIRST(list);
++	bip = list->first;
+ 
+ 	while (bip != NULL) {
+-		next = TAILQ_NEXT(bip, link);
++		next = bip->next;
+ 		free(bip);
+ 		bip = next;
+ 	}
+@@ -343,7 +345,8 @@
+ 		if (!__rpc_nconf2sockinfo(nconf, &si))
+ 			continue;
+ 
+-		TAILQ_INIT(&fdlist[fdlistno].nal);
++		fdlist[fdlistno].nal.first = NULL;
++		fdlist[fdlistno].nal.last = &fdlist[fdlistno].nal.first;
+ 		if (__rpc_getbroadifs(si.si_af, si.si_proto, si.si_socktype, 
+ 		    &fdlist[fdlistno].nal) == 0)
+ 			continue;
+@@ -468,8 +471,8 @@
+ 				stat = RPC_CANTSEND;
+ 				continue;
+ 			}
+-			for (bip = TAILQ_FIRST(&fdlist[i].nal); bip != NULL;
+-			     bip = TAILQ_NEXT(bip, link)) {
++			for (bip = fdlist[i].nal.first; bip != NULL;
++			     bip = bip->next) {
+ 				void *addr;
+ 
+ 				addr = &bip->broadaddr;

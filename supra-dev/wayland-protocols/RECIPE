@@ -1,0 +1,12 @@
+PKG=wayland-protocols
+VER=1.10
+SRC=https://wayland.freedesktop.org/releases/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir
+    make
+    make DESTDIR=$PKG_DIR install
+}

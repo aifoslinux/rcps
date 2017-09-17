@@ -1,0 +1,16 @@
+PKG=json-glib
+VER=1.2.8
+SRC=https://download.gnome.org/sources/$PKG/${VER:0:3}/$PKG-$VER.tar.xz
+
+build() {
+    cd $BLD_DIR
+
+    meson --prefix=$prefix \
+          --buildtype=release \
+          --libexecdir=lib \
+          -Denable-gtk-doc=true \
+          -Denable-man=true \
+          $SRC_DIR
+    ninja
+    DESTDIR=$PKG_DIR ninja install
+}

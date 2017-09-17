@@ -1,0 +1,35 @@
+PKG=lua5.1
+VER=5.1.5
+SRC=http://www.lua.org/ftp/lua-$VER.tar.gz
+
+build() {
+    $PATCH/lua-arch.patch
+    $PATCH/lua-5.1-cflags.diff
+
+    sed -e 's:llua:llua5.1:' -e 's:/include:/include/lua5.1:' -i etc/lua.pc
+    sed -r -e '/^LUA_(SO|A|T)=/ s/lua/lua5.1/' -e '/^LUAC_T=/ s/luac/luac5.1/' -i src/Makefile
+
+    export CFLAGS="$CFLAGS -fPIC"
+
+    make MYCFLAGS="$CFLAGS" MYLDFLAGS="$LDFLAGS" linux
+
+    make \
+    TO_BIN='lua5.1 luac5.1' \
+    TO_LIB="liblua5.1.a liblua5.1.so liblua5.1.so.5.1 liblua5.1.so.$VER" \
+    INSTALL_DATA='cp -d' \
+    INSTALL_TOP=$PKG_DIR \
+    INSTALL_INC=$INC_DIR/lua5.1 \
+    INSTALL_MAN=$DAT_DIR/man/man1 \
+    install
+
+    install -Dm644 etc/lua.pc $LIB_DIR/pkgconfig/$PKG.pc
+    install -d $DAT_DIR/doc/$PKG
+    install -m644 doc/*.{gif,png,css,html} $DAT_DIR/doc/$PKG
+
+    ln -s liblua5.1.so $LIB_DIR/liblua.so.5.1
+    ln -s liblua5.1.so $LIB_DIR/liblua.so.$VER
+
+    cd $DAT_DIR/man/man1
+    mv lua.1 lua5.1.1
+    mv luac.1 luac5.1.1
+}

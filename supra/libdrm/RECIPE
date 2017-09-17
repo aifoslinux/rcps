@@ -1,0 +1,15 @@
+PKG=libdrm
+VER=2.4.83
+SRC=http://dri.freedesktop.org/$PKG/$PKG-$VER.tar.bz2
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --mandir=$datdir/man \
+                --localstatedir=$vardir \
+                --enable-udev \
+                --disable-manpages
+    make
+    make DESTDIR=$PKG_DIR install
+}

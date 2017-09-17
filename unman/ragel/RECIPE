@@ -1,0 +1,13 @@
+PKG=ragel
+VER=6.10
+SRC=http://www.colm.net/files/$PKG/$PKG-$VER.tar.gz
+
+build() {
+    export CXXFLAGS="$CXXFLAGS -std=gnu++98"
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir
+    make
+    make DESTDIR=$PKG_DIR install
+}

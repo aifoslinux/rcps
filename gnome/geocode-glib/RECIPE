@@ -1,0 +1,17 @@
+PKG=geocode-glib
+VER=3.24.0
+SRC=https://download.gnome.org/sources/$PKG/${VER:0:4}/$PKG-$VER.tar.xz
+
+build() {
+    sed -i 's/gnome/Adwaita/g' icons/Makefile.am
+    autoreconf -fiv
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --enable-gtk-doc \
+                --disable-Werror
+    make
+    make DESTDIR=$PKG_DIR install
+}

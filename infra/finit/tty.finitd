@@ -1,0 +1,8 @@
+# Virtual consoles to start getty on.
+tty [12345]  /dev/tty1  38400 linux nowait
+tty  [2345]  /dev/tty2  38400 linux nowait
+tty  [2345]  /dev/tty3  38400 linux nowait
+tty  [2345]  /dev/tty4  38400 linux nowait
+tty  [2345]  /dev/tty5  38400 linux nowait
+tty  [2345]  /dev/tty6  38400 linux nowait
+

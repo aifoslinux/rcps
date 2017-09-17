@@ -1,0 +1,18 @@
+PKG=git
+VER=2.14.1
+SRC=https://www.kernel.org/pub/software/scm/$PKG/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --libexecdir=$libdir \
+                --with-gitconfig=$cfgdir/gitconfig
+    make
+    make DESTDIR=$PKG_DIR install
+
+    install -Dm644 contrib/completion/git-completion.bash \
+            $DAT_DIR/bash-completion/completions/$PKG
+
+    rm -r $LIB_DIR/perl5
+}

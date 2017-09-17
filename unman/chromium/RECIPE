@@ -1,0 +1,106 @@
+PKG=chromium
+VER=59.0.3071.115
+SRC=https://commondatastorage.googleapis.com/chromium-browser-official/$PKG-$VER.tar.xz
+
+build() {
+    chromium_launcher_ver=5
+    chromium_launcher_dir=chromium-launcher-$chromium_launcher_ver
+    chromium_launcher_tar=chromium-launcher-$chromium_launcher_ver.tar.gz
+    chromium_launcher_url=https://github.com/foutrelis/chromium-launcher/archive/v${chromium_launcher_ver}.tar.gz
+    curl -L -o $chromium_launcher_tar $chromium_launcher_url
+    tar -xf $chromium_launcher_tar
+
+    # Enable support for the Widevine CDM plugin
+    sed "s/@WIDEVINE_VERSION@/Pinkie Pie/" $RCP_DIR/chromium-widevine.patch | patch -Np1
+
+    # Build fix from Gentoo
+    $PATCH/chromium-system-ffmpeg-r6.patch
+
+    # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=853347
+    $PATCH/chromium-blink-gcc7.patch
+    # https://bugs.chromium.org/p/chromium/issues/detail?id=614289
+    $PATCH/chromium-v8-gcc7.patch
+
+    # Build fix from Alpine
+    patch -Np0 -i $RCP_DIR/default-pthread-stacksize.patch
+    patch -Np0 -i $RCP_DIR/gn_bootstrap.patch
+    patch -Np0 -i $RCP_DIR/last-commit-position.patch
+    patch -Np0 -i $RCP_DIR/musl-fixes.patch
+    patch -Np0 -i $RCP_DIR/musl-hacks.patch
+    patch -Np0 -i $RCP_DIR/musl-sandbox.patch
+    patch -Np0 -i $RCP_DIR/no-execinfo.patch
+    patch -Np0 -i $RCP_DIR/no-getcontext.patch
+    patch -Np0 -i $RCP_DIR/no-mallinfo.patch
+    patch -Np0 -i $RCP_DIR/resolver.patch
+    patch -Np0 -i $RCP_DIR/swiftshader.patch
+    patch -Np0 -i $RCP_DIR/unset-madv_free.patch
+
+    mkdir -p third_party/node/linux/node-linux-x64/bin
+    ln -s /usr/bin/node third_party/node/linux/node-linux-x64/bin/
+
+    cd $chromium_launcher_dir
+    make PREFIX=$prefix
+    make PREFIX=$prefix DESTDIR=$PKG_DIR install
+    cd ..
+
+    # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
+    # Note: These are for AI\OS use ONLY. For your own distribution, please
+    # get your own set of keys.
+    _google_api_key=AIzaSyDtErDifxpCAXz1uPYJdEoniNZw83GCu4g
+    _google_default_client_id=624717512760-4jjho55j7kh3olr80odmlgpdh08b24pv.apps.googleusercontent.com
+    _google_default_client_secret=Wp_RyU401ZQFBxofwgD5KBbN
+
+    local _flags=(
+        'is_clang=false'
+        'clang_use_chrome_plugins=false'
+        'is_debug=false'
+        'fatal_linker_warnings=false'
+        'treat_warnings_as_errors=false'
+        'fieldtrial_testing_like_official_build=true'
+        'remove_webcore_debug_symbols=true'
+        'ffmpeg_branding="Chrome"'
+        'proprietary_codecs=true'
+        'link_pulseaudio=true'
+        'linux_use_bundled_binutils=false'
+        'use_gtk3=true'
+        'use_gconf=false'
+        'use_gnome_keyring=false'
+        'use_gold=false'
+        'use_sysroot=false'
+        'enable_hangout_services_extension=true'
+        'enable_widevine=true'
+        "enable_nacl=false"
+        "google_api_key=\"${_google_api_key}\""
+        "google_default_client_id=\"${_google_default_client_id}\""
+        "google_default_client_secret=\"${_google_default_client_secret}\""
+    )
+
+    python tools/gn/bootstrap/bootstrap.py --gn-gen-args "${_flags[*]}"
+    out/Release/gn gen out/Release --args="${_flags[*]}"
+
+    ninja -C out/Release chrome chrome_sandbox chromedriver widevinecdmadapter
+
+    install -D out/Release/chrome $LIB_DIR/chromium/chromium
+    install -Dm644 out/Release/chrome.1 $DAT_DIR/man/man1/chromium.1
+    install -Dm644 $RCP_DIR/chromium.desktop $DAT_DIR/applications/chromium.desktop
+
+    install -Dm4755 out/Release/chrome_sandbox $LIB_DIR/chromium/chrome-sandbox
+
+    cp -a out/Release/{chrome_{100,200}_percent,resources}.pak \
+        out/Release/{*.bin,chromedriver,libwidevinecdmadapter.so} \
+        out/Release/locales \
+        out/Release/icudtl.dat \
+        $LIB_DIR/chromium/
+
+    ln -s $libdir/chromium/chromedriver $BIN_DIR/chromedriver
+
+    for size in 22 24 48 64 128 256; do
+        install -Dm644 chrome/app/theme/chromium/product_logo_$size.png \
+        $DAT_DIR/icons/hicolor/${size}x${size}/apps/chromium.png
+    done
+
+    for size in 16 32; do
+        install -Dm644 chrome/app/theme/default_100_percent/chromium/product_logo_$size.png \
+        $DAT_DIR/icons/hicolor/${size}x${size}/apps/chromium.png
+    done
+}

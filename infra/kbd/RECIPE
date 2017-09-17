@@ -1,0 +1,31 @@
+PKG=kbd
+VER=2.0.4
+SRC=https://www.kernel.org/pub/linux/utils/kbd/$PKG-$VER.tar.gz
+
+build() {
+    # fixes from fedora
+    # 7-bit maps are obsolete; so are non-euro maps
+    pushd data/keymaps/i386
+    cp qwerty/pt-latin9.map qwerty/pt.map
+    cp qwerty/sv-latin1.map qwerty/se-latin1.map
+
+    mv azerty/fr.map azerty/fr-old.map
+    cp azerty/fr-latin9.map azerty/fr.map
+
+    cp azerty/fr-latin9.map azerty/fr-latin0.map # legacy alias
+
+    # Rename conflicting keymaps
+    mv dvorak/no.map dvorak/no-dvorak.map
+    mv fgGIod/trf.map fgGIod/trf-fgGIod.map
+    mv olpc/es.map olpc/es-olpc.map
+    mv olpc/pt.map olpc/pt-olpc.map
+    mv qwerty/cz.map qwerty/cz-qwerty.map
+    popd
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --datadir=$datdir \
+                --disable-nls
+    make
+    make DESTDIR=$PKG_DIR install
+}

@@ -1,0 +1,15 @@
+PKG=gconf
+VER=3.2.6
+SRC=https://download.gnome.org/sources/GConf/3.2/GConf-$VER.tar.xz
+
+build() {
+    autoreconf -fiv
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --libexecdir=$libdir/GConf \
+                --disable-orbit
+    make pkglibdir=$libdir/GConf
+    make DESTDIR=$PKG_DIR install
+}

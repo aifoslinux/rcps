@@ -1,0 +1,27 @@
+PKG=graphite2
+VER=1.3.10
+SRC=http://downloads.sourceforge.net/project/silgraphite/$PKG/$PKG-$VER.tgz
+
+build() {
+    #$PATCH/cmake.patch
+    #$PATCH/graphite2-1.2.0-cmakepath.patch
+
+    cd $BLD_DIR
+
+    cmake -G "Unix Makefiles" /$SRC_DIR \
+          -DCMAKE_C_FLAGS:STRING="${CFLAGS}" \
+          -DCMAKE_INSTALL_PREFIX=/usr \
+          -DCMAKE_BUILD_TYPE:STRING=Release \
+          -DGRAPHITE2_COMPARE_RENDERER=OFF
+
+    # fix unwanted -O3 cflag (taken form Debian)
+    find . -type f ! -name "rules" ! -name "changelog" -exec sed -i -e 's/\-O3//g' {} \;
+
+    make
+
+    make DESTDIR="$PKG_DIR/" install
+
+    # cmake $prefix = / error
+    mv $PKG_DIR/usr/* $PKG_DIR/
+    rm -rf $PKG_DIR/usr
+}

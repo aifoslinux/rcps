@@ -1,0 +1,21 @@
+PKG=sway
+VER=0.14.0-20170914
+#SRC=$PKG-$VER.tar.gz::https://github.com/SirCmpwn/$PKG/archive/$VER.tar.gz
+SRC=git+https://github.com/SirCmpwn/sway.git#commit=ba27600
+
+build() {
+    $PATCH/stdint.patch
+
+    cd $BLD_DIR
+
+    cmake $SRC_DIR -DCMAKE_BUILD_TYPE=Release \
+                   -DCMAKE_INSTALL_PREFIX=$prefix \
+                   -DCMAKE_INSTALL_SYSCONFDIR=$cfgdir \
+                   -DCMAKE_INSTALL_DATAROOTDIR=$datdir
+    make
+    make DESTDIR=$PKG_DIR install
+
+    install -m644 $RCP_DIR/config $CFG_DIR/sway/config
+    install -m755 $RCP_DIR/sway-gb_se.sh $BIN_DIR/sway-gb_se
+    install -m644 $RCP_DIR/sway-gb_se.desktop $DAT_DIR/wayland-sessions
+}

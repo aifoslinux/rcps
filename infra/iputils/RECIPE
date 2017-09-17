@@ -1,0 +1,22 @@
+PKG=iputils
+VER=20161105
+SRC=$PKG-$VER.tar.gz::https://github.com/$PKG/$PKG/archive/s${VER}.tar.gz
+
+build() {
+    $PATCH/s20161105-manpages.patch 
+
+    _BINS="arping clockdiff ping rdisc tracepath"
+
+    make USE_NETTLE=no \
+         USE_GNUTLS=no \
+         USE_GCRYPT=no \
+         USE_IDN=no \
+         CCOPTOPT="$CFLAGS" \
+         LDFLAGS="$LDFLAGS" \
+         $_BINS
+
+    for f in $_BINS; do
+        install -D -m755 $f $BIN_DIR/$f
+        install -D -m644 doc/$f.8 $DAT_DIR/man/man8/$f.8
+    done
+}

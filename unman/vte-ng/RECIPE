@@ -1,0 +1,21 @@
+PKG=vte-ng
+VER=0.48.3
+SRC=$PKG-$VER.tar.gz::https://github.com/thestinger/$PKG/archive/$VER.a.tar.gz
+
+build() {
+    NOCONFIGURE=1 ./autogen.sh
+
+    export CFLAGS="$CFLAGS -D_GNU_SOURCE"
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --libexecdir=$libdir/vte \
+                --localstatedir=$vardir \
+                --without-gnutls \
+                --disable-static \
+                --enable-introspection 
+    make
+    make DESTDIR=$PKG_DIR install
+
+    rm -r $CFG_DIR
+}

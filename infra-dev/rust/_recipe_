@@ -1,0 +1,26 @@
+pkg=rust
+ver=1.18.0
+
+build() {
+    url=https://repo.voidlinux.eu/distfiles
+    rustc_file=rustc-$VER-x86_64-unknown-linux-musl.tar.gz
+    rust_std_file=rust-std-$VER-x86_64-unknown-linux-musl.tar.gz
+
+    if [ ! -f $SRC_DIR/arc/$rustc_file ]; then
+        curl -L -o $SRC_DIR/arc/$rustc_file $url/$rustc_file
+    fi
+    if [ ! -f $SRC_DIR/arc/$rust_std_file ]; then
+        curl -L -o $SRC_DIR/arc/$rust_std_file $url/$rust_std_file
+    fi
+
+    tar -xf $SRC_DIR/arc/$rustc_file
+    tar -xf $SRC_DIR/arc/$rust_std_file
+
+    cp -flr rustc-*/rustc/* $PKG_DIR
+    cp -flr rust-std-*/rust-std-*/* $PKG_DIR
+
+    rm $PKG_DIR/manifest.in
+    rm $LIB_DIR/*.so
+    cd $LIB_DIR
+    ln -sf rustlib/*/lib/*.so .
+}

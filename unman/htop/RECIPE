@@ -1,0 +1,15 @@
+PKG=htop
+VER=2.0.2
+SRC=https://hisham.hm/$PKG/releases/$VER/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --enable-unicode \
+                --enable-openvz \
+                --enable-vserver \
+                --enable-cgroup
+    make
+    make DESTDIR=$PKG_DIR install
+}

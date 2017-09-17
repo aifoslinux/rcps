@@ -1,0 +1,11 @@
+PKG=libusb
+VER=1.0.21
+SRC=http://downloads.sourceforge.net/$PKG/$PKG-$VER.tar.bz2
+
+build() {
+    autoreconf -fiv
+    ./configure --prefix=$prefix \
+                --host=$CHOST
+    make -j1
+    make DESTDIR=$PKG_DIR install
+}

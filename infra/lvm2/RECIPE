@@ -1,0 +1,35 @@
+PKG=lvm2
+VER=2.02.173
+SRC=https://mirrors.kernel.org/sourceware/$PKG/releases/LVM2.$VER.tgz
+
+build() {
+    $PATCH/portability.patch
+    $PATCH/fix-stdio-usage.patch
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --libdir=$libdir \
+                --sbindir=$bindir \
+                --localstatedir=$vardir \
+                --with-udev-prefix=$prefix \
+                --with-default-pid-dir=$rundir \
+                --with-default-dm-run-dir=$rundir \
+                --with-default-run-dir=$rundir/lvm \
+                --with-default-locking-dir=$rundir/lock/lvm \
+                --with-thin=internal \
+                --with-cache=internal \
+                --enable-udev_sync \
+                --enable-udev_rules \
+                --enable-lvmetad \
+                --enable-pkgconfig \
+                --enable-readline \
+                --enable-dmeventd \
+                --enable-applib \
+                --enable-cmdlib \
+                --disable-nls 
+    make
+    make DESTDIR=$PKG_DIR install
+
+    install -d $CFG_DIR/lvm/{archive,backup}
+}

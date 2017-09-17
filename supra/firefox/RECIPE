@@ -1,0 +1,113 @@
+PKG=firefox
+VER=55.0.3
+SRC=https://ftp.mozilla.org/pub/mozilla.org/$PKG/releases/$VER/source/$PKG-$VER.source.tar.xz
+
+build() {
+    cat >.mozconfig <<EOF
+ac_add_options --enable-application=browser
+ac_add_options --enable-default-toolkit=cairo-gtk3
+
+ac_add_options --prefix=${prefix}
+ac_add_options --libdir=${libdir}
+ac_add_options --enable-release
+ac_add_options --enable-pie
+ac_add_options --enable-optimize="-O2"
+
+ac_add_options --enable-official-branding
+ac_add_options --enable-update-channel=release
+export BUILD_OFFICIAL=1
+export MOZILLA_OFFICIAL=1
+
+ac_add_options --with-system-nspr
+ac_add_options --with-system-nss
+ac_add_options --with-system-icu
+ac_add_options --with-system-jpeg
+ac_add_options --with-system-zlib
+ac_add_options --with-system-bz2
+ac_add_options --with-system-libvpx
+ac_add_options --with-system-png
+ac_add_options --with-pthreads
+ac_add_options --enable-system-pixman
+ac_add_options --enable-system-hunspell
+ac_add_options --enable-system-sqlite
+ac_add_options --enable-system-ffi
+
+ac_add_options --enable-alsa
+ac_add_options --enable-startup-notification
+ac_add_options --disable-gconf
+ac_add_options --disable-crashreporter
+ac_add_options --disable-updater
+ac_add_options --disable-tests
+ac_add_options --disable-pulseaudio
+ac_add_options --disable-profiling
+ac_add_options --disable-jemalloc
+ac_add_options --disable-elf-hack
+
+STRIP_FLAGS="--strip-debug"
+EOF
+
+    $PATCH/0002-Use-C99-math-isfinite.patch
+    $PATCH/firefox-install-dir.patch
+
+    case $CTARGET in
+        *-musl)
+            $PATCH/fix-fortify-inline.patch
+            $PATCH/fix-fortify-system-wrappers.patch
+            $PATCH/fix-musl.patch
+            $PATCH/fix-seccomp-bpf.patch
+            $PATCH/fix-seccomp-musl.patch
+            $PATCH/fix-toolkit.patch
+            $PATCH/fix-tools.patch
+            $PATCH/fix-xpcom.patch
+            $PATCH/mallinfo.patch
+            $PATCH/disable-moz-stackwalk.patch
+
+            cp $RCP_DIR/stab.h toolkit/crashreporter/google-breakpad/src/
+
+            sed -i -e 's,x86_64-unknown-linux-gnu,x86_64-unknown-linux-musl,' build/moz.configure/rust.configure
+            ;;
+        *-gnu)
+            # glibc-2.26 fix
+            export CPPFLAGS="$CPPFLAGS -D_GLIBCXX_USE_C99_MATH=1"
+            ;;
+    esac
+
+    MOZ_OPT_FLAGS="-O2 -fno-delete-null-pointer-checks -fno-schedule-insns2"
+    export CFLAGS=$MOZ_OPT_FLAGS
+    export CXXFLAGS=$MOZ_OPT_FLAGS
+
+    # set rpath so linker finds the libs
+    export LDFLAGS="$LDFLAGS -Wl,-rpath,$libdir/firefox"
+
+    make -f client.mk build MOZ_MAKE_FLAGS="$MAKEFLAGS"
+    make -f client.mk DESTDIR=$PKG_DIR INSTALL_SDK= install
+
+    for i in 16x16 22x22 24x24 32x32 48x48 256x256; do
+        install -Dm644 browser/branding/official/default${i%x*}.png \
+            $DAT_DIR/icons/hicolor/${i}/apps/firefox.png
+    done
+
+    install -Dm644 browser/branding/official/content/icon64.png \
+        $DAT_DIR/icons/hicolor/64x64/apps/firefox.png
+    install -Dm644 browser/branding/official/mozicon128.png \
+        $DAT_DIR/icons/hicolor/128x128/apps/firefox.png
+    install -Dm644 browser/branding/official/content/about-logo.png \
+        $DAT_DIR/icons/hicolor/192x192/apps/firefox.png
+    install -Dm644 browser/branding/official/content/about-logo@2x.png \
+        $DAT_DIR/icons/hicolor/384x384/apps/firefox.png
+
+    install -Dm644 $RCP_DIR/firefox.desktop $DAT_DIR/applications/firefox.desktop
+    install -Dm644 $RCP_DIR/vendor.js $LIB_DIR/firefox/browser/defaults/preferences/vendor.js
+
+    rm -r $LIB_DIR/firefox/dictionaries
+    ln -Ts $datdir/hunspell $LIB_DIR/firefox/dictionaries
+    ln -Ts $datdir/hyphen $LIB_DIR/firefox/hyphenation
+
+    install -Dm755 /dev/stdin $BIN_DIR/firefox <<END
+#!/bin/sh
+exec $libdir/firefox/firefox "\$@"
+END
+
+    # https://bugzilla.mozilla.org/show_bug.cgi?id=658850
+    ln -sf firefox $LIB_DIR/firefox/firefox-bin
+}

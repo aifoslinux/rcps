@@ -1,0 +1,27 @@
+PKG=pypillow
+VER=4.2.0
+SRC=https://files.pythonhosted.org/packages/source/P/Pillow/Pillow-$VER.tar.gz
+
+build() {
+    cp -r $SRC_DIR $SRC_DIR-py2
+
+    cd $SRC_DIR-py2
+    python2 setup.py build
+
+    cd $SRC_DIR
+    python3 setup.py build
+
+    cd $SRC_DIR-py2
+    python2 setup.py install --root=$PKG_DIR --optimize=0
+
+    cd $SRC_DIR
+    python3 setup.py install --root=$PKG_DIR --optimize=0
+
+    mv $PKG_DIR/usr/* $PKG_DIR/
+    rm -r $PKG_DIR/usr
+
+    cd $BIN_DIR
+    for f in *.py; do
+        mv "$f" "${f%.py}"
+    done
+}

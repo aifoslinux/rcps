@@ -1,0 +1,14 @@
+PKG=p11-kit
+VER=0.23.7
+SRC=https://github.com/p11-glue/$PKG/releases/download/$VER/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --libexecdir=$libdir \
+                --localstatedir=$vardir \
+                --with-trust-paths=$cfgdir/ssl/certs/ca-certificates.crt
+    make
+    make DESTDIR=$PKG_DIR install
+}

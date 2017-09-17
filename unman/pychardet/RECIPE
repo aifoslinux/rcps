@@ -1,0 +1,16 @@
+PKG=pychardet
+VER=3.0.4
+SRC=https://pypi.io/packages/source/c/chardet/chardet-$VER.tar.gz
+
+build() {
+    cp -r $SRC_DIR $SRC_DIR-py2
+
+    cd $SRC_DIR-py2
+    python2 setup.py install --root=$PKG_DIR
+
+    cd $SRC_DIR
+    python3 setup.py install --root=$PKG_DIR
+
+    mv $PKG_DIR/usr/* $PKG_DIR/
+    rm -r $PKG_DIR/usr
+}

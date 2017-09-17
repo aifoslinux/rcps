@@ -1,0 +1,37 @@
+PKG=lightdm
+VER=1.22.0
+SRC=https://launchpad.net/$PKG/${VER%.*}/$VER/+download/$PKG-$VER.tar.xz
+
+build() {
+    $PATCH/musl-language.patch
+    $PATCH/musl-updwtmpx.patch
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sbindir=$bindir \
+                --sysconfdir=$cfgdir \
+                --libexecdir=$libdir/$PKG \
+                --localstatedir=$vardir \
+                --with-greeter-session=lightdm-gtk-greeter \
+                --with-greeter-user=$PKG \
+                --disable-static \
+                --disable-tests
+    make
+    make DESTDIR=$PKG_DIR install
+
+    rm -r $CFG_DIR/init
+
+    install -dm 755 $VAR_DIR/cache/lightdm
+    install -dm 770 $VAR_DIR/lib/lightdm{,-data}
+    install -dm 711 $VAR_DIR/log/lightdm
+    chmod +t $VAR_DIR/{cache/lightdm,lib/lightdm{,-data}}
+    chown 620:620 -R $VAR_DIR/lib/lightdm{,-data}
+    chgrp 620 $VAR_DIR/log/lightdm
+
+    install -m 644 $RCP_DIR/lightdm.pam $CFG_DIR/pam.d/lightdm
+    install -m 644 $RCP_DIR/lightdm-autologin.pam $CFG_DIR/pam.d/lightdm-autologin
+    sed -i -e 's,pam_systemd.so,pam_elogind.so,' $CFG_DIR/pam.d/lightdm-greeter
+
+    install -dm 750 -g 102 $DAT_DIR/polkit-1/rules.d
+    install -m 644 $RCP_DIR/lightdm.rules $DAT_DIR/polkit-1/rules.d/lightdm.rules
+}

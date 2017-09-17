@@ -1,0 +1,14 @@
+PKG=geoclue
+VER=2.4.7
+SRC=http://www.freedesktop.org/software/$PKG/releases/${VER:0:3}/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --libexecdir=$libdir/$PKG \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}

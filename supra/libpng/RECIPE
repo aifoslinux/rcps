@@ -1,0 +1,17 @@
+PKG=libpng
+VER=1.6.32
+SRC=http://downloads.sourceforge.net/$PKG/$PKG-$VER.tar.xz
+
+build() {
+    curl -L -o /src/arc/$PKG-$VER-apng.patch.gz \
+        http://downloads.sourceforge.net/sourceforge/$PKG-apng/$PKG-$VER-apng.patch.gz
+    gunzip -c /src/arc/$PKG-$VER-apng.patch.gz | patch -p1
+
+    $PATCH/0001-fix-build.patch
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir
+    make
+    make DESTDIR=$PKG_DIR install
+}

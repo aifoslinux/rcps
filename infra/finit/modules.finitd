@@ -1,0 +1,4 @@
+## Linux kernel modules to load
+#module button
+#module evdev
+

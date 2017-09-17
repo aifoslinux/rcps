@@ -1,0 +1,67 @@
+PKG=nss
+VER=3.32
+SRC=https://ftp.mozilla.org/pub/security/nss/releases/NSS_${VER//./_}_RTM/src/$PKG-$VER.tar.gz
+
+build() {
+    _nsprver=4.16
+
+    $PATCH/add_spi+cacert_ca_certs.patch
+
+    sed -e 's/\$(MKSHLIB) -o/\$(MKSHLIB) \$(LDFLAGS) -o/' -i nss/coreconf/rules.mk
+
+    cd nss
+
+    export BUILD_OPT=1
+    export PKG_CONFIG_ALLOW_SYSTEM_LIBS=1
+    export PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1
+    export NSS_USE_SYSTEM_SQLITE=1
+    export NSS_ENABLE_WERROR=0
+    export NSS_ENABLE_ECC=1
+    export FREEBL_NO_DEPEND=1
+    export NSPR_INCLUDE_DIR="`nspr-config --includedir`"
+    export NSPR_LIB_DIR="`nspr-config --libdir`"
+    export XCFLAGS="${CFLAGS}"
+    export USE_64=1
+
+    make -j1 -C coreconf
+    make -j1 -C lib/dbm
+    make -j1
+
+    install -d $PKG_DIR/{bin,include/nss,lib/pkgconfig}
+
+    NSS_VMAJOR=`awk '/#define.*NSS_VMAJOR/ {print $3}' lib/nss/nss.h`
+    echo "DEBUG: $NSS_VMAJOR"
+    NSS_VMINOR=`awk '/#define.*NSS_VMINOR/ {print $3}' lib/nss/nss.h`
+    NSS_VPATCH=`awk '/#define.*NSS_VPATCH/ {print $3}' lib/nss/nss.h`
+
+    sed $RCP_DIR/nss.pc.in \
+        -e "s,%libdir%,${libdir},g" \
+        -e "s,%prefix%,${prefix},g" \
+        -e "s,%exec_prefix%,${bindir},g" \
+        -e "s,%includedir%,${incdir}/nss,g" \
+        -e "s,%NSPR_VERSION%,${_nsprver},g" \
+        -e "s,%NSS_VERSION%,${VER},g" \
+        > $LIB_DIR/pkgconfig/nss.pc
+    ln -sf nss.pc $LIB_DIR/pkgconfig/mozilla-nss.pc
+
+    sed $RCP_DIR/nss-config.in \
+        -e "s,@libdir@,${libdir},g" \
+        -e "s,@prefix@,${bindir},g" \
+        -e "s,@exec_prefix@,${bindir},g" \
+        -e "s,@includedir@,${incdir}/nss,g" \
+        -e "s,@MOD_MAJOR_VERSION@,${NSS_VMAJOR},g" \
+        -e "s,@MOD_MINOR_VERSION@,${NSS_VMINOR},g" \
+        -e "s,@MOD_PATCH_VERSION@,${NSS_VPATCH},g" \
+        > $BIN_DIR/nss-config
+    chmod 755 $BIN_DIR/nss-config
+
+    cd ../dist
+    install -t $INC_DIR/nss -m644 public/nss/*.h
+
+    cd *.OBJ/bin
+    install -t $BIN_DIR *util derdump pp shlibsign signtool signver ssltap vfychain vfyserv
+
+    cd ../lib
+    install -t $LIB_DIR *.so
+    install -t $LIB_DIR -m644 libcrmf.a *.chk
+}

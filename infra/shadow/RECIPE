@@ -1,0 +1,51 @@
+PKG=shadow
+VER=4.5
+SRC=https://github.com/shadow-maint/$PKG/releases/download/$VER/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --sbindir=$bindir \
+                --localstatedir=$vardir \
+                --disable-nls \
+                --with-libpam \
+                --without-audit \
+                --without-selinux \
+                --without-tcb \
+                --without-nscd \
+                --with-group-name-max-length=32
+
+    sed -i -e 's/\/sbin/\/bin/' src/Makefile
+
+    make
+    make DESTDIR=$PKG_DIR install
+
+    rm $CFG_DIR/pam.d/{chfn,chsh,login,su}
+    rm $BIN_DIR/logoutd
+
+    # Remove utilities provided by util-linux
+    rm $BIN_DIR/{chsh,chfn,login,nologin,sg,su,vipw,vigr}
+    mv $BIN_DIR/{newgrp,sg}
+
+    find $DAT_DIR/man \
+        '(' -name 'chsh.1'    -o \
+            -name 'chfn.1'    -o \
+            -name 'su.1'      -o \
+            -name 'logoutd.8' -o \
+            -name 'login.1'   -o \
+            -name 'nologin.8' -o \
+            -name 'vipw.8'    -o \
+            -name 'vigr.8'    -o \
+            -name 'newgrp.1' ')' \
+        -delete
+
+    install -m644 $RCP_DIR/login.defs $CFG_DIR/login.defs
+    install -d $CFG_DIR/pam.d
+    install -t $CFG_DIR/pam.d -m644 $RCP_DIR/{passwd,chgpasswd,chpasswd,newusers}
+    install -Dm644 $RCP_DIR/useradd $CFG_DIR/default/useradd
+
+    for file in chage groupadd groupdel groupmod shadow useradd usermod userdel; do
+        install -m644 $RCP_DIR/defaults.pam $CFG_DIR/pam.d/$file
+    done
+}

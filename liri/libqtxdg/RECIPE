@@ -1,0 +1,15 @@
+PKG=libqtxdg
+VER=2.0.0-20170806
+SRC=git+https://github.com/lxde/$PKG.git
+
+build() {
+    cd $BLD_DIR
+
+    cmake $SRC_DIR \
+        -DCMAKE_INSTALL_PREFIX=$prefix \
+        -DCMAKE_INSTALL_LIBDIR=$libdir \
+        -DCMAKE_INSTALL_INCLUDEDIR=$incdir \
+        -DCMAKE_INSTALL_DATAROOTDIR=$datdir
+    make
+    make DESTDIR=$PKG_DIR install
+}

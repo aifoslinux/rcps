@@ -1,0 +1,24 @@
+PKG=network-manager-applet
+VER=1.8.2
+SRC=https://download.gnome.org/sources/$PKG/${VER:0:3}/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --sbindir=$bindir \
+                --libexecdir=$libdir/NetworkManager \
+                --disable-maintainer-mode \
+                --disable-static \
+                --enable-gtk-doc \
+                --enable-introspection \
+                --enable-ld-gc \
+                --with-gcr \
+                --with-team \
+                --with-wwan \
+                --without-appindicator \
+                --without-selinux
+    make
+    make DESTDIR=$PKG_DIR install
+}

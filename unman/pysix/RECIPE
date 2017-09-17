@@ -1,0 +1,16 @@
+PKG=pysix
+VER=1.10.0
+SRC=https://pypi.io/packages/source/s/six/six-$VER.tar.gz
+
+build() {
+    cp -a $SRC_DIR{,-py2}
+
+    cd $SRC_DIR-py2
+    python2 setup.py install --prefix=/usr --root=$PKG_DIR --optimize=1
+
+    cd $SRC_DIR
+    python3 setup.py install --prefix=/usr --root=$PKG_DIR --optimize=1
+
+    mv $PKG_DIR/usr/* $PKG_DIR/
+    rm -r $PKG_DIR/usr
+}

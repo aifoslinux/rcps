@@ -1,0 +1,15 @@
+PKG=msgpack-c
+VER=2.1.5
+SRC=https://github.com/msgpack/$PKG/releases/download/cpp-$VER/msgpack-$VER.tar.gz
+
+build() {
+    cd $BLD_DIR
+
+    cmake $SRC_DIR \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=$prefix \
+        -DMSGPACK_CXX11=ON
+    make
+    sed -i -e 's,//include,/include,' cmake_install.cmake
+    make DESTDIR=$PKG_DIR install
+}

@@ -1,0 +1,13 @@
+PKG=libass
+VER=0.13.7
+SRC=https://github.com/$PKG/$PKG/releases/download/$VER/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --enable-harfbuzz \
+                --enable-fontconfig
+    make
+    make DESTDIR=$PKG_DIR install
+}

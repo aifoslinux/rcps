@@ -1,0 +1,35 @@
+PKG=tzdata
+VER=2017b
+
+build() {
+    cd $SRC_DIR
+
+    _file1=$PKG$VER.tar.gz
+    _file2=tzcode$VER.tar.gz
+    _url=http://www.iana.org/time-zones/repository/releases
+
+    if [ ! -f /src/arc/$_file1 ] && [ ! -f /src/arc/$_file2 ]; then
+        curl -L -o /src/arc/$_file1 $_url/$_file1
+        curl -L -o /src/arc/$_file2 $_url/$_file2
+    fi
+    tar -xf /src/arc/$_file1
+    tar -xf /src/arc/$_file2
+
+    make cc="${CC:-gcc}" CFLAGS="$CFLAGS -DHAVE_STDINT_H=1" TZDIR="$datdir/zoneinfo"
+
+    timezones=('africa' 'antarctica' 'asia' 'australasia' 'europe'
+           'northamerica' 'southamerica' 'pacificnew' 'etcetera'
+           'backward' 'systemv' 'factory')
+
+    ./zic -y ./yearistype -d $DAT_DIR/zoneinfo ${timezones[@]}
+    ./zic -y ./yearistype -d $DAT_DIR/zoneinfo/posix ${timezones[@]}
+    ./zic -y ./yearistype -d $DAT_DIR/zoneinfo/right -L leapseconds ${timezones[@]}
+    ./zic -y ./yearistype -d $DAT_DIR/zoneinfo -p America/New_York
+    install -m444 -t $DAT_DIR/zoneinfo iso3166.tab zone1970.tab zone.tab
+
+    mkdir -p $BIN_DIR
+    install -m755 zic zdump $BIN_DIR
+
+    mkdir -p $DAT_DIR/man/man8
+    install -m644 zic.8 zdump.8 $DAT_DIR/man/man8
+}

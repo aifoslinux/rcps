@@ -1,0 +1,11 @@
+PKG=libvdpau
+VER=1.1.1
+SRC=http://people.freedesktop.org/~aplattner/vdpau/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir
+    make
+    make DESTDIR=$PKG_DIR install
+}

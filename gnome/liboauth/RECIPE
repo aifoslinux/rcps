@@ -1,0 +1,16 @@
+PKG=liboauth
+VER=1.0.3
+SRC=$PKG-$VER.tar.gz::https://github.com/x42/$PKG/archive/v${VER}.tar.gz
+
+build() {
+    autoreconf -fiv
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --disable-static \
+                --enable-nss
+    make
+    make DESTDIR=$PKG_DIR install
+}

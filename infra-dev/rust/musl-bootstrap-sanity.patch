@@ -1,0 +1,51 @@
+--- a/src/bootstrap/sanity.rs	2017-09-02 20:40:36.611492768 +0200
++++ b/src/bootstrap/sanity.rs	2017-09-02 20:41:39.002230258 +0200
+@@ -21,7 +21,6 @@
+ use std::collections::HashMap;
+ use std::env;
+ use std::ffi::{OsString, OsStr};
+-use std::fs;
+ use std::process::Command;
+ use std::path::PathBuf;
+ 
+@@ -138,12 +137,6 @@
+         }
+     }
+ 
+-    // Externally configured LLVM requires FileCheck to exist
+-    let filecheck = build.llvm_filecheck(&build.build);
+-    if !filecheck.starts_with(&build.out) && !filecheck.exists() && build.config.codegen_tests {
+-        panic!("FileCheck executable {:?} does not exist", filecheck);
+-    }
+-
+     for target in &build.config.target {
+         // Can't compile for iOS unless we're on macOS
+         if target.contains("apple-ios") &&
+@@ -151,27 +144,6 @@
+             panic!("the iOS target is only supported on macOS");
+         }
+ 
+-        // Make sure musl-root is valid if specified
+-        if target.contains("musl") && !target.contains("mips") {
+-            match build.musl_root(target) {
+-                Some(root) => {
+-                    if fs::metadata(root.join("lib/libc.a")).is_err() {
+-                        panic!("couldn't find libc.a in musl dir: {}",
+-                               root.join("lib").display());
+-                    }
+-                    if fs::metadata(root.join("lib/libunwind.a")).is_err() {
+-                        panic!("couldn't find libunwind.a in musl dir: {}",
+-                               root.join("lib").display());
+-                    }
+-                }
+-                None => {
+-                    panic!("when targeting MUSL either the rust.musl-root \
+-                            option or the target.$TARGET.musl-root option must \
+-                            be specified in config.toml")
+-                }
+-            }
+-        }
+-
+         if target.contains("msvc") {
+             // There are three builds of cmake on windows: MSVC, MinGW, and
+             // Cygwin. The Cygwin build does not have generators for Visual

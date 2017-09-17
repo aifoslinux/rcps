@@ -1,0 +1,5 @@
+[Desktop Entry]
+Name=Sway Swedish
+Comment=SirCmpwn's Wayland window manager with the Swedish keyboard layout
+Exec=sway-gb_se
+Type=Application

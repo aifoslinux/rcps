@@ -1,0 +1,26 @@
+PKG=openssh
+VER=7.5p1
+SRC=https://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir/ssh \
+                --sbindir=$bindir \
+                --libexecdir=$libdir/ssh \
+                --with-ssl-engine \
+                --with-md5-passwords \
+                --with-pam \
+                --with-pid-dir=$rundir
+    make
+    make DESTDIR=$PKG_DIR install
+
+    install -Dm755 contrib/findssl.sh $BIN_DIR/findssl.sh
+    install -Dm755 contrib/ssh-copy-id $BIN_DIR/ssh-copy-id
+    install -Dm644 contrib/ssh-copy-id.1 $DAT_DIR/man/man1/ssh-copy-id.1
+
+    sed -e '/^#ChallengeResponseAuthentication yes$/c ChallengeResponseAuthentication no' \
+        -e '/^#PrintMotd yes$/c PrintMotd no # pam does that' \
+        -e '/^#UsePAM no$/c UsePAM yes' \
+        -i $CFG_DIR/ssh/sshd_config
+}

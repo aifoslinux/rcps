@@ -1,0 +1,31 @@
+PKG=pydocutils
+VER=0.13.1
+SRC=http://downloads.sourceforge.net/docutils/docutils-$VER.tar.gz
+
+build() {
+    cp -a $SRC_DIR{,-py2}
+
+    cd $SRC_DIR-py2
+    python2 setup.py build
+
+    cd $SRC_DIR
+    python3 setup.py build
+
+    cd $SRC_DIR-py2
+    python2 setup.py install --prefix=/usr --root=$PKG_DIR --optimize=1
+
+    for _f in $PKG_DIR/usr/bin/*.py; do
+        mv -v $_f ${_f%.py}2.py
+    done
+
+    cd $SRC_DIR
+    python3 setup.py install --prefix=/usr --root=$PKG_DIR --optimize=1
+
+    mv $PKG_DIR/usr/* $PKG_DIR/
+    rm -r $PKG_DIR/usr
+
+    # symlink without .py
+    for f in $BIN_DIR/*.py; do
+        ln -s $(basename $f) $BIN_DIR/$(basename $f .py)
+    done
+}

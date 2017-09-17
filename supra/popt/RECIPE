@@ -1,0 +1,14 @@
+PKG=popt
+VER=1.16
+SRC=http://rpm5.org/files/popt/popt-$VER.tar.gz
+
+build() {
+    $PATCH/config.patch
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --libdir=$libdir \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}

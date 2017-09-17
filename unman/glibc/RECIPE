@@ -1,0 +1,86 @@
+PKG=glibc
+VER=2.26
+#SRC=ftp://ftp.gnu.org/gnu/$PKG/$PKG-$VER.tar.xz
+SRC=git+https://sourceware.org/git/glibc.git#commit=8a1adb5
+
+build() {
+    cd $BLD_DIR
+
+    echo "slibdir=/usr/lib" >> configparms
+    echo "rtlddir=/usr/lib" >> configparms
+    echo "sbindir=/usr/bin" >> configparms
+    echo "rootsbindir=/usr/bin" >> configparms
+
+    # remove fortify for building libraries
+    CPPFLAGS=${CPPFLAGS/-D_FORTIFY_SOURCE=2/}
+
+    $SRC_DIR/configure --prefix=$prefix \
+                       --host=$CHOST \
+                       --exec-prefix=$prefix \
+                       --sysconfdir=$cfgdir \
+                       --bindir=$bindir \
+                       --sbindir=$bindir \
+                       --libdir=$libdir \
+                       --libexecdir=$libdir \
+                       --enable-kernel=3.2 \
+                       --enable-add-ons \
+                       --enable-bind-now \
+                       --disable-profile \
+                       --enable-stackguard-randomization \
+                       --enable-lock-elision \
+                       --enable-multi-arch \
+                       --enable-obsolete-nsl \
+                       --enable-obsolete-rpc \
+                       --enable-stack-protector=strong \
+                       --enable-stackguard-randomization \
+                       --disable-profile \
+                       --disable-werror
+
+    # build libraries with hardening disabled
+    echo "build-programs=no" >> configparms
+    make
+
+    # re-enable hardening for programs
+    sed -i "/build-programs=/s#no#yes#" configparms
+    echo "CC += -D_FORTIFY_SOURCE=2" >> configparms
+    echo "CXX += -D_FORTIFY_SOURCE=2" >> configparms
+    make
+
+    # remove harding in preparation to run test-suite
+    sed -i '/FORTIFY/d' configparms
+
+    install -dm755 $CFG_DIR
+    touch $CFG_DIR/ld.so.conf
+
+    make install_root=$PKG_DIR install
+
+    rm -f $CFG_DIR/ld.so.{cache,conf}
+
+    install -m644 $SRC_DIR/nscd/nscd.conf $CFG_DIR/nscd.conf
+    install -m644 $SRC_DIR/posix/gai.conf $CFG_DIR/gai.conf
+
+    # create /etc/locale.gen
+    install -m644 $RCP_DIR/locale.gen $CFG_DIR/locale.gen
+    sed -e '1,3d' -e 's|/| |g' -e 's|\\| |g' -e 's|^|#|g' \
+    $SRC_DIR/localedata/SUPPORTED >> $CFG_DIR/locale.gen
+
+    # uncomment en_GB as default language
+    sed -i -e 's/#en_GB.UTF-8/en_GB.UTF-8/' $CFG_DIR/locale.gen
+
+    install -dm755 $LIB_DIR/locale
+    install -m755 $RCP_DIR/locale-gen $BIN_DIR
+
+    mv $PKG_DIR/usr/lib/l* $LIB_DIR
+    mv $PKG_DIR/usr/bin/* $BIN_DIR
+    rm -r $PKG_DIR/usr
+
+    case $CTARGET in
+        *-gnu)
+            # zic zdump provided by tzdata
+            rm $BIN_DIR/z{ic,dump}
+
+            # lib64 -> lib
+            ln -s $libdir ${LIB_DIR}64
+            ;;
+    esac
+}

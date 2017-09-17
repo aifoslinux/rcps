@@ -1,0 +1,16 @@
+PKG=libqmi
+VER=1.18.0
+SRC=http://www.freedesktop.org/software/$PKG/$PKG-$VER.tar.xz
+
+build() {
+    $PATCH/0001-musl-compat-canonicalize_file_name.patch
+
+    ./configure --prefix=$prefix \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --libexecdir=$libdir \
+                --disable-static \
+                --enable-more-warnings=yes
+    make
+    make DESTDIR=$PKG_DIR install
+}

@@ -1,0 +1,19 @@
+PKG=taglib
+VER=1.11.1
+SRC=http://taglib.github.io/releases/$PKG-$VER.tar.gz
+
+build() {
+    cd $BLD_DIR
+
+    cmake $SRC_DIR \
+        -DCMAKE_INSTALL_PREFIX=$prefix \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DBUILD_SHARED_LIBS=ON \
+        -DWITH_MP4=ON \
+        -DWITH_ASF=ON
+    make
+    find . -type f -exec sed -i -e 's,//lib,/lib,g' {} +
+    find . -type f -exec sed -i -e 's,//bin,/bin,g' {} +
+    find . -type f -exec sed -i -e 's,//include,/include,g' {} +
+    make DESTDIR=$PKG_DIR install
+}

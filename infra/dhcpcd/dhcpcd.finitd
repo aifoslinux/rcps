@@ -1,0 +1,2 @@
+# dhcpcd
+service [2345] /bin/dhcpcd -q -B -- dhcpcd daemon

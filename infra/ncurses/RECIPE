@@ -1,0 +1,31 @@
+PKG=ncurses
+VER=6.0
+SRC=ftp://ftp.gnu.org/gnu/$PKG/$PKG-$VER.tar.gz
+
+build() {
+    export CFLAGS="$CFLAGS -fPIC"
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --with-pkg-config-libdir=$libdir/pkgconfig \
+                --includedir=$incdir \
+                --with-shared \
+                --with-normal \
+                --without-ada \
+                --without-debug \
+                --enable-widec \
+                --enable-ext-colors \
+                --enable-pc-files \
+                --with-cxx-binding \
+                --with-cxx-shared
+    make
+    make DESTDIR=$PKG_DIR install
+
+    for lib in ncurses ncurses++ form panel menu; do
+        ln -s ${lib}w.pc $LIB_DIR/pkgconfig/${lib}.pc
+        echo "INPUT(-l${lib}w)" > $LIB_DIR/lib${lib}.so
+    done
+
+    echo "INPUT(-lncursesw)" > $LIB_DIR/libcursesw.so
+    ln -s libncurses.so $LIB_DIR/libcurses.so
+}

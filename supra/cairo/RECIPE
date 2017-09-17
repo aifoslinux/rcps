@@ -1,0 +1,22 @@
+PKG=cairo
+VER=1.14.10
+SRC=http://cairographics.org/releases/cairo-$VER.tar.xz
+
+build() {
+    $PATCH/musl-stacksize.patch
+
+    autoreconf -fiv
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --enable-gl \
+                --enable-egl \
+                --enable-svg \
+                --enable-png \
+                --enable-ps \
+                --enable-pdf \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}

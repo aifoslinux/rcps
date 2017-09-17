@@ -1,0 +1,12 @@
+PKG=zip
+VER=3.0
+SRC=http://downloads.sourceforge.net/infozip/$PKG${VER/./}.tar.gz
+
+build() {
+    sed -e "/^CFLAGS_NOOPT =/s/\$/ $CPPFLAGS $CFLAGS/" -i unix/Makefile
+    sed -e "s/^LFLAGS1=''/LFLAGS1=$LDFLAGS/" -i unix/configure
+
+    make -f unix/Makefile prefix=$prefix generic_gcc
+    make -f unix/Makefile prefix=$PKG_DIR \
+            MANDIR=$DAT_DIR/man/man1 install
+}

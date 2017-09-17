@@ -1,0 +1,14 @@
+PKG=startup-notification
+VER=0.12
+SRC=http://www.freedesktop.org/software/$PKG/releases/$PKG-$VER.tar.gz
+
+build() {
+    $PATCH/config.patch
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir
+    make
+    make DESTDIR=$PKG_DIR install
+}

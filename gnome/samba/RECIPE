@@ -1,0 +1,45 @@
+PKG=samba
+VER=4.6.7
+SRC=https://download.samba.org/pub/$PKG/stable/$PKG-$VER.tar.gz
+
+build() {
+    $PATCH/domain.patch
+    $PATCH/getpwent_r.patch
+    $PATCH/netapp.patch
+    $PATCH/netdb-defines.patch
+    $PATCH/uclibc-xattr-create.patch
+
+    ./configure --prefix=$prefix \
+                --sbindir=$bindir \
+                --libdir=$libdir \
+                --libexecdir=$libdir/samba \
+                --localstatedir=$vardir \
+                --with-configdir=$cfgdir/samba \
+                --with-lockdir=$vardir/cache/samba \
+                --with-sockets-dir=$vardir/run/samba \
+                --with-piddir=$vardir/run \
+                --with-ldap \
+                --with-acl-support \
+                --enable-gnutls \
+                --enable-fhs \
+                --enable-cups \
+                --with-pam \
+                --with-pammodulesdir=$libdir/security \
+                --without-systemd \
+                --disable-rpath-install
+    make
+    make DESTDIR=$PKG_DIR install
+
+    install -D -m644 $RCP_DIR/samba.pam $CFG_DIR/pam.d/samba 
+
+    install -m644 packaging/LSB/smb.conf $CFG_DIR/samba/smb.conf.default
+
+    mkdir -p $CFG_DIR/samba/private
+    chmod 700 $CFG_DIR/samba/private
+
+    install -d -m1777 $VAR_DIR/spool/samba
+    rm -rf $VAR_DIR/run
+
+    install -d -m755 $LIB_DIR/cups/backend
+    ln -sf $bindir/smbspool $LIB_DIR/cups/backend/smb
+}

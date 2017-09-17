@@ -1,0 +1,16 @@
+PKG=cogl
+VER=1.22.2
+SRC=https://download.gnome.org/sources/$PKG/${VER:0:4}/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --enable-gles2 \
+                --enable-kms-egl-platform \
+                --enable-wayland-egl-platform \
+                --enable-wayland-egl-server
+    make
+    make DESTDIR=$PKG_DIR install
+}

@@ -1,0 +1,15 @@
+PKG=cmake
+VER=3.9.2
+SRC=http://www.cmake.org/files/v${VER%.*}/$PKG-$VER.tar.gz
+
+build() {
+    ./bootstrap --prefix=$prefix \
+                --mandir=$datdir/man \
+                --docdir=$datdir/doc/cmake \
+                --system-libs \
+                --no-system-jsoncpp \
+                --no-system-librhash \
+                --parallel=${MAKEFLAGS#-j}
+    make
+    make DESTDIR=$PKG_DIR install
+}

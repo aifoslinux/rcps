@@ -1,0 +1,14 @@
+PKG=autoconf2.13
+VER=2.13
+SRC=ftp://ftp.gnu.org/gnu/autoconf/autoconf-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --program-suffix=-2.13
+    make
+    make prefix=$PKG_DIR infodir=$DAT_DIR/info install
+
+    mv $DAT_DIR/info/autoconf{,-2.13}.info
+    mv $DAT_DIR/info/standards{,-2.13}.info
+}

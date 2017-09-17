@@ -1,0 +1,18 @@
+#!/bin/openrc-run
+
+description="Sets the hostname of the machine."
+
+depend() {
+	keyword -prefix -lxc
+}
+
+start() {
+	if [ -s /cfg/hostname ] ; then
+		opts="-b -F /cfg/hostname"
+	else
+		opts="localhost"
+	fi
+	ebegin "Setting hostname"
+	hostname $opts
+	eend $?
+}

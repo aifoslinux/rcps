@@ -1,0 +1,11 @@
+PKG=texinfo
+VER=6.3
+SRC=ftp://ftp.gnu.org/gnu/$PKG/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --disable-nls
+    make
+    make DESTDIR=$PKG_DIR install
+}

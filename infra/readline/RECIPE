@@ -1,0 +1,16 @@
+PKG=readline
+VER=7.0
+SRC=ftp://ftp.gnu.org/gnu/$PKG/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --disable-nls
+    make SHLIB_LIBS=-lncursesw
+    make DESTDIR=$PKG_DIR install
+
+    rm -r $BIN_DIR
+
+    install -Dm644 $RCP_DIR/inputrc $CFG_DIR/inputrc
+}

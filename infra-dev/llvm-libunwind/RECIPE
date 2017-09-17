@@ -1,0 +1,17 @@
+PKG=llvm-libunwind
+VER=5.0.0
+SRC=http://llvm.org/releases/$VER/${PKG//llvm-/}-$VER.src.tar.xz
+
+build() {
+    cmake \
+        -DCMAKE_INSTALL_PREFIX=$prefix \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_CXX_FLAGS="$CXXFLAGS" \
+        -DCMAKE_C_FLAGS="$CFLAGS" \
+        -DLIBUNWIND_HAS_NODEFAULTLIBS_FLAG=OFF
+    make
+    make DESTDIR=$PKG_DIR install
+
+    mkdir -p $INC_DIR
+    cp include/*.h $INC_DIR/
+}

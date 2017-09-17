@@ -1,0 +1,29 @@
+PKG=binutils
+VER=2.29
+SRC=ftp://ftp.gnu.org/gnu/$PKG/$PKG-$VER.tar.gz
+
+build() {
+    sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" libiberty/configure
+
+    cd $BLD_DIR
+
+    $SRC_DIR/configure --prefix=$prefix \
+                       --build=$CBUILD \
+                       --host=$CHOST \
+                       --target=$CTARGET \
+                       --enable-threads \
+                       --enable-shared \
+                       --with-pic \
+                       --enable-ld=default \
+                       --enable-gold \
+                       --enable-plugins \
+                       --enable-deterministic-archives \
+                       --disable-werror \
+                       --disable-nls \
+                       --disable-gdb
+    make configure-host
+    make tooldir=/
+    make prefix=$PKG_DIR tooldir=$PKG_DIR install
+
+    rm $DAT_DIR/man/man1/{dlltool,nlmconv,windres,windmc}*
+}

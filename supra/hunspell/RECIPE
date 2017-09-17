@@ -1,0 +1,15 @@
+PKG=hunspell
+VER=1.6.2
+SRC=$PKG-$VER.tar.gz::https://github.com/$PKG/$PKG/archive/v${VER}.tar.gz
+
+build() {
+    autoreconf -fiv
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --with-ui \
+                --with-readline \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}

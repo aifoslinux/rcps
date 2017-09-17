@@ -1,0 +1,18 @@
+PKG=wlc
+VER=0.0.10
+SRC=https://github.com/Cloudef/$PKG/releases/download/v${VER}/$PKG-$VER.tar.bz2
+
+build() {
+    $PATCH/elogind-support.patch
+
+    cd $BLD_DIR
+
+    cmake $SRC_DIR \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_INSTALL_PREFIX=$prefix \
+          -DCMAKE_INSTALL_SYSCONFDIR=$cfgdir \
+          -DCMAKE_INSTALL_LIBDIR=$libdir \
+          -DCMAKE_INSTALL_INCLUDEDIR=$incdir
+    make
+    make DESTDIR=$PKG_DIR install
+}

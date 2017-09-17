@@ -1,0 +1,11 @@
+--- a/hostname.c	2016-07-03 21:23:39.000000000 +0200
++++ b/hostname.c	2017-06-03 12:01:35.093405549 +0200
+@@ -193,7 +193,7 @@
+ 		return 0;
+ 
+ 	for (i = 0; i < len; i++) {
+-		if (!isalnum(name[i]) && name[i] != '-' && name[i] != '.')
++		if (!isalnum(name[i]) && name[i] != '-' && name[i] != '.' && name[i] != '\\')
+ 			return 0;
+ 		if (name[i] == '-' && (name[i - 1] == '.' || name[i + 1] == '.'))
+ 			return 0;

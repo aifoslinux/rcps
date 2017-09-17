@@ -1,0 +1,8 @@
+--- a/src/core/config/desktop_linux.pri.orig	2017-05-19 04:22:04.000000000 +0000
++++ b/src/core/config/desktop_linux.pri	2017-06-30 10:20:15.429947915 +0000
+@@ -10,4 +10,4 @@
+     gn_args += use_debug_fission=false
+ }
+ 
+-!use_gold_linker: gn_args += use_gold=false
++gn_args += use_gold=false

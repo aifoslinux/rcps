@@ -1,0 +1,23 @@
+PKG=gtk+2
+VER=2.24.31
+SRC=https://download.gnome.org/sources/gtk+/${VER:0:4}/gtk+-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir
+    make
+    make DESTDIR=$PKG_DIR install
+
+    install -Dm644 $RCP_DIR/gtkrc $DAT_DIR/gtk-2.0/gtkrc
+
+    rm $BIN_DIR/gtk-update-icon-cache
+
+    case $CTARGET in
+        *-musl)
+            # datadir localedir doesn't work
+            mv $LIB_DIR/locale $DAT_DIR/
+        ;;
+    esac
+}

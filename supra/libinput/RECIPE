@@ -1,0 +1,17 @@
+PKG=libinput
+VER=1.8.2
+SRC=https://freedesktop.org/software/$PKG/$PKG-$VER.tar.xz
+
+build() {
+    cd $BLD_DIR
+
+    meson --prefix=$prefix \
+          --buildtype=release \
+          --libexecdir=lib \
+          -Ddocumentation=false \
+          -Dlibwacom=false \
+          -Dtests=false \
+          $SRC_DIR
+    ninja
+    DESTDIR=$PKG_DIR ninja install
+}

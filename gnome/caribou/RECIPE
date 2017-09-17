@@ -1,0 +1,16 @@
+PKG=caribou
+VER=0.4.21
+SRC=https://download.gnome.org/sources/$PKG/${VER:0:3}/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --libexecdir=$libdir/$PKG \
+                --disable-static \
+                --disable-gtk2-module \
+                --disable-schemas-compile
+    make
+    make DESTDIR=$PKG_DIR install
+}

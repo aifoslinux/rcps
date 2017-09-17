@@ -1,0 +1,19 @@
+PKG=poppler
+VER=0.56.0
+SRC=http://poppler.freedesktop.org/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --disable-static \
+                --enable-cairo-output \
+                --enable-xpdf-headers \
+                --enable-libjpeg \
+                --enable-zlib \
+                --enable-poppler-qt5 \
+                --enable-poppler-glib
+    make
+    make DESTDIR=$PKG_DIR install
+}

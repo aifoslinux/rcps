@@ -1,0 +1,9 @@
+PKG=qt5ct
+VER=0.33
+SRC=http://downloads.sourceforge.net/project/$PKG/$PKG-$VER.tar.bz2
+
+build() {
+    qmake PREFIX=$prefix $PKG.pro
+    make
+    make INSTALL_ROOT=$PKG_DIR install
+}

@@ -1,0 +1,11 @@
+PKG=libbytesize
+VER=0.11
+SRC=https://github.com/storaged-project/$PKG/archive/$PKG-$VER.tar.gz
+
+build() {
+    ./autogen.sh
+    ./configure --prefix=$prefix \
+                --host=$CHOST
+    make
+    make DESTDIR=$PKG_DIR install
+}

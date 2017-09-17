@@ -1,0 +1,15 @@
+PKG=libjpeg-turbo
+VER=1.5.2
+SRC=http://sourceforge.net/projects/$PKG/files/$VER/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --mandir=$datdir/man \
+                --with-jpeg8
+    make
+    make DESTDIR=$PKG_DIR \
+         docdir=$datdir/doc/libjpeg-turbo \
+         exampledir=$datdir/doc/libjpeg-turbo install
+}

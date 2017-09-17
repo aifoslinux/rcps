@@ -1,0 +1,23 @@
+PKG=gnome-session
+VER=3.24.1
+SRC=https://download.gnome.org/sources/$PKG/${VER:0:4}/$PKG-$VER.tar.xz
+
+build() {
+    $PATCH/patch-gnome-session_main_c.patch
+    $PATCH/gnome-session-3.24.1-support-elogind.patch
+
+    autoreconf -fiv
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --libexecdir=$libdir/$PKG \
+                --enable-elogind \
+                --disable-systemd \
+                --disable-static \
+                --disable-schemas-compile \
+                --disable-gconf
+    make
+    make DESTDIR=$PKG_DIR install
+}

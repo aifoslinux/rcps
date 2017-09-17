@@ -1,0 +1,10 @@
+PKG=nerd-fonts
+VER=20170910
+SRC=git+https://github.com/ryanoasis/nerd-fonts.git
+
+build() {
+    find . -iname "*.ttf" -execdir install -Dm644 {} $DAT_DIR/fonts/TTF/{} \;
+    find . -iname "*.otf" -execdir install -Dm644 {} $DAT_DIR/fonts/OTF/{} \;
+    find . -iname "*.pcf.gz" -execdir install -Dm644 {} $DAT_DIR/fonts/misc/{} \;
+    find . -iname "*.psf.gz" -execdir install -Dm644 {} $DAT_DIR/kbd/consolefonts/{} \;
+}

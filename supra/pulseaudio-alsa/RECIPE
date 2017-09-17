@@ -1,0 +1,6 @@
+PKG=pulseaudio-alsa
+VER=2
+
+build() {
+    install -Dm644 $RCP_DIR/asound.conf $CFG_DIR/asound.conf
+}

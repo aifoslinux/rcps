@@ -1,0 +1,2 @@
+TARGET="/lib/gio/modules/.*.so"
+RUNCMD="/bin/gio-querymodules /lib/gio/modules"

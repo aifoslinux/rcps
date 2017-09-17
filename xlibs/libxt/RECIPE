@@ -1,0 +1,12 @@
+PKG=libxt
+VER=1.1.5
+SRC=http://xorg.freedesktop.org/releases/individual/lib/libXt-$VER.tar.bz2
+
+build() {
+    autoreconf -fiv
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir
+    make
+    make DESTDIR=$PKG_DIR install
+}

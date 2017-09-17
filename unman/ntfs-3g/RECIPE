@@ -1,0 +1,23 @@
+PKG=ntfs-3g
+VER=2017.3.23
+SRC=https://tuxera.com/opensource/${PKG}_ntfsprogs-$VER.tgz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --sbindir=$bindir \
+                --mandir=$datdir/man \
+               	--disable-ldconfig \
+		--disable-static \
+		--with-fuse=external \
+		--enable-posix-acls \
+		--enable-extras
+    make
+    make DESTDIR=$PKG_DIR rootbindir=$bindir rootsbindir=$bindir rootlibdir=$libdir install
+
+    ln -s $bindir/ntfs-3g $BIN_DIR/mount.ntfs
+
+    mv $PKG_DIR/sbin/* $BIN_DIR
+    rm -r $PKG_DIR/sbin
+}

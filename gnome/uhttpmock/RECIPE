@@ -1,0 +1,13 @@
+PKG=uhttpmock
+VER=0.5.1
+SRC=http://tecnocode.co.uk/downloads/$PKG/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}

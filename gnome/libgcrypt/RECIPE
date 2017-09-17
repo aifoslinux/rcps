@@ -1,0 +1,13 @@
+PKG=libgcrypt
+VER=1.8.0
+SRC=ftp://ftp.gnupg.org/gcrypt/$PKG/$PKG-$VER.tar.bz2
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sbindir=$bindir \
+                --disable-static \
+                --disable-doc
+    make
+    make DESTDIR=$PKG_DIR install
+}

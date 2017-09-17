@@ -1,0 +1,22 @@
+--- a/include/stdlib.h
++++ b/include/stdlib.h
+@@ -50,7 +50,8 @@
+ int at_quick_exit (void (*) (void));
+ _Noreturn void quick_exit (int);
+ 
+ char *getenv (const char *);
++char *secure_getenv (const char *);
+ 
+ int system (const char *);
+ 
+--- /dev/null
++++ b/src/env/secure_getenv.c
+@@ -0,0 +1,8 @@
++#define _DEFAULT_SOURCE 1
++#include <stdlib.h>
++#include <unistd.h>
++
++char *secure_getenv(const char *name)
++{
++	return issetugid() ? NULL : getenv(name);
++}

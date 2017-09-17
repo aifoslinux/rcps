@@ -1,0 +1,17 @@
+PKG=libtirpc
+VER=1.0.2
+SRC=http://downloads.sourceforge.net/sourceforge/$PKG/$PKG-$VER.tar.bz2
+
+build() {
+    $PATCH/libtirpc_clnt_bcast.patch
+    $PATCH/libtirpc_bzero.patch
+
+    sed '/stdlib.h/a#include <stdint.h>' -i src/xdr_sizeof.c
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --disable-gssapi
+    make
+    make DESTDIR=$PKG_DIR install
+}

@@ -1,0 +1,11 @@
+PKG=luakit
+VER=20170707
+SRC=git+https://github.com/$PKG/$PKG.git
+
+build() {
+    $PATCH/no_x11.patch
+    $PATCH/socket.patch
+
+    make  DEVELOPMENT_PATHS=0 USE_LUAJIT=1 PREFIX=/usr all
+    make PREFIX=$prefix DESTDIR=$PKG_DIR install
+}

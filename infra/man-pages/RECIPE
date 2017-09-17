@@ -1,0 +1,16 @@
+PKG=man-pages
+VER=4.12
+SRC=http://www.kernel.org/pub/linux/docs/$PKG/$PKG-$VER.tar.xz
+
+build() {
+    make prefix=$PKG_DIR install
+
+    # this is included in attr
+    rm -f $DAT_DIR/man/man5/attr.5
+    # this is included in shadow
+    rm -f $DAT_DIR/man/man5/passwd.5
+    rm -f $DAT_DIR/man/man3/getspnam.3
+    # this is included in tzdata
+    rm -f $DAT_DIR/man/man8/zdump.8 
+    rm -f $DAT_DIR/man/man8/zic.8
+}

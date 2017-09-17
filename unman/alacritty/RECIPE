@@ -1,0 +1,13 @@
+PKG=alacritty
+VER=0.1.0-20170812
+SRC=git+https://github.com/jwilm/alacritty.git
+
+build() {
+    cargo build --release
+
+    install -Dm755 target/release/alacritty $BIN_DIR/alacritty
+    install -Dm644 Alacritty.desktop $DAT_DIR/applications/Alacritty.desktop
+
+    install -dm755 $DAT_DIR/terminfo/a/
+    tic -o $DAT_DIR/terminfo alacritty.info
+}

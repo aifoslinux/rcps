@@ -1,0 +1,18 @@
+PKG=xz
+VER=5.2.3
+SRC=http://tukaani.org/$PKG/$PKG-$VER.tar.gz
+
+build() {
+    unset CPPFLAGS
+    CFLAGS="$CFGLAGS -Wno-implicit-fallthrough"
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --disable-nls \
+                --disable-rpath \
+                --enable-werror
+    make
+    make DESTDIR=$PKG_DIR install
+}

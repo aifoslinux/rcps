@@ -1,0 +1,11 @@
+PKG=gperf
+VER=3.1
+SRC=ftp://ftp.gnu.org/gnu/$PKG/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --docdir=$datdir/doc/gperf
+    make -j1
+    make DESTDIR=$PKG_DIR install
+}

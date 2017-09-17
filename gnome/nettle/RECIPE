@@ -1,0 +1,13 @@
+PKG=nettle
+VER=3.3
+SRC=http://ftp.gnu.org/gnu/$PKG/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --enable-shared
+    make
+    make DESTDIR=$PKG_DIR install
+}

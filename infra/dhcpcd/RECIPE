@@ -1,0 +1,19 @@
+PKG=dhcpcd
+VER=6.11.5
+SRC=http://roy.marples.name/downloads/$PKG/$PKG-$VER.tar.xz
+
+build() {
+    CFLAGS="$CFLAGS -D_GNU_SOURCE -DHAVE_PRINTF_M"
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --sbindir=$bindir \
+                --libexecdir=$libdir/$PKG \
+                --dbdir=$vardir/lib/$PKG \
+                --rundir=$rundir
+    make
+    make DESTDIR=$PKG_DIR install
+
+    install -Dm644 $RCP_DIR/$PKG.finitd $CFG_DIR/finit.d/available/$PKG.conf
+}

@@ -1,0 +1,13 @@
+PKG=libxklavier
+VER=5.4
+SRC=http://people.freedesktop.org/~svu/$PKG-$VER.tar.bz2
+
+build() {
+    ./autogen.sh --prefix=$prefix \
+                 --host=$CHOST \
+                 --disable-static \
+                 --with-xkb-bin-base=$bindir \
+                 --with-xkb-base=$datdir/X11/xkb
+    make
+    make DESTDIR=$PKG_DIR install
+}

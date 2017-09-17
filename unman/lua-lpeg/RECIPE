@@ -1,0 +1,23 @@
+PKG=lua-lpeg
+VER=1.0.1
+SRC=http://www.inf.puc-rio.br/~roberto/lpeg/lpeg-$VER.tar.gz
+
+build() {
+    sed 's/^CFLAGS =/CFLAGS +=/' -i makefile
+    sed 's/^COPT =/# COPT =/' -i makefile
+
+    cp -a $SRC_DIR ${SRC_DIR}_5.1
+
+    make
+
+    install -Dm755 lpeg.so $LIB_DIR/lua/5.3/lpeg.so
+    install -Dm644 re.lua $DAT_DIR/lua/5.3/re.lua
+
+    cd ${SRC_DIR}_5.1
+    make LUADIR=$incdir/lua5.1
+
+    install -Dm755 lpeg.so $LIB_DIR/lua/5.1/lpeg.so
+    install -Dm644 re.lua $DAT_DIR/lua/5.1/re.lua
+
+    rm -r ${SRC_DIR}_5.1
+}

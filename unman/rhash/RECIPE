@@ -1,0 +1,13 @@
+PKG=rhash
+VER=1.3.4
+SRC=http://downloads.sourceforge.net/$PKG/$PKG-$VER-src.tar.gz
+
+build() {
+    sed -i -e 's/\/etc/\/cfg/' Makefile
+
+    make  build-shared
+    make -C librhash
+
+    make PREFIX=$prefix DESTDIR=$PKG_DIR install-shared
+    make -C librhash PREFIX=$prefix DESTDIR=$PKG_DIR install-headers install-lib-shared install-lib-static
+}

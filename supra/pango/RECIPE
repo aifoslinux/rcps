@@ -1,0 +1,19 @@
+PKG=pango
+VER=1.40.12
+SRC=https://download.gnome.org/sources/$PKG/${VER:0:4}/$PKG-$VER.tar.xz
+
+build() {
+    cd $BLD_DIR
+
+    meson --prefix=$prefix \
+          --buildtype=release \
+          --libexecdir=lib \
+          -Denable_docs=true \
+          $SRC_DIR
+    ninja
+    DESTDIR=$PKG_DIR ninja install
+
+    find $LIB_DIR/pkgconfig/ -type f -exec sed -i -e 's,prefix=,prefix=/,' {} +
+    find $LIB_DIR/pkgconfig/ -type f -exec sed -i -e 's,libdir=lib,libdir=/lib,' {} +
+    find $LIB_DIR/pkgconfig/ -type f -exec sed -i -e 's,includedir=include,includedir=/include,' {} +
+}

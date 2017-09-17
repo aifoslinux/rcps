@@ -1,0 +1,11 @@
+PKG=poseidon
+VER=0.6.7-1
+SRC=$PKG-$VER.tar.gz::https://github.com/sidus-dev/$PKG/archive/$VER.tar.gz
+
+build() {
+    install -Dm755 $RCP_DIR/poseidon.sh $BIN_DIR/poseidon
+    install -Dm755 $RCP_DIR/poseidon.desktop $DAT_DIR/applications/poseidon.desktop
+
+    install -m755 -d $LIB_DIR/$PKG
+    mv -v  * $LIB_DIR/$PKG/
+}

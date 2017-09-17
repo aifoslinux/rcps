@@ -1,0 +1,14 @@
+PKG=libnewt
+VER=0.52.20
+SRC=https://pagure.io/releases/newt/newt-$VER.tar.gz
+
+build() {
+    sed -i -e 's:-lslang:-lslang -lncurses:g' -e 's:instroot:DESTDIR:g' Makefile.in
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --without-tcl \
+                --disable-nls
+    make RPM_OPT_FLAGS="$CFLAGS"
+    make -j1 DESTDIR=$PKG_DIR prefix=$prefix install
+}

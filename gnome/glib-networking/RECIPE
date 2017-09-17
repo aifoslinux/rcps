@@ -1,0 +1,12 @@
+PKG=glib-networking
+VER=2.50.0
+SRC=https://download.gnome.org/sources/$PKG/${VER:0:4}/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --disable-static \
+                --disable-installed-tests
+    make
+    make DESTDIR=$PKG_DIR install
+}

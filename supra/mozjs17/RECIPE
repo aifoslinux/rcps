@@ -1,0 +1,26 @@
+PKG=mozjs17
+VER=17.0.0
+SRC=http://ftp.mozilla.org/pub/mozilla.org/js/mozjs$VER.tar.gz
+
+build() {
+    $PATCH/gcc7-empty_string_comparison.patch
+
+    cd js/src
+
+    # LFS solution
+    sed -i 's/(defined\((@TEMPLATE_FILE)\))/\1/' config/milestone.pl
+
+    unset CPPFLAGS
+    CXXFLAGS="-Wno-unused-local-typedefs"
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --with-system-nspr \
+                --enable-system-ffi \
+                --enable-readline \
+                --enable-threadsafe
+    make
+    make DESTDIR=$PKG_DIR install
+
+    find $PKG_DIR/{lib/pkgconfig,include} -type f -exec chmod -x {} +
+}

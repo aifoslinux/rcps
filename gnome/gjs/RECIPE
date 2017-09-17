@@ -1,0 +1,14 @@
+PKG=gjs
+VER=1.48.6
+SRC=https://download.gnome.org/sources/$PKG/${VER:0:4}/$PKG-$VER.tar.xz
+
+build() {
+    autoreconf -fiv
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --libexecdir=$libdir
+    make
+    make DESTDIR=$PKG_DIR install
+}

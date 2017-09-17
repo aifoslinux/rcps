@@ -1,0 +1,16 @@
+PKG=qbs
+VER=1.8.1
+SRC=$PKG-$VER.tar.gz::https://github.com/qt-labs/qbs/archive/v${VER}.tar.gz
+#SRC=git+https://github.com/qt-labs/qbs.git
+
+build() {
+    qmake -r \
+        qbs.pro \
+        QBS_INSTALL_PREFIX=$prefix \
+        QBS_LIBRARY_DIRNAME=$libdir \
+        QBS_LIBEXEC_INSTALL_DIR=$libdir/qbs \
+        QBS_RELATIVE_LIBEXEC_PATH=../lib/qbs \
+        CONFIG+=qbs_enable_project_file_updates qbs.pro
+    make
+    make INSTALL_ROOT=$PKG_DIR install
+}

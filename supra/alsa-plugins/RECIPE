@@ -1,0 +1,14 @@
+PKG=alsa-plugins
+VER=1.1.4
+SRC=ftp://ftp.alsa-project.org/pub/plugins/$PKG-$VER.tar.bz2
+
+build() {
+    $PATCH/config.patch
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir
+    make
+    make DESTDIR=$PKG_DIR install
+}

@@ -1,0 +1,22 @@
+PKG=pyopenssl
+VER=17.1.0
+SRC=https://files.pythonhosted.org/packages/source/p/pyOpenSSL/pyOpenSSL-$VER.tar.gz
+
+build() {
+    cp -r $SRC_DIR $SRC_DIR-py2
+
+    cd $SRC_DIR-py2
+    python2 setup.py build
+
+    cd $SRC_DIR
+    python3 setup.py build
+
+    cd $SRC_DIR-py2
+    python2 setup.py install --root=$PKG_DIR --optimize=0
+
+    cd $SRC_DIR
+    python3 setup.py install --root=$PKG_DIR --optimize=0
+
+    mv $PKG_DIR/usr/* $PKG_DIR/
+    rm -r $PKG_DIR/usr
+}

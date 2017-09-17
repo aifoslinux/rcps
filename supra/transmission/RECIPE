@@ -1,0 +1,25 @@
+PKG=transmission
+VER=2.92
+SRC=git+https://github.com/$PKG/$PKG.git
+
+build() {
+    git submodule update --init
+    NOCONFIGURE=1 ./autogen.sh
+
+    CXXFLAGS="$CXXFLAGS -fPIC"
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --without-systemd
+    make
+
+    pushd qt
+    qmake QMAKE_CFLAGS_ISYSTEM= qtr.pro
+    make
+    popd
+
+    make DESTDIR=$PKG_DIR install
+
+    make -C qt INSTALL_ROOT=$PKG_DIR install
+}

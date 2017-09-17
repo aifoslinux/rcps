@@ -1,0 +1,37 @@
+PKG=python
+VER=2.7.13
+SRC=http://www.python.org/ftp/$PKG/$VER/Python-$VER.tar.xz
+
+build() {
+    $PATCH/unchecked-ioctl.patch
+    $PATCH/musl-find_library.patch
+
+    # Make sure we use system libs
+    rm -r Modules/expat \
+          Modules/zlib \
+          Modules/_ctypes/{darwin,libffi}*
+
+     unset CPPFLAGS
+     unset CFLAGS
+     unset LDFLAGS
+
+    ./configure --prefix=/usr \
+                --build=$CBUILD \
+                --host=$CHOST \
+                --enable-shared \
+                --with-threads \
+                --enable-ipv6 \
+                --with-system-ffi \
+                --with-system-expat \
+                --without-ensurepip \
+                --with-computed-gotos \
+                --with-dbmliborder=gdbm:ndbm \
+                --enable-unicode=ucs4
+    make
+    make DESTDIR=$PKG_DIR install
+
+    mv $PKG_DIR/usr/* $PKG_DIR
+    rm -r $PKG_DIR/usr
+
+    mv $BIN_DIR/2to3{,-2.7}
+}

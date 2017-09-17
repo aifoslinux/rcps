@@ -1,0 +1,50 @@
+PKG=systemd
+VER=234
+SRC=$PKG-$VER.tar.gz::https://github.com/$PKG/$PKG/archive/v${VER}.tar.gz
+
+build() {
+    # systemd patches for musl
+    $PATCH/systemd_patches/canonicalize_file_name.patch
+    $PATCH/systemd_patches/glob.patch
+    $PATCH/systemd_patches/netdb.patch
+    $PATCH/systemd_patches/nftw.patch
+    $PATCH/systemd_patches/printf.h.patch
+    $PATCH/systemd_patches/qsort_r.patch
+    $PATCH/systemd_patches/secure_getenv.patch
+    $PATCH/systemd_patches/strndupa.patch
+    $PATCH/systemd_patches/stub_macros.patch
+    $PATCH/systemd_patches/utmpx.h.patch
+
+    sed -i -e 's,#include <linux/in6.h>,,' src/libsystemd-network/sd-radv.c
+    sed -i -e 's,#include <linux/in6.h>,,' src/libsystemd/sd-netlink/netlink-types.c
+    sed -i -e 's,#include <linux/if_bridge.h>,,' src/libsystemd/sd-netlink/netlink-types.c
+    #sed -i -e 's,#include <linux/if_bridge.h>,,' src/network/networkd-brvlan.c
+    sed -i -e 's,#include <net/if.h>,,' src/network/netdev/tunnel.c
+
+    sed -i -e 's,/usr,/,g' meson_options.txt
+    sed -i -e 's,/usr,/,g' meson.build
+    sed -i -e 's,/sbin/,/bin/,g' meson.build
+
+    local meson_options=(
+        -Daudit=false
+        -Dgnuefi=true
+        -Dima=false
+        -Dlz4=true
+        -Db_lto=true
+        -Dprefix=$prefix
+        -Dsysconfdir=$cfgdir
+        -Dlocalstatedir=$vardir
+        -Ddbuspolicydir=$datdir/dbus-1/system.d
+        -Ddefault-dnssec=no
+        -Ddefault-hierarchy=hybrid
+        -Ddefault-kill-user-processes=false
+        -Drpmmacrosdir=no
+        -Dsysvinit-path=
+        -Dsysvrcnd-path=
+    )
+
+    meson build "${meson_options[@]}"
+    ninja -C build
+
+    DESTDIR=$PKG_DIR ninja -C build install
+}

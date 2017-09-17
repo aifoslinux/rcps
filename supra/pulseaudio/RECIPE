@@ -1,0 +1,29 @@
+PKG=pulseaudio
+VER=11.0
+SRC=http://freedesktop.org/software/pulseaudio/releases/pulseaudio-$VER.tar.xz
+
+build() {
+    $PATCH/0001-padsp-Make-it-compile-on-musl.patch
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --with-udev-rules-dir=$libdir/udev/rules.d \
+                --disable-tcpwrap \
+                --disable-bluez4 \
+                --disable-samplerate \
+                --disable-rpath \
+                --disable-nls \
+                --disable-orc \
+                --disable-x11 \
+                --disable-systemd \
+                --disable-systemd-daemon \
+                --disable-systemd-journal \
+                --disable-default-build-tests 
+    make
+    make -j1 DESTDIR=$PKG_DIR install
+
+    sed -e '/flat-volumes/iflat-volumes=no' -i $CFG_DIR/pulse/daemon.conf
+    sed -e '/autospawn/iautospawn=no' -i $CFG_DIR/pulse/client.conf
+}

@@ -1,0 +1,16 @@
+PKG=groff
+VER=1.22.3
+SRC=ftp://ftp.gnu.org/gnu/$PKG/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --without-x
+    make -j1
+    make DESTDIR=$PKG_DIR install
+
+    # add compatibility symlinks
+    ln -s eqn $BIN_DIR/geqn
+    ln -s tbl $BIN_DIR/gtbl
+    ln -s soelim $BIN_DIR/zsoelim
+}

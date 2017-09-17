@@ -1,0 +1,2 @@
+TARGET="/share/mime/packages/.*.xml"
+RUNCMD="/bin/update-mime-database /share/mime"

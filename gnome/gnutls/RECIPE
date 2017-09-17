@@ -1,0 +1,22 @@
+PKG=gnutls
+VER=3.5.14
+SRC=ftp://ftp.gnutls.org/gcrypt/$PKG/v3.5/$PKG-$VER.tar.xz
+
+build() {
+    # gperf 3.1 musl fix
+    # $(echo foo,bar | gperf -L ANSI-C)
+    # determines if it is unsigned or size_t
+    sed -i -e 's,register unsigned int len,register size_t len,' lib/priority_options.gperf
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --with-zlib \
+                --without-idn \
+                --disable-static \
+                --disable-rpath \
+                --disable-guile \
+                --disable-valgrind-tests
+    make
+    make DESTDIR=$PKG_DIR install
+}

@@ -1,0 +1,15 @@
+PKG=rest
+VER=0.8.1
+#SRC=https://download.gnome.org/sources/$PKG/${VER:0:3}/$PKG-$VER.tar.xz
+SRC=$PKG-$VER.tar.gz::https://github.com/GNOME/librest/archive/$VER.tar.gz
+
+build() {
+    NOCONFIGURE=1 ./autogen.sh
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --enable-gtk-doc
+    make
+    make DESTDIR=$PKG_DIR install
+}

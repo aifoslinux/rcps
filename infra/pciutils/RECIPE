@@ -1,0 +1,18 @@
+PKG=pciutils
+VER=3.5.4
+SRC=http://www.kernel.org/pub/software/utils/$PKG/$PKG-$VER.tar.xz
+
+build() {
+    make SHARED=no ZLIB=no PREFIX=$prefix SBINDIR=$bindir SHAREDIR=$datdir/hwdata MANDIR=$datdir/man all
+
+    make clean
+
+    make SHARED=yes ZLIB=no PREFIX=$prefix SBINDIR=$bindir SHAREDIR=$datdir/hwdata MANDIR=$datdir/man all
+
+    make SHARED=yes PREFIX=$prefix SBINDIR=$bindir SHAREDIR=$datdir/hwdata MANDIR=$datdir/man \
+         DESTDIR=$PKG_DIR install install-lib
+
+    # conflicts with hwids
+    rm -f $BIN_DIR/update-pciids
+    rm -rf $DAT_DIR/{man/man8/update-pciids.8,hwdata}
+}

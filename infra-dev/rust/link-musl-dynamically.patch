@@ -1,0 +1,66 @@
+--- a/src/liblibc/src/unix/mod.rs
++++ b/src/liblibc/src/unix/mod.rs
+@@ -209,10 +209,6 @@
+     } else if #[cfg(all(not(stdbuild), feature = "use_std"))] {
+         // cargo build, don't pull in anything extra as the libstd  dep
+         // already pulls in all libs.
+-    } else if #[cfg(any(all(target_env = "musl", not(target_arch = "mips"))))] {
+-        #[link(name = "c", kind = "static", cfg(target_feature = "crt-static"))]
+-        #[link(name = "c", cfg(not(target_feature = "crt-static")))]
+-        extern {}
+     } else if #[cfg(target_os = "emscripten")] {
+         #[link(name = "c")]
+         extern {}
+--- a/src/librustc_back/target/x86_64_unknown_linux_musl.rs
++++ b/src/librustc_back/target/x86_64_unknown_linux_musl.rs
+@@ -11,7 +11,7 @@
+ use target::{Target, TargetResult};
+  
+ pub fn target() -> TargetResult {
+-    let mut base = super::linux_musl_base::opts();
++    let mut base = super::linux_base::opts();
+     base.cpu = "x86-64".to_string();
+     base.max_atomic_width = 64;
+     base.pre_link_args.push("-m64".to_string());
+--- a/src/libunwind/build.rs
++++ b/src/libunwind/build.rs
+@@ -16,9 +16,7 @@
+     let target = env::var("TARGET").unwrap();
+  
+     if target.contains("linux") {
+-        if target.contains("musl") && !target.contains("mips") {
+-            println!("cargo:rustc-link-lib=static=unwind");
+-        } else if !target.contains("android") {
++        if !target.contains("android") {
+             println!("cargo:rustc-link-lib=gcc_s");
+         }
+     } else if target.contains("freebsd") {
+--- a/src/bootstrap/compile.rs
++++ b/src/bootstrap/compile.rs
+@@ -114,10 +114,6 @@
+     let libdir = build.sysroot_libdir(target_compiler, target);
+     add_to_sysroot(&libdir, &libstd_stamp(build, compiler, target));
+ 
+-    if target.contains("musl") && !target.contains("mips") {
+-        copy_musl_third_party_objects(build, target, &libdir);
+-    }
+-
+     if build.config.sanitizers && compiler.stage != 0 && target == "x86_64-apple-darwin" {
+         // The sanitizers are only built in stage1 or above, so the dylibs will
+         // be missing in stage0 and causes panic. See the `std()` function above
+@@ -126,15 +122,6 @@
+     }
+ }
+ 
+-/// Copies the crt(1,i,n).o startup objects
+-///
+-/// Only required for musl targets that statically link to libc
+-fn copy_musl_third_party_objects(build: &Build, target: &str, into: &Path) {
+-    for &obj in &["crt1.o", "crti.o", "crtn.o"] {
+-        copy(&build.musl_root(target).unwrap().join("lib").join(obj), &into.join(obj));
+-    }
+-}
+-
+ fn copy_apple_sanitizer_dylibs(native_dir: &Path, platform: &str, into: &Path) {
+     for &sanitizer in &["asan", "tsan"] {
+         let filename = format!("libclang_rt.{}_{}_dynamic.dylib", sanitizer, platform);

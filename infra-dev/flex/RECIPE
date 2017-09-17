@@ -1,0 +1,13 @@
+PKG=flex
+VER=2.6.3
+SRC=https://github.com/westes/$PKG/releases/download/v${VER}/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --disable-nls
+    make
+    make DESTDIR=$PKG_DIR install
+
+    ln -s flex $BIN_DIR/lex
+}

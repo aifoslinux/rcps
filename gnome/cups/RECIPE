@@ -1,0 +1,70 @@
+PKG=cups
+VER=2.2.4
+SRC=https://github.com/apple/cups/releases/download/v${VER}/$PKG-$VER-source.tar.gz
+
+build() {
+    $PATCH/cups-no-gzip-man.patch
+    $PATCH/cups-1.6.2-statedir.patch
+    $PATCH/cups-no-export-ssllibs.patch 
+    $PATCH/cups-no-gcrypt.patch
+    patch -Np0 -i $RCP_DIR/cups-fix-install-perms.patch
+
+    aclocal -I config-scripts
+    autoconf -I config-scripts
+
+    find . -type f -exec sed -i 's,/usr/,/,g' {} +
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --sbindir=$bindir \
+                --libdir=$libdir \
+                --with-logdir=$vardir/log/cups \
+                --with-docdir=$datdir/cups/doc \
+                --with-cups-user=lp \
+                --with-cups-group=lp \
+                --enable-pam=yes \
+                --enable-raw-printing \
+                --enable-dbus \
+                --with-dbusdir=$cfgdir/dbus-1 \
+                --enable-ssl=yes \
+                --enable-threads \
+                --enable-avahi \
+                --enable-libpaper \
+                --disable-systemd \
+                --disable-launchd \
+                --with-optim="$CFLAGS"
+    make
+    make BUILDROOT=$PKG_DIR install
+
+    rm -rf $CFG_DIR/rc*.d
+    rm -rf $CFG_DIR/init.d
+
+    chmod 755 $VAR_DIR/spool
+    chmod 755 $CFG_DIR
+
+    install -dm700 -g lp $CFG_DIR/cups/ssl
+
+    touch $CFG_DIR/cups/printers.conf
+    touch $CFG_DIR/cups/classes.conf
+    touch $CFG_DIR/cups/subscriptions.conf
+    chgrp -R lp $CFG_DIR/cups
+
+    sed -i 's|^Exec=htmlview http://localhost:631/|Exec=xdg-open http://localhost:631/|g' $DAT_DIR/applications/cups.desktop
+
+    find $DAT_DIR/cups/model -name "*.ppd" | xargs gzip -n9f
+
+    rm -f $DAT_DIR/man/man5/client.conf.5
+  
+    # cups-filters
+    perl -p -i -e 's:^(.*\s+bannertops\s*)$:#\1:' $DAT_DIR/cups/mime/mime.convs
+
+    sed -i -e 's:PageLogFormat:#PageLogFormat:' $CFG_DIR/cups/cupsd.conf*
+
+    install -Dm644 $RCP_DIR/cups.pam $CFG_DIR/pam.d/cups
+
+    mv $PKG_DIR/usr/lib/* $LIB_DIR
+    mv $PKG_DIR/usr/bin/* $BIN_DIR
+    rm -rf $PKG_DIR/{run,usr}
+}

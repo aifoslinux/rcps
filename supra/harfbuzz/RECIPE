@@ -1,0 +1,18 @@
+PKG=harfbuzz
+VER=1.5.1
+SRC=http://www.freedesktop.org/software/$PKG/release/$PKG-$VER.tar.bz2
+
+build() {
+    autoreconf -fiv
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --with-glib \
+                --with-freetype \
+                --with-cairo \
+                --with-icu \
+                --with-graphite2
+    make
+    make DESTDIR=$PKG_DIR install
+}

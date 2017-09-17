@@ -1,0 +1,8 @@
+PKG=hwids
+VER=20170715
+SRC=https://github.com/gentoo/$PKG/archive/$PKG-$VER.tar.gz
+
+build() {
+    mkdir -p $DAT_DIR/hwdata
+    cp pci.ids usb.ids $DAT_DIR/hwdata
+}

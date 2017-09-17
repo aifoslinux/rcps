@@ -1,0 +1,18 @@
+PKG=epiphany
+VER=3.24.3
+SRC=https://download.gnome.org/sources/$PKG/${VER:0:4}/$PKG-$VER.tar.xz
+
+build() {
+    $PATCH/pluginsdir.diff
+
+    autoreconf -fiv
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --libexecdir=$libdir/$PKG \
+                --enable-compile-warnings=yes
+    make
+    make DESTDIR=$PKG_DIR install
+}

@@ -1,0 +1,24 @@
+PKG=weston
+VER=3.0.0
+SRC=https://wayland.freedesktop.org/releases/$PKG-$VER.tar.xz
+
+build() {
+    $PATCH/musl.patch
+    $PATCH/timespec.patch
+
+    find . -type f -exec sed -i -e 's,systemd/sd-login.h,elogind/sd-login.h,' {} +
+
+    autoreconf -fiv
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --libexecdir=$libdir/$PKG \
+                --enable-weston-launch \
+                --enable-drm-compositor \
+                --enable-wayland-compositor \
+                --enable-demo-clients-install
+    make
+    make DESTDIR=$PKG_DIR install
+}

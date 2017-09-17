@@ -1,0 +1,14 @@
+PKG=way-cooler
+VER=0.6.0
+SRC=$PKG-$VER.tar.gz::https://github.com/way-cooler/$PKG/archive/v${VER}.tar.gz
+
+build() {
+    cargo build --release
+    #cargo install $PKG --root $PKG_DIR
+
+    mkdir -p $BIN_DIR
+    mv target/release/$PKG $BIN_DIR
+
+    install -Dm644 config/init.lua $CFG_DIR/way-cooler/init.lua
+    install -Dm644 way-cooler.desktop $DAT_DIR/wayland-sessions/way-cooler.desktop
+}

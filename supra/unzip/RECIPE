@@ -1,0 +1,27 @@
+PKG=unzip
+VER=6.0
+SRC=http://downloads.sourceforge.net/infozip/unzip${VER/./}.tar.gz
+
+build() {
+    sed -i "/MANDIR =/s#)/#)/share/#" unix/Makefile
+    $PATCH/overflow-fsize.patch
+    $PATCH/cve20149636.patch
+    patch -i $RCP_DIR/test_compr_eb.patch
+    patch -i $RCP_DIR/getZip64Data.patch
+    patch -i $RCP_DIR/crc32.patch
+    $PATCH/empty-input.patch
+    $PATCH/csiz-underflow.patch
+    $PATCH/nextbyte-overflow.patch
+
+    # DEFINES, make, and install args from Debian
+    DEFINES='-DACORN_FTYPE_NFS -DWILD_STOP_AT_DIR -DLARGE_FILE_SUPPORT \
+        -DUNICODE_SUPPORT -DUNICODE_WCHAR -DUTF8_MAYBE_NATIVE -DNO_LCHMOD \
+        -DDATE_FORMAT=DF_YMD -DUSE_BZIP2 -DNOMEMCPY -DNO_WORKING_ISPRINT'
+
+    make -f unix/Makefile prefix=$prefix \
+        D_USE_BZ2=-DUSE_BZIP2 L_BZ2=-lbz2 \
+        LF2="$LDFLAGS" CF="$CFLAGS $CPPFLAGS -I. $DEFINES" \
+        unzips
+
+    make -f unix/Makefile prefix=$PKG_DIR install
+}

@@ -1,0 +1,12 @@
+PKG=jansson
+VER=2.10
+SRC=http://www.digip.org/$PKG/releases/$PKG-$VER.tar.bz2
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir
+    make
+    make DESTDIR=$PKG_DIR install
+}

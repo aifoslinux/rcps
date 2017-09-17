@@ -1,0 +1,14 @@
+PKG=dbus-glib
+VER=0.108
+SRC=http://dbus.freedesktop.org/releases/dbus-glib/dbus-glib-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --enable-static=no \
+                --enable-bash-completion=no
+    make
+    make DESTDIR=$PKG_DIR install
+}

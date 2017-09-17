@@ -1,0 +1,34 @@
+PKG=wpa_supplicant
+VER=2.6
+SRC=http://w1.fi/releases/$PKG-$VER.tar.gz
+
+build() {
+    $PATCH/eloop.patch
+    $PATCH/libressl.patch
+
+    cd wpa_supplicant
+
+    cp $RCP_DIR/config .config
+
+    export CFLAGS="$CPPFLAGS $CFLAGS"
+
+    make LIBDIR=$libdir BINDIR=$bindir
+    make LIBDIR=$libdir BINDIR=$bindir eapol_test
+    make LIBDIR=$libdir BINDIR=$bindir DESTDIR=$PKG_DIR install
+
+    install -m755 eapol_test $BIN_DIR/eapol_test
+
+    install -Dm644 wpa_supplicant.conf $CFG_DIR/wpa_supplicant/wpa_supplicant.conf 
+
+    install -d -m755 $DAT_DIR/man/man{5,8}
+    install -m644 doc/docbook/*.5 $DAT_DIR/man/man5/
+    install -m644 doc/docbook/*.8 $DAT_DIR/man/man8/
+    rm -f $DAT_DIR/man/man8/wpa_{priv,gui}.8
+
+    install -d -m755 $CFG_DIR/dbus-1/system.d
+    install -m644 dbus/dbus-wpa_supplicant.conf $CFG_DIR/dbus-1/system.d/wpa_supplicant.conf
+    install -d -m755 $DAT_DIR/dbus-1/system-services
+    install -m644 dbus/{fi.epitest.hostap.WPASupplicant.service,fi.w1.wpa_supplicant1.service} $DAT_DIR/dbus-1/system-services/
+
+    install -d $RUN_DIR/wpa_supplicant
+}

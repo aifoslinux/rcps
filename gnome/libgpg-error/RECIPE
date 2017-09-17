@@ -1,0 +1,13 @@
+PKG=libgpg-error
+VER=1.27
+SRC=ftp://ftp.gnupg.org/gcrypt/$PKG/$PKG-$VER.tar.bz2
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --disable-nls
+    make
+    make DESTDIR=$PKG_DIR install
+}

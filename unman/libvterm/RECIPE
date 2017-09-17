@@ -1,0 +1,8 @@
+PKG=libvterm
+VER=0.1-20170812
+SRC=git+https://github.com/neovim/libvterm.git
+
+build() {
+    make PREFIX=$prefix
+    make PREFIX=$prefix DESTDIR=$PKG_DIR install
+}

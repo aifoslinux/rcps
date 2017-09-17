@@ -1,0 +1,14 @@
+PKG=swc
+VER=0.0.1
+SRC=git+https://github.com/michaelforney/swc.git
+
+build() {
+    sed -i -e 's,ENABLE_XWAYLAND = 1,ENABLE_XWAYLAND = 0,' config.mk
+
+    make
+    make PREFIX=$prefix \
+         DESTDIR=$PKG_DIR install
+
+    sed -i -e 's,/usr/local/,/,' $LIB_DIR/pkgconfig/swc.pc
+    sed -i -e 's,/usr/local,/,' $LIB_DIR/pkgconfig/swc.pc
+}

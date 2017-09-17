@@ -1,0 +1,15 @@
+PKG=enchant
+VER=1.6.1
+SRC=https://github.com/AbiWord/enchant/releases/download/$PKG-${VER//./-}/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --disable-ispell \
+                --disable-aspell \
+                --disable-hspell \
+                --disable-myspell \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}

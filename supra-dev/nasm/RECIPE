@@ -1,0 +1,13 @@
+PKG=nasm
+VER=2.13.01
+SRC=http://www.nasm.us/pub/nasm/releasebuilds/$VER/$PKG-$VER.tar.xz
+
+build() {
+    export CFLAGS=
+    export CXXFLAGS=
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST
+    make
+    make INSTALLROOT=$PKG_DIR install
+}

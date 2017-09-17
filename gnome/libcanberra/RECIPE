@@ -1,0 +1,22 @@
+PKG=libcanberra
+VER=0.30
+SRC=git+git://git.0pointer.de/$PKG.git
+
+build() {
+    ./autogen.sh
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --disable-static \
+                --with-builtin=dso \
+                --enable-null \
+                --disable-oss \
+                --enable-alsa \
+                --enable-gstreamer \
+                --enable-pulse \
+                --enable-gtk-doc
+    make
+    make -j1 DESTDIR=$PKG_DIR install
+}

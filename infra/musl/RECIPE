@@ -1,0 +1,36 @@
+PKG=musl
+VER=1.1.16
+SRC=http://www.musl-libc.org/releases/$PKG-$VER.tar.gz
+
+build() {
+    sed -i -e 's#x86_64\*)#amd64\*)#' configure
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --build=$CBUILD \
+                --sysconfdir=$cfgdir
+    make
+    make DESTDIR=$PKG_DIR install
+
+    mkdir -p $BIN_DIR $DAT_DIR/man/man1
+
+    ln -sf libc.so $LIB_DIR/ld-musl-x86_64.so.1
+    ln -sf ../lib/ld-musl-x86_64.so.1 $BIN_DIR/ldd
+    ln -sf ld-musl-x86_64.so.1 $LIB_DIR/ld-linux-x86-64.so.2
+
+    for i in libc.so.6 libcrypt.so.1 libm.so.6 libpthread.so.0 librt.so.1 libutil.so.1; do
+        ln -sf ld-musl-x86_64.so.1 $LIB_DIR/$i
+    done
+
+    gcc $RCP_DIR/getent.c -o getent
+    gcc $RCP_DIR/getconf.c -o getconf
+    gcc $RCP_DIR/iconv.c -o iconv
+
+    install -m755 get{ent,conf} iconv $BIN_DIR
+    install -m644 $RCP_DIR/getconf.1 $DAT_DIR/man/man1
+
+    # BSD compat headers
+    install -m644 $RCP_DIR/sys-cdefs.h $INC_DIR/sys/cdefs.h
+    install -m644 $RCP_DIR/sys-queue.h $INC_DIR/sys/queue.h
+    install -m644 $RCP_DIR/sys-tree.h $INC_DIR/sys/tree.h
+}

@@ -1,0 +1,11 @@
+PKG=asciidoc
+VER=8.6.9
+SRC=http://downloads.sourceforge.net/asciidoc/asciidoc-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+    make
+    make DESTDIR=$PKG_DIR install
+}

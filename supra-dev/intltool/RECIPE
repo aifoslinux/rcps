@@ -1,0 +1,14 @@
+PKG=intltool
+VER=0.51.0
+SRC=http://edge.launchpad.net/$PKG/trunk/$VER/+download/$PKG-$VER.tar.gz
+
+build() {
+    $PATCH/perl522.patch
+
+    autoreconf -fiv
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST
+    make
+    make DESTDIR=$PKG_DIR install
+}

@@ -1,0 +1,8 @@
+PKG=unibilium
+VER=1.2.0
+SRC=$PKG-$VER.tar.gz::https://github.com/mauke/$PKG/archive/v${VER}.tar.gz
+
+build() {
+    make PREFIX=$prefix
+    make PREFIX=$prefix DESTDIR=$PKG_DIR install
+}

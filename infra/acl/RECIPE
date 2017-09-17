@@ -1,0 +1,17 @@
+PKG=acl
+VER=2.2.52
+SRC=https://download.savannah.gnu.org/releases/$PKG/$PKG-$VER.src.tar.gz
+
+build() {
+    $PATCH/config.patch
+
+    export INSTALL_USER=root INSTALL_GROUP=root
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --libdir=$libdir \
+                --libexecdir=$libdir \
+                --disable-gettext
+    make
+    make DIST_ROOT=$PKG_DIR install install-lib install-dev
+}

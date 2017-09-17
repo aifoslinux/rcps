@@ -1,0 +1,16 @@
+PKG=sinit
+VER=1.0
+SRC=http://dl.suckless.org/sinit/sinit-$VER.tar.gz
+
+build() {
+    gcc $RCP_DIR/respawn.c -o respawn
+
+    make
+    make PREFIX=$PKG_DIR install
+
+    install -Dm755 $RCP_DIR/rc.init.sh $BIN_DIR/rc.init
+    install -Dm644 $RCP_DIR/grub-sinit.cfg $PKG_DIR/boot/grub/grub.cfg
+
+    install -Dm755 respawn $BIN_DIR
+    install -Dm644 $RCP_DIR/respawn.1 $DAT_DIR/man/man1/respawn.1
+}

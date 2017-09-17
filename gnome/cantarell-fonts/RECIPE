@@ -1,0 +1,15 @@
+PKG=cantarell-fonts
+VER=0.0.25
+SRC=https://download.gnome.org/sources/$PKG/${VER:0:3}/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --with-configdir=$cfgdir/fonts/conf.avail
+    make
+    make DESTDIR=$PKG_DIR install
+
+    mkdir $CFG_DIR/fonts/conf.d
+    ln -srt $CFG_DIR/fonts/conf.d $CFG_DIR/fonts/conf.avail/*
+}

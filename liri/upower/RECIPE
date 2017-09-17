@@ -1,0 +1,16 @@
+PKG=upower
+VER=0.99.4-20170806
+SRC=git+https://anongit.freedesktop.org/git/$PKG.git
+
+build() {
+    NOCONFIGURE=1 ./autogen.sh
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --libexecdir=$libdir/upower \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}

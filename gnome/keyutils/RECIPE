@@ -1,0 +1,21 @@
+PKG=keyutils
+VER=1.5.10
+SRC=https://people.redhat.com/~dhowells/$PKG/$PKG-$VER.tar.bz2
+
+build() {
+    $PATCH/fix-includes.patch
+
+    sed -i -e 's,/sbin/,/bin/,' request-key.conf
+    sed -i -e 's,/usr/,/,' request-key.conf
+
+    make CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" SBINDIR=$bindir BINDIR=$bindir
+    make DESTDIR=$PKG_DIR \
+         SBINDIR=$bindir \
+         BINDIR=$bindir \
+         LIBDIR=$libdir \
+         USRLIBDIR=$libdir \
+         ETCDIR=$cfgdir \
+         SHAREDIR=$datdir/keyutils \
+         MANDIR=$datdir/man \
+         INCLUDEDIR=$incdir install
+}

@@ -1,0 +1,236 @@
+@@ -, +, @@ 
+ -fix indentation
+ -use 'git mv' for rename 
+ configure.ac                                   | 54 +++++++++++++++++++-------
+ gedit/Makefile.am                              | 21 +++++-----
+ gedit/{gedit-app-x11.c => gedit-app-inherit.c} | 22 ++++++-----
+ gedit/{gedit-app-x11.h => gedit-app-inherit.h} | 12 +++---
+ gedit/gedit.c                                  |  4 +-
+ 5 files changed, 69 insertions(+), 44 deletions(-)
+ rename gedit/{gedit-app-x11.c => gedit-app-inherit.c} (88%)
+ rename gedit/{gedit-app-x11.h => gedit-app-inherit.h} (75%)
+--- a/configure.ac	
++++ a/configure.ac	
+@@ -115,22 +115,31 @@ AM_CONDITIONAL(PLATFORM_OSX, test "$platform_osx" = "yes")
+ dnl check for native osx
+ gdk_targets=`$PKG_CONFIG --variable=targets gdk-3.0`
+ 
+-gdk_windowing="x11"
+-
++gdk_has_quartz=""
++gdk_has_win32=""
++gdk_has_x11=""
++gdk_has_wayland=""
++ 
+ for target in $gdk_targets;
+ do
+ 	case "$target" in
+-		quartz)
+-			gdk_windowing=quartz
++ 		quartz)
++			gdk_has_quartz=yes
+ 			;;
+-		win32)
+-			gdk_windowing=win32
++ 		win32)
++			gdk_has_win32=yes
+ 			;;
+-	esac
++                x11)
++                        gdk_has_x11=yes
++                        ;;
++                wayland)
++                        gdk_has_wayland=yes
++                        ;;
++ 	esac
+ done
+ 
+ AC_MSG_CHECKING([for native Mac OS X])
+-if test "$gdk_windowing" = "quartz"; then
++if test "$gdk_has_quartz" = "yes"; then
+ 	os_osx=yes
+ 	ACTIVE_PLUGINS="${ACTIVE_PLUGINS}, 'checkupdate'"
+ else
+@@ -139,7 +148,12 @@ fi
+ AC_MSG_RESULT([$os_osx])
+ AM_CONDITIONAL(OS_OSX, test "$os_osx" = "yes")
+ 
+-AM_CONDITIONAL(GDK_WINDOWING_X11, test "$gdk_windowing" = "x11")
++if test "$gdk_has_x11" = "yes"; then
++	AM_CONDITIONAL(GEDIT_APP_INHERIT, true)	
++fi
++if test "$gdk_has_wayland" = "yes"; then
++	AM_CONDITIONAL(GEDIT_APP_INHERIT, true)	
++fi
+ 
+ if test "$os_osx" = "yes"; then
+ 	AC_DEFINE([OS_OSX],[1],[Defined if os is Mac OSX])
+@@ -318,8 +332,7 @@ PKG_CHECK_MODULES(GEDIT, [
+ 	gsettings-desktop-schemas
+ ])
+ 
+-if test "$os_osx" = "no" &&
+-   test "$os_win32" = "no"; then
++if test "$gdk_has_x11" = "yes"; then
+ 	PKG_CHECK_MODULES(X11, [
+ 		x11
+ 	])
+@@ -328,8 +341,17 @@ else
+ 	X11_LIBS=
+ fi
+ 
+-GEDIT_CFLAGS="$GEDIT_CFLAGS $X11_CFLAGS"
+-GEDIT_LIBS="$GEDIT_LIBS $X11_LIBS"
++if test "$gdk_has_wayland" = "yes"; then
++	PKG_CHECK_MODULES(WAYLAND, [
++		wayland-client
++	])
++else
++	WAYLAND_CFLAGS=
++	WAYLAND_LIBS=
++fi
++
++GEDIT_CFLAGS="$GEDIT_CFLAGS $X11_CFLAGS $WAYLAND_CFLAGS $UNIX_CFLAGS"
++GEDIT_LIBS="$GEDIT_LIBS $X11_LIBS $WAYLAND_LIBS $UNIX_LIBS"
+ 
+ AC_SUBST(GEDIT_CFLAGS)
+ AC_SUBST(GEDIT_LIBS)
+@@ -482,7 +504,11 @@ Configuration:
+ 	Gvfs metadata enabled:	$enable_gvfs_metadata
+ 	Deprecations enabled:	$enable_deprecations
+ 	GObject Introspection:	$enable_introspection
+-	GDK Backend:            $gdk_windowing
++	==== GDK Backends ====
++		x11:     	$gdk_has_x11
++		wayland:	$gdk_has_wayland
++		quartz:		$gdk_has_quartz
++		win32:		$gdk_has_win32
+ 	Python support:         $enable_python
+ 	Vala support:           $enable_vala
+ "
+--- a/gedit/Makefile.am	
++++ a/gedit/Makefile.am	
+@@ -78,18 +78,15 @@ gedit/gedit-res.o: gedit/gedit.rc
+ gedit_gedit_LDADD += gedit/gedit-res.o
+ endif
+ 
+-# X11 convenience library
+-if GDK_WINDOWING_X11
+-noinst_LTLIBRARIES += gedit/libx11.la
+-
+-gedit_libx11_la_SOURCES =		\
+-	gedit/gedit-app-x11.c		\
+-	gedit/gedit-app-x11.h
+-
+-gedit_libx11_la_CPPFLAGS = $(gedit_common_cppflags)
+-gedit_libx11_la_CFLAGS = $(gedit_common_cflags)
+-
+-gedit_libgedit_la_LIBADD += gedit/libx11.la
++if GEDIT_APP_INHERIT
++noinst_LTLIBRARIES += gedit/libinherit.la
++gedit_libinherit_la_SOURCES =		\
++	gedit/gedit-app-inherit.c		\
++	gedit/gedit-app-inherit.h
++
++gedit_libinherit_la_CPPFLAGS = $(gedit_common_cppflags)
++gedit_libinherit_la_CFLAGS = $(gedit_common_cflags)
++gedit_libgedit_la_LIBADD += gedit/libinherit.la
+ endif
+ 
+ gedit_built_sources =			\
+--- a/gedit/gedit-app-x11.c	
++++ a/gedit/gedit-app-x11.c	
+@@ -1,5 +1,5 @@ 
+ /*
+- * gedit-app-x11.h
++ * gedit-app-inherit.c
+  * This file is part of gedit
+  *
+  * Copyright (C) 2010 - Jesse van den Kieboom
+@@ -20,29 +20,27 @@ 
+  * Boston, MA  02110-1301  USA
+  */
+ 
+-#include "gedit-app-x11.h"
++#include "gedit-app-inherit.h"
+ 
+ #ifdef GDK_WINDOWING_X11
+ #include <gdk/gdkx.h>
++#include <X11/Xatom.h>
+ #endif
+ 
+-struct _GeditAppX11
++struct _GeditAppInherit
+ {
+ 	GeditApp parent_instance;
+ };
+ 
+-G_DEFINE_TYPE (GeditAppX11, gedit_app_x11, GEDIT_TYPE_APP)
++G_DEFINE_TYPE (GeditAppInherit, gedit_app_inherit, GEDIT_TYPE_APP)
+ 
+ /* This should go in GtkApplication at some point... */
+ 
+-#include <X11/Xatom.h>
+-#include <X11/Xlib.h>
+-
+ static void
+ gedit_app_add_platform_data (GApplication    *app,
+                              GVariantBuilder *builder)
+ {
+-  G_APPLICATION_CLASS (gedit_app_x11_parent_class)->add_platform_data (app, builder);
++  G_APPLICATION_CLASS (gedit_app_inherit_parent_class)->add_platform_data (app, builder);
+ 
+   /* In the event that we are launched from a terminal we will probably
+    * see that we have DISPLAY set, but not DESKTOP_STARTUP_ID.
+@@ -70,6 +68,7 @@ gedit_app_add_platform_data (GApplication    *app,
+    * "_NET_WM_USER_TIME_WINDOW" one since that's what we're doing
+    * here...
+    */
++#ifdef GDK_WINDOWING_X11
+   if (!g_getenv ("DESKTOP_STARTUP_ID") && g_getenv ("DISPLAY") &&
+       GDK_IS_X11_DISPLAY (gdk_display_get_default ()))
+     {
+@@ -92,10 +91,13 @@ gedit_app_add_platform_data (GApplication    *app,
+       g_variant_builder_add (builder, "{sv}", "desktop-startup-id", g_variant_new_string (startup_id));
+       g_free (startup_id);
+     }
++#else
++      g_warning("It was not implemented for wayland: gedit_app_add_platform_data()");
++#endif
+ }
+ 
+ static void
+-gedit_app_x11_class_init (GeditAppX11Class *klass)
++gedit_app_inherit_class_init (GeditAppInheritClass *klass)
+ {
+ 	GApplicationClass *app_class = G_APPLICATION_CLASS (klass);
+ 
+@@ -103,7 +105,7 @@ gedit_app_x11_class_init (GeditAppX11Class *klass)
+ }
+ 
+ static void
+-gedit_app_x11_init (GeditAppX11 *self)
++gedit_app_inherit_init (GeditAppInherit *self)
+ {
+ }
+ 
+--- a/gedit/gedit.c	
++++ a/gedit/gedit.c	
+@@ -29,7 +29,7 @@ 
+ #ifdef G_OS_WIN32
+ #include "gedit-app-win32.h"
+ #else
+-#include "gedit-app-x11.h"
++#include "gedit-app-inherit.h"
+ #endif
+ #endif
+ 
+@@ -121,7 +121,7 @@ main (int argc, char *argv[])
+ 
+ 	type = GEDIT_TYPE_APP_WIN32;
+ #else
+-	type = GEDIT_TYPE_APP_X11;
++	type = GEDIT_TYPE_APP_INHERIT;
+ #endif
+ #endif
+ 

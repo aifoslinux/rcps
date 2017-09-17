@@ -1,0 +1,17 @@
+PKG=libfontenc
+VER=1.1.3
+SRC=http://xorg.freedesktop.org/archive/individual/lib/$PKG-$VER.tar.bz2
+
+build() {
+    autoreconf -fiv
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --disable-static \
+                --with-encodingsdir=$datdir/fonts/encodings
+
+    make
+    make DESTDIR=$PKG_DIR install
+}

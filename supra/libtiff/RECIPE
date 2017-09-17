@@ -1,0 +1,13 @@
+PKG=libtiff
+VER=4.0.8
+SRC=http://download.osgeo.org/libtiff/tiff-$VER.tar.gz
+
+build() {
+    $PATCH/config.patch
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir
+    make
+    make DESTDIR=$PKG_DIR install
+}

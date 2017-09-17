@@ -1,0 +1,13 @@
+PKG=gspell
+VER=1.5.2
+SRC=https://download.gnome.org/sources/$PKG/${VER:0:3}/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --enable-introspection
+    make
+    make DESTDIR=$PKG_DIR install
+}

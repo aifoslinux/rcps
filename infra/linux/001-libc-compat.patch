@@ -1,0 +1,65 @@
+--- a/include/uapi/linux/libc-compat.h	2017-07-25 16:14:46.591475407 +0200
++++ b/include/uapi/linux/libc-compat.h	2017-07-25 16:26:26.908366271 +0200
+@@ -48,8 +48,7 @@
+ #ifndef _UAPI_LIBC_COMPAT_H
+ #define _UAPI_LIBC_COMPAT_H
+ 
+-/* We have included glibc headers... */
+-#if defined(__GLIBC__)
++#ifndef __KERNEL__ /* we're used from userspace */
+ 
+ /* Coordinate with glibc net/if.h header. */
+ #if defined(_NET_IF_H) && defined(__USE_MISC)
+@@ -64,9 +63,11 @@
+ /* Everything up to IFF_DYNAMIC, matches net/if.h until glibc 2.23 */
+ #define __UAPI_DEF_IF_NET_DEVICE_FLAGS 0
+ /* For the future if glibc adds IFF_LOWER_UP, IFF_DORMANT and IFF_ECHO */
++#ifndef IFF_ECHO
+ #ifndef __UAPI_DEF_IF_NET_DEVICE_FLAGS_LOWER_UP_DORMANT_ECHO
+ #define __UAPI_DEF_IF_NET_DEVICE_FLAGS_LOWER_UP_DORMANT_ECHO 1
+ #endif /* __UAPI_DEF_IF_NET_DEVICE_FLAGS_LOWER_UP_DORMANT_ECHO */
++#endif /* IFF_ECHO */
+ 
+ #else /* _NET_IF_H */
+ 
+@@ -85,6 +86,14 @@
+ 
+ #endif /* _NET_IF_H */
+ 
++/* musl defines the ethhdr struct itself in its netinet/if_ether.h.
++ * Glibc just includes the kernel header and uses a different guard. */
++#if defined(_NETINET_IF_ETHER_H)
++#define __UAPI_DEF_ETHHDR      0
++#else
++#define __UAPI_DEF_ETHHDR      1
++#endif
++
+ /* Coordinate with glibc netinet/in.h header. */
+ #if defined(_NETINET_IN_H)
+ 
+@@ -98,15 +107,7 @@
+ #define __UAPI_DEF_IN_CLASS		0
+ 
+ #define __UAPI_DEF_IN6_ADDR		0
+-/* The exception is the in6_addr macros which must be defined
+- * if the glibc code didn't define them. This guard matches
+- * the guard in glibc/inet/netinet/in.h which defines the
+- * additional in6_addr macros e.g. s6_addr16, and s6_addr32. */
+-#if defined(__USE_MISC) || defined (__USE_GNU)
+ #define __UAPI_DEF_IN6_ADDR_ALT		0
+-#else
+-#define __UAPI_DEF_IN6_ADDR_ALT		1
+-#endif
+ #define __UAPI_DEF_SOCKADDR_IN6		0
+ #define __UAPI_DEF_IPV6_MREQ		0
+ #define __UAPI_DEF_IPPROTO_V6		0
+@@ -180,6 +181,9 @@
+ /* For the future if glibc adds IFF_LOWER_UP, IFF_DORMANT and IFF_ECHO */
+ #define __UAPI_DEF_IF_NET_DEVICE_FLAGS_LOWER_UP_DORMANT_ECHO 1
+ 
++/* Definitions for if_ether.h */
++#define __UAPI_DEF_ETHHDR      1
++
+ /* Definitions for in.h */
+ #define __UAPI_DEF_IN_ADDR		1
+ #define __UAPI_DEF_IN_IPPROTO		1

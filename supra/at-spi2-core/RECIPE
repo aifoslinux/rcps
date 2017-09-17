@@ -1,0 +1,13 @@
+PKG=at-spi2-core
+VER=2.24.1
+SRC=https://download.gnome.org/sources/$PKG/${VER:0:4}/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --libexecdir=$libdir/$PKG \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}

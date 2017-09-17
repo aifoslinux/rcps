@@ -1,0 +1,20 @@
+PKG=zlib
+VER=1.2.11
+SRC=http://zlib.net/$PKG-$VER.tar.gz
+
+build() {
+    export CFLAGS="$CFLAGS -O2 -fPIC"
+    CHOST="${CHOST}" \
+    ./configure --prefix=$prefix \
+                --libdir=$libdir \
+                --shared
+    make
+    make DESTDIR=$PKG_DIR install
+
+    cd contrib/minizip
+    autoreconf -fiv
+    ./configure --prefix=$prefix \
+                --enable-static=no
+    make
+    make DESTDIR=$PKG_DIR install
+}

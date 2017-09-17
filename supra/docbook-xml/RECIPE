@@ -1,0 +1,245 @@
+PKG=docbook-xml
+VER=4.5
+
+build() {
+    curl -L -o /src/arc/docbook-xml-4.5.zip http://www.docbook.org/xml/4.5/docbook-xml-4.5.zip
+    curl -L -o /src/arc/docbook-xml-4.4.zip http://www.docbook.org/xml/4.4/docbook-xml-4.4.zip
+    curl -L -o /src/arc/docbook-xml-4.3.zip http://www.docbook.org/xml/4.3/docbook-xml-4.3.zip
+    curl -L -o /src/arc/docbook-xml-4.2.zip http://www.docbook.org/xml/4.2/docbook-xml-4.2.zip
+    curl -L -o /src/arc/docbook-xml-4.1.2.zip http://www.docbook.org/xml/4.1.2/docbkx412.zip
+
+    for _ver in 4.1.2 4.2 4.3 4.4 4.5; do
+        mkdir $SRC_DIR/docbook-xml-${_ver}
+        bsdtar -C $SRC_DIR/docbook-xml-${_ver} -xpf /src/arc/docbook-xml-${_ver}.zip
+        mkdir -p $DAT_DIR/xml/docbook/xml-dtd-${_ver}
+        pushd $SRC_DIR/docbook-xml-${_ver}
+        cp -dRf docbook.cat *.dtd ent/ *.mod \
+            $DAT_DIR/xml/docbook/xml-dtd-${_ver}/
+        popd
+    done
+
+    mkdir -p "$CFG_DIR/xml"
+    xmlcatalog --noout --create "$CFG_DIR/xml/docbook-xml"
+
+    # V4.1.2
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//DTD DocBook XML V4.1.2//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//DTD DocBook XML CALS Table Model V4.1.2//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.1.2/calstblx.dtd" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//DTD DocBook XML CALS Table Model V4.1.2//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.1.2/calstblx.dtd" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//DTD XML Exchange Table Model 19990315//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.1.2/soextblx.dtd" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//ELEMENTS DocBook XML Information Pool V4.1.2//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.1.2/dbpoolx.mod" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//ELEMENTS DocBook XML Document Hierarchy V4.1.2//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.1.2/dbhierx.mod" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//ENTITIES DocBook XML Additional General Entities V4.1.2//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.1.2/dbgenent.mod" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//ENTITIES DocBook XML Notations V4.1.2//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.1.2/dbnotnx.mod" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//ENTITIES DocBook XML Character Entities V4.1.2//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.1.2/dbcentx.mod" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "rewriteSystem" \
+            "http://www.oasis-open.org/docbook/xml/4.1.2" \
+            "file:///usr/share/xml/docbook/xml-dtd-4.1.2" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "rewriteURI" \
+            "http://www.oasis-open.org/docbook/xml/4.1.2" \
+            "file:///usr/share/xml/docbook/xml-dtd-4.1.2" \
+            "$CFG_DIR/xml/docbook-xml"
+
+    # V4.2
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//DTD DocBook XML V4.2//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//DTD DocBook CALS Table Model V4.2//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.2/calstblx.dtd" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//DTD XML Exchange Table Model 19990315//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.2/soextblx.dtd" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//ELEMENTS DocBook Information Pool V4.2//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.2/dbpoolx.mod" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//ELEMENTS DocBook Document Hierarchy V4.2//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.2/dbhierx.mod" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//ENTITIES DocBook Additional General Entities V4.2//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.2/dbgenent.mod" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//ENTITIES DocBook Notations V4.2//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.2/dbnotnx.mod" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//ENTITIES DocBook Character Entities V4.2//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.2/dbcentx.mod" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "rewriteSystem" \
+            "http://www.oasis-open.org/docbook/xml/4.2" \
+            "file:///usr/share/xml/docbook/xml-dtd-4.2" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "rewriteURI" \
+            "http://www.oasis-open.org/docbook/xml/4.2" \
+            "file:///usr/share/xml/docbook/xml-dtd-4.2" \
+            "$CFG_DIR/xml/docbook-xml"
+
+    # V4.3
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//DTD DocBook XML V4.3//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//DTD DocBook CALS Table Model V4.3//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.3/calstblx.dtd" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//DTD XML Exchange Table Model 19990315//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.3/soextblx.dtd" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//ELEMENTS DocBook Information Pool V4.3//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.3/dbpoolx.mod" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//ELEMENTS DocBook Document Hierarchy V4.3//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.3/dbhierx.mod" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//ENTITIES DocBook Additional General Entities V4.3//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.3/dbgenent.mod" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//ENTITIES DocBook Notations V4.3//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.3/dbnotnx.mod" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//ENTITIES DocBook Character Entities V4.3//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.3/dbcentx.mod" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "rewriteSystem" \
+            "http://www.oasis-open.org/docbook/xml/4.3" \
+            "file:///usr/share/xml/docbook/xml-dtd-4.3" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "rewriteURI" \
+            "http://www.oasis-open.org/docbook/xml/4.3" \
+            "file:///usr/share/xml/docbook/xml-dtd-4.3" \
+            "$CFG_DIR/xml/docbook-xml"
+
+    # V4.4
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//DTD DocBook XML V4.4//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//DTD DocBook CALS Table Model V4.4//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.4/calstblx.dtd" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//ELEMENTS DocBook XML HTML Tables V4.4//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.4/htmltblx.mod" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//DTD XML Exchange Table Model 19990315//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.4/soextblx.dtd" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//ELEMENTS DocBook Information Pool V4.4//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.4/dbpoolx.mod" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//ELEMENTS DocBook Document Hierarchy V4.4//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.4/dbhierx.mod" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//ENTITIES DocBook Additional General Entities V4.4//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.4/dbgenent.mod" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//ENTITIES DocBook Notations V4.4//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.4/dbnotnx.mod" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//ENTITIES DocBook Character Entities V4.4//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.4/dbcentx.mod" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "rewriteSystem" \
+            "http://www.oasis-open.org/docbook/xml/4.4" \
+            "file:///usr/share/xml/docbook/xml-dtd-4.4" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "rewriteURI" \
+            "http://www.oasis-open.org/docbook/xml/4.4" \
+            "file:///usr/share/xml/docbook/xml-dtd-4.4" \
+            "$CFG_DIR/xml/docbook-xml"
+
+    # V4.5
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//DTD DocBook XML V4.5//EN" \
+            "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//DTD DocBook XML CALS Table Model V4.5//EN" \
+            "file:///usr/share/xml/docbook/xml-dtd-4.5/calstblx.dtd" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//DTD XML Exchange Table Model 19990315//EN" \
+            "file:///usr/share/xml/docbook/xml-dtd-4.5/soextblx.dtd" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//ELEMENTS DocBook XML Information Pool V4.5//EN" \
+            "file:///usr/share/xml/docbook/xml-dtd-4.5/dbpoolx.mod" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//ELEMENTS DocBook XML Document Hierarchy V4.5//EN" \
+            "file:///usr/share/xml/docbook/xml-dtd-4.5/dbhierx.mod" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//ELEMENTS DocBook XML HTML Tables V4.5//EN" \
+            "file:///usr/share/xml/docbook/xml-dtd-4.5/htmltblx.mod" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//ENTITIES DocBook XML Notations V4.5//EN" \
+            "file:///usr/share/xml/docbook/xml-dtd-4.5/dbnotnx.mod" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//ENTITIES DocBook XML Character Entities V4.5//EN" \
+            "file:///usr/share/xml/docbook/xml-dtd-4.5/dbcentx.mod" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+            "-//OASIS//ENTITIES DocBook XML Additional General Entities V4.5//EN" \
+            "file:///usr/share/xml/docbook/xml-dtd-4.5/dbgenent.mod" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "rewriteSystem" \
+            "http://www.oasis-open.org/docbook/xml/4.5" \
+            "file:///usr/share/xml/docbook/xml-dtd-4.5" \
+            "$CFG_DIR/xml/docbook-xml"
+    xmlcatalog --noout --add "rewriteURI" \
+            "http://www.oasis-open.org/docbook/xml/4.5" \
+            "file:///usr/share/xml/docbook/xml-dtd-4.5" \
+            "$CFG_DIR/xml/docbook-xml"
+}

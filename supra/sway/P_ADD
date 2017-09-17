@@ -1,0 +1,2 @@
+#!/bin/sh
+setcap "cap_sys_ptrace,cap_sys_tty_config=eip" /bin/sway

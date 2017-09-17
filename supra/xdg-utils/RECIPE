@@ -1,0 +1,15 @@
+PKG=xdg-utils
+VER=1.1.2
+SRC=http://portland.freedesktop.org/download/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --mandir=$datdir/man
+    make
+
+    chmod +x install-sh
+
+    make DESTDIR=$PKG_DIR install
+}

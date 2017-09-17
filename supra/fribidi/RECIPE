@@ -1,0 +1,11 @@
+PKG=fribidi
+VER=0.19.7
+SRC=http://fribidi.org/download/$PKG-$VER.tar.bz2
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}

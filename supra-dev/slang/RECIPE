@@ -1,0 +1,12 @@
+PKG=slang
+VER=2.3.1a
+SRC=http://www.jedsoft.org/releases/$PKG/$PKG-$VER.tar.bz2
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir
+    make -j1
+    make -j1 DESTDIR=$PKG_DIR install-all
+}

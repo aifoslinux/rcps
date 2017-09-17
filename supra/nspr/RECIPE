@@ -1,0 +1,18 @@
+PKG=nspr
+VER=4.16
+SRC=https://ftp.mozilla.org/pub/mozilla.org/$PKG/releases/v${VER}/src/$PKG-$VER.tar.gz
+
+build() {
+    ./nspr/configure --prefix=$prefix \
+                     --host=$CHOST \
+                     --libdir=$libdir \
+                     --enable-optimize \
+                     --disable-debug \
+                     --enable-64bit
+    make
+    make DESTDIR=$PKG_DIR install
+
+    ln -s nspr.pc $LIB_DIR/pkgconfig/mozilla-nspr.pc
+    rm -r $BIN_DIR/{compile-et.pl,prerr.properties} \
+          $INC_DIR/nspr/md
+}

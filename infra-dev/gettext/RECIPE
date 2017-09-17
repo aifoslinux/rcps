@@ -1,0 +1,16 @@
+PKG=gettext
+VER=0.19.8.1
+SRC=ftp://ftp.gnu.org/gnu/$PKG/$PKG-$VER.tar.gz
+
+build() {
+    # perl-5.26 fix
+    $PATCH/texi2html.patch
+
+    autoreconf -fiv
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --disable-nls
+    make
+    make DESTDIR=$PKG_DIR install
+}

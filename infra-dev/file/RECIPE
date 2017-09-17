@@ -1,0 +1,11 @@
+PKG=file
+VER=5.32
+SRC=ftp://ftp.astron.com/pub/$PKG/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                -datadir=$datdir/file
+    make
+    make DESTDIR=$PKG_DIR install
+}

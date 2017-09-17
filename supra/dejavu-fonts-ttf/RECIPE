@@ -1,0 +1,19 @@
+PKG=dejavu-fonts-ttf
+VER=2.37
+SRC=http://downloads.sourceforge.net/project/dejavu/dejavu/$VER/$PKG-$VER.tar.bz2
+
+build() {
+    install -dm755 $CFG_DIR/fonts/conf.avail
+    install -dm755 $CFG_DIR/fonts/conf.d
+    install -dm755 $DAT_DIR/fonts/TTF
+
+    install -m644 ttf/*.ttf $DAT_DIR/fonts/TTF/
+    install -m644 fontconfig/*.conf $CFG_DIR/fonts/conf.avail/
+
+    (
+        cd $CFG_DIR/fonts/conf.avail
+        for config in *; do
+            ln -sf ../conf.avail/${config} ../conf.d/${config}
+        done
+    )
+}

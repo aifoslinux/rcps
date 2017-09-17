@@ -1,0 +1,22 @@
+PKG=libtheora
+VER=1.1.1
+SRC=http://downloads.xiph.org/releases/theora/$PKG-$VER.tar.bz2
+
+build() {
+    $PATCH/config.patch
+
+    sed -i 's/png_\(sizeof\)/\1/g' examples/png2theora.c
+    export LDFLAGS="$LDFLAGS -lm"
+
+    libtoolize --force && \
+    aclocal -I m4 && \
+    autoconf --force && \
+    automake --force --add-missing
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --enable-shared \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}

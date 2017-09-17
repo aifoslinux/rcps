@@ -1,0 +1,12 @@
+PKG=cgroupfs-mount
+VER=20170722
+SRC=git+https://github.com/tianon/$PKG.git
+
+build() {
+    install -Dm755 cgroupfs-mount $BIN_DIR/cgroupfs-mount
+    install -Dm755 cgroupfs-umount $BIN_DIR/cgroupfs-umount
+
+    install -Dm644 cgroupfs-mount.8 $DAT_DIR/man/man8/cgroupfs-mount.8
+
+    install -Dm644 $RCP_DIR/$PKG.finitd $CFG_DIR/finit.d/available/$PKG.conf
+}

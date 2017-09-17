@@ -1,0 +1,12 @@
+PKG=libxi
+VER=1.7.9
+SRC=http://xorg.freedesktop.org/releases/individual/lib/libXi-$VER.tar.bz2
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir
+    make
+    make DESTDIR=$PKG_DIR install
+}

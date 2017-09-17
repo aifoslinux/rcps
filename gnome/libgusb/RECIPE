@@ -1,0 +1,14 @@
+PKG=libgusb
+VER=0.2.11
+SRC=http://people.freedesktop.org/~hughsient/releases/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --enable-gtk-doc \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}

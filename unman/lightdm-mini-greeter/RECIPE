@@ -1,0 +1,15 @@
+PKG=lightdm-mini-greeter
+VER=0.2.0
+SRC=$PKG-$VER.tar.gz::https://github.com/prikhi/$PKG/archive/$VER.tar.gz
+
+build() {
+    NOCONFIGURE=1 ./autogen.sh
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --bindir=$bindir \
+                --sysconfdir=$cfgdir \
+                --datadir=$datdir
+    make
+    make DESTDIR=$PKG_DIR install
+}

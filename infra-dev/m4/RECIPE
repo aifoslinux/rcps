@@ -1,0 +1,12 @@
+PKG=m4
+VER=1.4.18
+SRC=ftp://ftp.gnu.org/gnu/$PKG/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST
+    make
+    make DESTDIR=$PKG_DIR install
+
+    rm -rf $LIB_DIR
+}

@@ -1,0 +1,28 @@
+PKG=textadept
+VER=9.5_beta
+SRC=https://foicica.com/$PKG/download/${PKG}_${VER}.x86_64.tgz
+
+build() {
+    modules_zip=${PKG}_${VER}.modules.zip
+    curl -L -o $modules_zip http://foicica.com/textadept/download/$modules_zip
+    unzip $modules_zip
+
+    cd src
+
+    sed -i -e 's,/usr/,/,g' Makefile
+
+    export GTK3=1
+
+    make -j1 deps
+    install -m644 lua.sym luajit/src/lua.sym
+    make
+    make PREFIX=$prefix DESTDIR=$PKG_DIR install
+    #rm $DAT_DIR/pixmaps/textadept{.svg,.png}
+    #make curses PREFIX=$prefix DESTDIR=$PKG_DIR install
+    rm $DAT_DIR/applications/textadept-curses.desktop
+
+    cp -r ../${PKG}_${VER}.modules/modules $DAT_DIR/$PKG/
+
+    install -d $DAT_DIR/doc
+    ln -s $datdir/textadept/doc $DAT_DIR/doc/$PKG
+}

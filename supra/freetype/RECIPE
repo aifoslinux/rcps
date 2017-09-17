@@ -1,0 +1,12 @@
+PKG=freetype
+VER=2.8.1
+SRC=http://downloads.sourceforge.net/$PKG/$PKG-$VER.tar.bz2
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}

@@ -1,0 +1,26 @@
+PKG=e2fsprogs
+VER=1.43.6
+SRC=http://downloads.sourceforge.net/$PKG/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --libdir=$libdir \
+                --sbindir=$bindir \
+                --enable-elf-shlibs \
+                --disable-fsck \
+                --disable-uuidd \
+                --disable-libuuid \
+                --disable-libblkid \
+                --disable-tls \
+                --disable-nls
+    make
+    make -j1 DESTDIR=$PKG_DIR install install-libs
+
+    sed -i -e 's/^AWK=.*/AWK=awk/' $BIN_DIR/compile_et
+
+    # remove references to build directory
+    sed -i -e 's#^SS_DIR=.*#SS_DIR="/share/ss"#' $BIN_DIR/mk_cmds
+    sed -i -e 's#^ET_DIR=.*#ET_DIR="/share/et"#' $BIN_DIR/compile_et
+}

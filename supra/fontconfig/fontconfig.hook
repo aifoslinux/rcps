@@ -1,0 +1,2 @@
+TARGET="/share/fonts/.*"
+RUNCMD="/bin/fc-cache -s"

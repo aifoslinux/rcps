@@ -1,0 +1,22 @@
+PKG=orbital
+VER=0.2_git
+SRC=git+https://github.com/giucam/$PKG.git
+
+build() {
+    find . -type f -exec sed -i -e 's,/libexec,/lib/orbital,g' {} +
+
+    sed -i -e 's,/usr/local/,/,' src/client/shellui.cpp
+
+    cd $BLD_DIR
+
+    cmake $SRC_DIR \
+         -DCMAKE_INSTALL_PREFIX=$prefix \
+         -DCMAKE_INSTALL_LIBEXECDIR=$libdir/$PKG \
+         -Duse_solid=OFF
+    make
+
+    sed -i -e 's,//lib/orbital,/lib/orbital,g' scripts/cmake_install.cmake
+    find . -name cmake_install.cmake -exec sed -i -e 's,/libexec,/lib/orbital,g' {} +
+
+    make DESTDIR=$PKG_DIR install
+}

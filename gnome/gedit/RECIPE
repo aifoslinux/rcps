@@ -1,0 +1,23 @@
+PKG=gedit
+VER=3.22.1
+SRC=https://download.gnome.org/sources/$PKG/${VER:0:4}/$PKG-$VER.tar.xz
+
+build() {
+    #$PATCH/wayland.patch
+    #$PATCH/wayland_2.patch
+    #mv gedit/gedit-app-x11.c gedit/gedit-app-inherit.c
+    #mv gedit/gedit-app-x11.h gedit/gedit-app-inherit.h
+    #autoreconf -fiv
+    #intltoolize --force
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --libexecdir=$libdir \
+                --disable-static \
+                --disable-schemas-compile \
+                --disable-user-help
+    make
+    make DESTDIR=$PKG_DIR install
+}

@@ -1,0 +1,18 @@
+PKG=pcre
+VER=8.41
+SRC=ftp://ftp.csx.cam.ac.uk/pub/software/programming/$PKG/$PKG-$VER.tar.bz2
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --enable-utf8 \
+                --enable-unicode-properties \
+                --enable-pcre16 \
+                --enable-pcre32 \
+                --enable-jit \
+                --enable-pcregrep-libz \
+                --enable-pcregrep-libbz2 \
+                --enable-pcretest-libreadline
+    make
+    make DESTDIR=$PKG_DIR install
+}

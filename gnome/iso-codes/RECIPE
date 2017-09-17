@@ -1,0 +1,10 @@
+PKG=iso-codes
+VER=3.75
+SRC=http://pkg-isocodes.alioth.debian.org/downloads/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST
+    make
+    make DESTDIR=$PKG_DIR pkgconfigdir=$libdir/pkgconfig install
+}

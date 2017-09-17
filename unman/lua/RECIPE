@@ -1,0 +1,31 @@
+PKG=lua
+VER=5.3.4
+SRC=https://www.lua.org/ftp/$PKG-$VER.tar.gz
+
+build() {
+    $PATCH/liblua.so.patch
+
+    sed "s/%VER%/${VER%.*}/g;s/%REL%/$VER/g" $RCP_DIR/lua.pc > lua.pc
+
+    make \
+        MYCFLAGS="$CFLAGS -fPIC -DLUA_COMPAT_5_2" \
+        MYLDFLAGS="$LDFLAGS" linux
+
+    make \
+        TO_LIB="liblua.a liblua.so liblua.so.${VER%.*} liblua.so.$VER" \
+        INSTALL_DATA='cp -d' \
+        INSTALL_TOP=$PKG_DIR \
+        INSTALL_MAN=$DAT_DIR/man/man1 \
+        install
+
+    ln -sf $bindir/lua $BIN_DIR/lua${VER%.*}
+    ln -sf $bindir/luac $BIN_DIR/luac${VER%.*}
+    ln -sf $libdir/liblua.so.$VER $LIB_DIR/liblua${VER%.*}.so
+
+
+    install -Dm644 lua.pc $LIB_DIR/pkgconfig/${PKG}53.pc
+    ln -sf $libdir/pkgconfig/${PKG}53.pc $LIB_DIR/pkgconfig/$PKG.pc
+
+    install -d $DAT_DIR/doc/$PKG
+    install -m644 doc/*.{gif,png,css,html} $DAT_DIR/doc/$PKG
+}

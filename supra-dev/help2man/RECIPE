@@ -1,0 +1,13 @@
+PKG=help2man
+VER=1.47.4
+SRC=ftp://ftp.gnu.org/gnu/$PKG/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --mandir=$datdir/man \
+                --infodir=$datdir/info
+    make
+    make DESTDIR=$PKG_DIR install
+}

@@ -1,0 +1,28 @@
+PKG=icu
+VER=59.1
+SRC=http://download.icu-project.org/files/icu4c/$VER/icu4c-${VER/./_}-src.tgz
+
+build() {
+    cd source
+
+    sed -i -e 's,DU_HAVE_STRTOD_L=1,DU_HAVE_STRTOD_L=0,' configure.ac
+    sed -i -e 's,DU_HAVE_STRTOD_L=1,DU_HAVE_STRTOD_L=0,' configure
+
+    for x in ARFLAGS CFLAGS CPPFLAGS CXXFLAGS FFLAGS LDFLAGS; do
+        sed -i -e "/^${x} =.*/s:@${x}@::" "config/Makefile.inc.in"
+    done
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --sbindir=$bindir \
+                --disable-samples \
+                --mandir=$datdir/man
+    make
+    make -j1 DESTDIR=$PKG_DIR install
+
+    chmod +x $BIN_DIR/icu-config
+
+    # FIXME: icu-i18n, icu-io isn't being installed
+    install -m644 config/icu-i*.pc $LIB_DIR/pkgconfig/
+}

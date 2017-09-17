@@ -1,0 +1,13 @@
+PKG=libxkbcommon
+VER=0.7.2
+SRC=https://github.com/xkbcommon/$PKG/archive/xkbcommon-$VER.tar.gz
+
+build() {
+    NOCONFIGURE=1 ./autogen.sh
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir
+    make
+    make DESTDIR=$PKG_DIR install
+}

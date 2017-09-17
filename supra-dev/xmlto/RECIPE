@@ -1,0 +1,13 @@
+PKG=xmlto
+VER=0.0.28
+SRC=https://releases.pagure.org/$PKG/$PKG-$VER.tar.bz2
+
+build() {
+    autoreconf -fiv
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --mandir=$datdir/man
+    make
+    make DESTDIR=$PKG_DIR install
+}

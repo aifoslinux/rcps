@@ -1,0 +1,12 @@
+PKG=dri2proto
+VER=2.8
+SRC=http://xorg.freedesktop.org/releases/individual/proto/$PKG-$VER.tar.bz2
+
+build() {
+    $PATCH/config-sub.patch
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST
+    make
+    make DESTDIR=$PKG_DIR install
+}

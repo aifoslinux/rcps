@@ -1,0 +1,29 @@
+PKG=dbus
+VER=1.10.22
+SRC=http://dbus.freedesktop.org/releases/$PKG/$PKG-$VER.tar.gz
+
+build() {
+    $PATCH/dbus-enable-elogind.patch
+
+    autoreconf -fiv
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --libexecdir=$libdir/dbus-1.0 \
+                --localstatedir=$vardir \
+                --with-system-socket=$rundir/dbus/system_bus_socket \
+                --with-system-pid-file=$rundir/dbus.pid \
+                --with-dbus-user=dbus \
+                --enable-inotify \
+                --enable-elogind \
+                --disable-systemd \
+                --disable-user-session \
+                --disable-verbose-mode \
+                --disable-asserts \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+
+    rm -r $VAR_DIR/run
+}

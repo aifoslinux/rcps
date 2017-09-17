@@ -1,0 +1,9 @@
+PKG=ed
+VER=1.14.2
+SRC=https://ftp.gnu.org/gnu/$PKG/$PKG-$VER.tar.lz
+
+build() {
+    ./configure --prefix=$prefix
+    make
+    make DESTDIR=$PKG_DIR install
+}

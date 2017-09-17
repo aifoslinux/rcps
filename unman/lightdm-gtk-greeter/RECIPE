@@ -1,0 +1,18 @@
+PKG=lightdm-gtk-greeter
+VER=2.0.2
+SRC=https://launchpad.net/$PKG/${VER%.*}/$VER/+download/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sbindir=$bindir \
+                --sysconfdir=$cfgdir \
+                --libexecdir=$libdir/ligthdm \
+                --with-libxklavier \
+                --enable-kill-on-sigterm \
+                --disable-libido \
+                --disable-libindicator \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}

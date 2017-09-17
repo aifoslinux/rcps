@@ -1,0 +1,14 @@
+PKG=qupzilla
+VER=2.1.2
+SRC=$PKG-$VER.tar.gz::https://github.com/QupZilla/$PKG/archive/v${VER}.tar.gz
+
+build() {
+    $PATCH/musl-execinfo.patch
+
+    export USE_WEBGL=true \
+           QUPZILLA_PREFIX=$prefix
+
+    qmake
+    make
+    make INSTALL_ROOT=$PKG_DIR install
+}

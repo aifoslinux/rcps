@@ -1,0 +1,20 @@
+PKG=vim-rust
+VER=20170813
+SRC=git+https://github.com/rust-lang/rust.vim.git
+
+build() {
+    VF=$DAT_DIR/vim/vimfiles
+
+    install -Dm644 after/syntax/rust.vim $VF/after/syntax/rust.vim
+    install -Dm644 autoload/rustfmt.vim $VF/autoload/rustfmt.vim
+    install -Dm644 autoload/rust.vim $VF/autoload/rust.vim
+    install -Dm644 compiler/rustc.vim $VF/compiler/rustc.vim
+    install -Dm644 compiler/cargo.vim $VF/compiler/cargo.vim
+    install -Dm644 ftdetect/rust.vim $VF/ftdetect/rust.vim
+    install -Dm644 ftplugin/rust.vim $VF/ftplugin/rust.vim
+    install -Dm644 indent/rust.vim $VF/indent/rust.vim
+    install -Dm644 plugin/rust.vim $VF/plugin/rust.vim
+    install -Dm644 syntax/rust.vim $VF/syntax/rust.vim
+    install -Dm644 syntax_checkers/rust/rustc.vim $VF/syntax_checkers/rust/rustc.vim
+    install -Dm644 doc/rust.txt $VF/doc/rust.txt
+}

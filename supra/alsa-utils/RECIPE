@@ -1,0 +1,18 @@
+PKG=alsa-utils
+VER=1.1.4
+SRC=ftp://ftp.alsa-project.org/pub/utils/$PKG-$VER.tar.bz2
+
+build() {
+    $PATCH/config.patch
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sbindir=$bindir \
+                --with-udev-rules-dir=$libdir/udev/rules.d \
+                --disable-nls
+    make
+    make DESTDIR=$PKG_DIR install
+
+    # dir where to save ALSA state
+    install -d $VAR_DIR/lib/alsa
+}

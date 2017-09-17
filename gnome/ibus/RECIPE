@@ -1,0 +1,23 @@
+PKG=ibus
+VER=1.5.16
+SRC=https://github.com/ibus/ibus/releases/download/1.5.16/ibus-1.5.16.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --libexecdir=$libdir/$PKG \
+                --enable-dconf \
+                --enable-wayland \
+                --enable-ui \
+                --disable-gconf \
+                --disable-gtk2 \
+                --disable-memconf \
+                --disable-emoji-dict
+    make
+    make DESTDIR=$PKG_DIR install
+
+    mv $PKG_DIR/usr/lib/python2.7 $LIB_DIR
+    mv $LIB_DIR/locale $DAT_DIR/
+    rm -r $PKG_DIR/usr
+}

@@ -1,0 +1,10 @@
+PKG=util-macros
+VER=1.19.1
+SRC=http://xorg.freedesktop.org/releases/individual/util/$PKG-$VER.tar.bz2
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST
+    make
+    make DESTDIR=$PKG_DIR install
+}

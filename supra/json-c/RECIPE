@@ -1,0 +1,18 @@
+PKG=json-c
+VER=0.12.1
+SRC=https://s3.amazonaws.com/${PKG}_releases/releases/$PKG-$VER.tar.gz
+
+build() {
+    $PATCH/config.patch
+    $PATCH/0001-Add-FALLTHRU-comment-to-handle-GCC7-warnings.patch
+
+    autoreconf -fiv
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --disable-static \
+                --enable-shared
+    make -j1
+    make DESTDIR=$PKG_DIR install
+}

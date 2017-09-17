@@ -1,0 +1,12 @@
+--- a/build/make/configure.sh	2017-06-08 19:22:53.733217403 +0200
++++ b/build/make/configure.sh	2017-06-08 19:23:55.255083860 +0200
+@@ -618,9 +618,6 @@
+   prefix="${prefix%/}"
+   libdir="${libdir:-${prefix}/lib}"
+   libdir="${libdir%/}"
+-  if [ "${libdir#${prefix}}" = "${libdir}" ]; then
+-    die "Libdir ${libdir} must be a subdirectory of ${prefix}"
+-  fi
+ }
+ 
+ post_process_cmdline() {

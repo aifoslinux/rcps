@@ -1,0 +1,8 @@
+PKG=linux-firmware
+VER=20170622
+SRC=git+git://git.kernel.org/pub/scm/linux/kernel/git/firmware/$PKG.git#commit=7d2c913
+
+build() {
+    make DESTDIR=$PKG_DIR FIRMWAREDIR=$libdir/firmware install
+    rm $LIB_DIR/firmware/{Makefile,README,configure,GPL-3}
+}

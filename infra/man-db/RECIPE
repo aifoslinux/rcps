@@ -1,0 +1,20 @@
+PKG=man-db
+VER=2.7.6.1
+SRC=http://download.savannah.gnu.org/releases/$PKG/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --sbindir=$bindir \
+                --libexecdir=$libdir \
+                --with-db=gdbm \
+                --disable-setuid \
+                --disable-nls \
+                --enable-cache-owner=man \
+                --with-sections="1 n l 8 3 0 2 5 4 9 6 7"
+    make
+    make DESTDIR=$PKG_DIR install
+
+    rm -r $PKG_DIR/usr
+}

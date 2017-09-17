@@ -1,0 +1,13 @@
+PKG=libraw
+VER=0.18.2
+SRC=http://www.libraw.org/data/LibRaw-$VER.tar.gz
+
+build() {
+    $PATCH/config.patch
+
+    ./configure --prefix=$prefix \
+                --host=x86_64-$CHOST \
+                --disable-examples
+    make
+    make DESTDIR=$PKG_DIR install
+}

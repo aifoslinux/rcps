@@ -1,0 +1,26 @@
+PKG=liri-shell
+VER=20170806
+SRC=git+https://github.com/lirios/shell.git
+
+build() {
+    git submodule update --init
+
+    # disable systemd
+    $PATCH/disable-systemd.patch
+
+    qbs setup-toolchains --type gcc $bindir/g++ gcc
+    qbs setup-qt $bindir/qmake qt5
+    qbs config profiles.qt5.baseProfile gcc
+
+    qbs build \
+        --no-install \
+        -d $PKG-build \
+        profile:qt5 \
+        qbs.installRoot:$prefix \
+        qbs.installPrefix:"" \
+        modules.lirideployment.libexecDir:lib \
+        modules.lirideployment.qmlDir:lib/qt/qml \
+        modules.lirideployment.pluginsDir:lib/qt/plugins
+
+    qbs install -d $PKG-build --no-build -v --install-root $PKG_DIR profile:qt5
+}

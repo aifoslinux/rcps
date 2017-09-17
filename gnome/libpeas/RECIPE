@@ -1,0 +1,20 @@
+PKG=libpeas
+VER=1.20.0
+SRC=https://download.gnome.org/sources/$PKG/${VER:0:4}/$PKG-$VER.tar.xz
+
+build() {
+    autoreconf -fiv
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --datadir=$datdir \
+                --localedir=$datdir \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+
+    # datadir or localedir doesn't apply
+    mv $LIB_DIR/locale $DAT_DIR/
+}

@@ -1,0 +1,13 @@
+PKG=gawk
+VER=4.1.4
+SRC=ftp://ftp.gnu.org/gnu/$PKG/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --libexecdir=$libdir \
+                --disable-nls
+    make
+    make DESTDIR=$PKG_DIR install
+}

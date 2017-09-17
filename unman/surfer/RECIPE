@@ -1,0 +1,10 @@
+PKG=surfer
+VER=0.1
+SRC=git+https://github.com/nihilowy/$PKG.git
+
+build() {
+    sed -i -e 's,usr/,,' Makefile
+
+    make
+    make DESTDIR=$PKG_DIR install
+}

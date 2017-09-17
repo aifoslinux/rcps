@@ -1,0 +1,12 @@
+PKG=libressl
+VER=2.5.5
+SRC=http://ftp.openbsd.org/pub/OpenBSD/LibreSSL/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir
+    make
+    make DESTDIR=$PKG_DIR install
+}

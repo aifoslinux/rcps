@@ -1,0 +1,73 @@
+PKG=networkmanager
+VER=1.8.2
+SRC=https://download.gnome.org/sources/NetworkManager/${VER:0:3}/NetworkManager-$VER.tar.xz
+
+build() {
+    $PATCH/musl-basic.patch
+    $PATCH/musl-dlopen-configure-ac.patch
+    $PATCH/musl-network-support.patch
+
+    NOCONFIGURE=1 ./autogen.sh
+
+    case $CTARGET in
+        *-musl)
+            CFLAGS+=" -DHAVE_SECURE_GETENV -Dsecure_getenv=getenv -D__USE_POSIX199309"
+            ;;
+    esac
+
+    sed -e "s/HAVE_LIBSYSTEMD/0/" -i src/devices/wwan/nm-modem-manager.c
+
+    ./configure --prefix=$prefix \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                runstatedir=$rundir \
+                --sbindir=$bindir \
+                --libexecdir=$libdir/NetworkManager \
+                --disable-ifcfg-rh \
+                --disable-ifcfg-suse \
+                --disable-ifnet \
+                --disable-ifupdown \
+                --disable-ppp \
+                --disable-lto \
+                --disable-tests \
+                --disable-wimax \
+                --disable-more-warnings \
+                --disable-static \
+                --enable-gtk-doc \
+                --enable-introspection \
+                --enable-concheck \
+                --enable-config-plugin-ibft \
+                --enable-modify-system \
+                --enable-wifi \
+                --enable-polkit \
+                --enable-polkit-agent \
+                --with-config-dhcp-default=dhcpcd \
+                --with-config-dns-rc-manager-default=resolvconf \
+                --with-config-plugins-default=keyfile,ibft \
+                --with-crypto=nss \
+                --with-nmcli \
+                --with-nmtui \
+                --with-wext \
+                --with-dhcpcd \
+                --with-resolvconf=$bindir/resolvconf \
+                --with-systemd-journal=no \
+                --with-systemd-logind=no \
+                --with-session-tracking=elogind \
+                --with-suspend-resume=elogind \
+                --with-system-ca-path=$cfg/ssl/certs \
+                --with-udev-dir=$libdir/udev \
+                --with-dbus-sys-dir=$datdir/dbus-1/system.d \
+                --with-kernel-firmware-dir=$libdir/firmware \
+                --with-modem-manager-1 \
+                --without-consolekit \
+                --without-libaudit \
+                --without-netconfig \
+                --without-ofono \
+                --without-selinux \
+                --without-valgrind
+    make
+    make DESTDIR=$PKG_DIR install
+
+    install -Dm644 $RCP_DIR/$PKG.conf $CFG_DIR/NetworkManager/NetworkManager.conf
+    install -Dm644 $RCP_DIR/$PKG.rules $DAT_DIR/polkit-1/rules.d/01-org.freedesktop.NetworkManager.settings.modify.system.rules
+}

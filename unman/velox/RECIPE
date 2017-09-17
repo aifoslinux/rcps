@@ -1,0 +1,13 @@
+PKG=velox
+VER=0.1
+SRC=git+https://github.com/michaelforney/velox.git
+
+build() {
+    make
+    make PREFIX=$prefix \
+         LIBEXECDIR=$libdir \
+         DESTDIR=$PKG_DIR install
+
+    sed -i -e 's,spawn st,spawn termite,' velox.conf.sample
+    install -Dm644 velox.conf.sample $CFG_DIR/velox.conf
+}

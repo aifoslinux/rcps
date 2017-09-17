@@ -1,0 +1,10 @@
+PKG=mpc
+VER=1.0.3
+SRC=http://www.multiprecision.org/$PKG/download/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST
+    make
+    make DESTDIR=$PKG_DIR install
+}

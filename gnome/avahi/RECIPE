@@ -1,0 +1,40 @@
+PKG=avahi
+VER=0.6.32
+SRC=$PKG-$VER.tar.gz::https://github.com/lathiat/$PKG/archive/v${VER}.tar.gz
+
+build() {
+    $PATCH/qt5.patch
+
+    NOCONFIGURE=1 ./autogen.sh
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --sbindir=$bindir \
+                --disable-mono \
+                --disable-monodoc \
+                --disable-doxygen-doc \
+                --disable-gtk \
+                --disable-qt3 \
+                --disable-qt4 \
+                --disable-python \
+                --enable-compat-libdns_sd \
+                --with-avahi-priv-access-group=network \
+                --with-autoipd-user=avahi \
+                --with-autoipd-group=avahi \
+                --with-distro="gentoo"
+    make
+    make DESTDIR=$PKG_DIR install
+
+    # mdnsresponder compat
+    ln -s avahi-compat-libdns_sd/dns_sd.h $INC_DIR/dns_sd.h
+    ln -s avahi-compat-libdns_sd.pc $LIB_DIR/pkgconfig/libdns_sd.pc
+
+    # move example services
+    install -d $DAT_DIR/doc/$PKG
+    mv $CFG_DIR/avahi/services/{,sftp-}ssh.service \
+       $DAT_DIR/doc/$PKG/
+
+    rm -r $VAR_DIR
+}

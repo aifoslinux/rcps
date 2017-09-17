@@ -1,0 +1,17 @@
+PKG=colord-gtk
+VER=0.1.26
+SRC=http://www.freedesktop.org/software/colord/releases/$PKG-$VER.tar.xz
+
+build() {
+    autoreconf -fiv
+    intltoolize --force
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --disable-nls \
+                --disable-schemas-compile
+    make
+    make DESTDIR=$PKG_DIR install
+}

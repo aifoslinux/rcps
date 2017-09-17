@@ -1,0 +1,2 @@
+TARGET="/share/applications/.*.desktop"
+RUNCMD="/bin/update-desktop-database -q"

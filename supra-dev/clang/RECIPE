@@ -1,0 +1,35 @@
+PKG=clang
+VER=5.0.0
+SRC=http://llvm.org/releases/$VER/cfe-$VER.src.tar.xz
+
+build() {
+    $PATCH/cfe-001-fix-stdint.patch
+    $PATCH/cfe-003-fix-unwind-chain-inclusion.patch
+
+    cd $BLD_DIR
+
+    CC=gcc CXX=g++ \
+    cmake -DCMAKE_INSTALL_PREFIX=$prefix \
+          -DCMAKE_INSTALL_MANDIR=$datdir/man \
+          -DCMAKE_INSTALL_DATADIR=$datdir \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_VERBOSE_MAKEFILE=OFF \
+          -DCLANG_BUILD_EXAMPLES=OFF \
+          -DCLANG_INCLUDE_DOCS=ON \
+          -DCLANG_INCLUDE_TESTS=ON \
+          -DCLANG_PLUGIN_SUPPORT=ON \
+          -DLIBCLANG_BUILD_STATIC=ON \
+          -DLLVM_ENABLE_EH=ON \
+          -DLLVM_ENABLE_RTTI=ON \
+          -G "Unix Makefiles" \
+          -Wno-dev $SRC_DIR
+    make clang-tblgen
+    make
+    make DESTDIR=$PKG_DIR install
+
+    install -m644 lib/libclang.a $LIB_DIR
+
+    mv $PKG_DIR/libexec/* $LIB_DIR/clang/
+    sed -i 's|libexec|lib/clang|' $BIN_DIR/scan-build
+    rm -r $PKG_DIR/libexec
+}

@@ -1,0 +1,21 @@
+PKG=modemmanager
+VER=1.6.8
+SRC=http://www.freedesktop.org/software/ModemManager/ModemManager-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --disable-static \
+                --sbindir=$bindir \
+                --with-dbus-sys-dir=$datdir/dbus-1/system.d \
+                --with-udev-base-dir=$libdir/udev \
+                --with-polkit=permissive \
+                --with-newest-qmi-commands \
+                --enable-gtk-doc
+    make
+    make DESTDIR=$PKG_DIR install
+
+    install -Dm644 $RCP_DIR/$PKG.rules \
+        $DAT_DIR/polkit-1/rules.d/01-org.freedesktop.ModemManager.rules
+}

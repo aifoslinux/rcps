@@ -1,0 +1,12 @@
+PKG=cracklib
+VER=2.9.6
+SRC=https://github.com/$PKG/$PKG/releases/download/$PKG-$VER/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sbindir=$bindir \
+                --without-python
+    make
+    make DESTDIR=$PKG_DIR install
+}

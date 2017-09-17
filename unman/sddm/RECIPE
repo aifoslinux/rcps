@@ -1,0 +1,22 @@
+PKG=sddm
+VER=0.14.0-20170715
+SRC=git+https://github.com/$PKG/$PKG.git
+
+build() {
+    find $SRC_DIR -type f -exec sed -i 's,/usr/bin/,/bin/,g' {} +
+
+    cd $BLD_DIR
+
+    cmake $SRC_DIR \
+        -DCMAKE_INSTALL_PREFIX="$prefix" \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_SYSCONFDIR=$cfgdir \
+        -DCMAKE_INSTALL_LIBEXECDIR=$libdir/sddm \
+        -DCMAKE_INSTALL_BINDIR=$bindir \
+        -DCMAKE_INSTALL_DATAROOTDIR=$datdir \
+        -DDBUS_CONFIG_FILENAME=org.freedesktop.sddm.conf \
+        -DNO_SYSTEMD=yes -DUSE_ELOGIND=yes \
+        -DBUILD_MAN_PAGES=ON
+    make
+    make DESTDIR=$PKG_DIR install
+}

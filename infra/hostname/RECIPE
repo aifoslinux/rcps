@@ -1,0 +1,12 @@
+PKG=hostname
+VER=3.18
+SRC=http://ftp.de.debian.org/debian/pool/main/h/$PKG/${PKG}_${VER}.tar.gz
+
+build() {
+    $PATCH/support-backslash.patch
+
+    make
+    make BASEDIR=$PKG_DIR \
+         BINDIR=$bindir \
+         MANDIR=$datdir/man install
+}

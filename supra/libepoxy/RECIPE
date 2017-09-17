@@ -1,0 +1,12 @@
+PKG=libepoxy
+VER=1.4.3
+SRC=https://github.com/anholt/$PKG/releases/download/$VER/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --disable-static \
+                --enable-shared
+    make
+    make DESTDIR=$PKG_DIR install
+}

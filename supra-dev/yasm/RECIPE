@@ -1,0 +1,12 @@
+PKG=yasm
+VER=1.3.0
+SRC=http://www.tortall.net/projects/$PKG/releases/$PKG-$VER.tar.gz
+
+build() {
+    $PATCH/config.patch
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST
+    make
+    make DESTDIR=$PKG_DIR install
+}

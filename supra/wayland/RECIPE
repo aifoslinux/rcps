@@ -1,0 +1,13 @@
+PKG=wayland
+VER=1.14.0
+SRC=https://wayland.freedesktop.org/releases/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --disable-documentation \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}

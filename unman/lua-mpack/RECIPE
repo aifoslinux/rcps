@@ -1,0 +1,15 @@
+PKG=lua-mpack
+VER=1.0.6
+SRC=https://github.com/libmpack/libmpack-lua/releases/download/$VER/libmpack-lua-$VER.tar.gz
+
+build() {
+    gcc -O2 -fPIC -I$incdir/lua5.1 -c lmpack.c -o lmpack.o
+    gcc -shared -o mpack.so.5.1 lmpack.o
+
+    install -Dm755 mpack.so.5.1 $LIB_DIR/lua/5.1/mpack.so
+
+    gcc -O2 -fPIC -I$incdir -c lmpack.c -o lmpack.o
+    gcc -shared -o mpack.so.5.3 lmpack.o
+
+    install -Dm755 mpack.so.5.3 $LIB_DIR/lua/5.3/mpack.so
+}

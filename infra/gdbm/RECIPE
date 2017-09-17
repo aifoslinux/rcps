@@ -1,0 +1,11 @@
+PKG=gdbm
+VER=1.13
+SRC=http://ftp.gnu.org/gnu/$PKG/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --enable-libgdbm-compat
+    make
+    make DESTDIR=$PKG_DIR install
+}

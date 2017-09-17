@@ -1,0 +1,26 @@
+--- a/src/compositor/application.cpp	2017-08-06 14:18:30.180632143 +0200
++++ b/src/compositor/application.cpp	2017-08-06 14:22:16.373161354 +0200
+@@ -38,10 +38,6 @@
+ #include "sessionmanager/sessionmanager.h"
+ #include "sigwatch.h"
+ 
+-#if HAVE_SYSTEMD
+-#  include <systemd/sd-daemon.h>
+-#endif
+-
+ static const QEvent::Type StartupEventType = (QEvent::Type)QEvent::registerEventType();
+ 
+ Application::Application(QObject *parent)
+@@ -139,12 +135,6 @@
+     QObject *rootObject = m_homeApp->rootObjects().at(0);
+     QWaylandCompositor *compositor = qobject_cast<QWaylandCompositor *>(rootObject);
+     if (compositor) {
+-#if HAVE_SYSTEMD
+-        connect(compositor, &QWaylandCompositor::createdChanged, this, [this] {
+-            // Notify systemd when the Wayland socket is available
+-            sd_notify(0, "READY=1");
+-        });
+-#endif
+         m_launcher->setWaylandSocketName(QString::fromUtf8(compositor->socketName()));
+ 
+         // Set Qt platform for applications that will be executed from here

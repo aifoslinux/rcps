@@ -1,0 +1,43 @@
+PKG=openrc
+VER=0.28
+SRC=$PKG-$VER.tar.gz::https://github.com/OpenRC/$PKG/archive/$VER.tar.gz
+
+build() {
+    find $SRC_DIR -type f -exec sed -i 's,/usr/,/,g' {} +
+    find $SRC_DIR -type f -exec sed -i 's,/sbin,/bin,g' {} +
+    find $SRC_DIR -type f -exec sed -i 's,etc/,cfg/,g' {} +
+    find $SRC_DIR -type f -exec sed -i 's,/etc,/cfg,g' {} +
+    find $SRC_DIR -type f -exec sed -i 's,/sbin|/lib(32|64)?|/libexec,/lib,g' {} +
+
+    _makeargs=(BRANDING=\"AI\\OS\")
+    _makeargs+=(MKPAM=pam)
+    _makeargs+=(MKSELINUX=no)
+    _makeargs+=(MKTERMCAP=ncurses)
+    _makeargs+=(PKG_PREFIX="")
+    _makeargs+=(UPREFIX=$prefix)
+    _makeargs+=(LIBDIR=$libdir)
+    _makeargs+=(SHLIBDIR=$libdir)
+    _makeargs+=(LIBEXECDIR=$libdir/openrc)
+    _makeargs+=(BINDIR=$bindir)
+    _makeargs+=(SBINDIR=$bindir)
+
+    make "${_makeargs[@]}"
+    make DESTDIR=$PKG_DIR "${_makeargs[@]}" install
+
+    install -m755 $RCP_DIR/hostname.initd $CFG_DIR/init.d/hostname
+    install -Dm644 $RCP_DIR/$PKG.logrotate $CFG_DIR/logrotate.d/$PKG
+
+    # set default keymap
+    sed -i -e 's,keymap="us",#keymap="uk"\nkeymap="sv-latin1",' $CFG_DIR/conf.d/keymaps
+
+    # poweroff
+    install -Dm755 /dev/stdin $BIN_DIR/poweroff <<END
+#!/bin/sh
+exec $bindir/openrc-shutdown -p
+END
+    # reboot
+    install -Dm755 /dev/stdin $BIN_DIR/reboot <<END
+#!/bin/sh
+exec $bindir/openrc-shutdown -r
+END
+}

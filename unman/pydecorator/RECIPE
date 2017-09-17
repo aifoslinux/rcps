@@ -1,0 +1,22 @@
+PKG=pydecorator
+VER=4.0.11
+SRC=https://pypi.python.org/packages/cc/ac/5a16f1fc0506ff72fcc8fd4e858e3a1c231f224ab79bb7c4c9b2094cc570/decorator-$VER.tar.gz
+
+build() {
+    cp -r $SRC_DIR $SRC_DIR-py2
+
+    cd $SRC_DIR-py2
+    python2 setup.py build
+
+    cd $SRC_DIR
+    python3 setup.py build
+
+    cd $SRC_DIR-py2
+    python2 setup.py install --root=$PKG_DIR --optimize=1
+
+    cd $SRC_DIR
+    python3 setup.py install --root=$PKG_DIR --optimize=1
+
+    mv $PKG_DIR/usr/* $PKG_DIR/
+    rm -r $PKG_DIR/usr
+}

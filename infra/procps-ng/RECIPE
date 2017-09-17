@@ -1,0 +1,16 @@
+PKG=procps-ng
+VER=3.3.12
+SRC=http://sourceforge.net/projects/$PKG/files/Production/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --libdir=$libdir \
+                --bindir=$bindir \
+                --sbindir=$bindir \
+                --disable-kill \
+                --with-ncurses
+    make
+    make DESTDIR=$PKG_DIR install
+}

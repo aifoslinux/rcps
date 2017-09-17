@@ -1,0 +1,12 @@
+PKG=vim-colors-solarized
+VER=20170814
+SRC=git+https://github.com/altercation/$PKG.git
+
+build() {
+    install -dm755 $DAT_DIR/vim/vimfiles/{plugin,bitmaps,colors,doc}
+
+    install -Dm644 autoload/*           $DAT_DIR/vim/vimfiles/plugin/
+    install -Dm644 bitmaps/*            $DAT_DIR/vim/vimfiles/bitmaps/
+    install -Dm644 colors/*             $DAT_DIR/vim/vimfiles/colors/
+    install -Dm644 doc/solarized.txt    $DAT_DIR/vim/vimfiles/doc/
+}

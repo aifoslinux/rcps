@@ -1,0 +1,2 @@
+# elogind
+service [2345] /lib/elogind/elogind -- elogind

@@ -1,0 +1,17 @@
+PKG=gcr
+VER=3.20.0
+SRC=https://download.gnome.org/sources/$PKG/${VER:0:4}/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --libexecdir=$libdir/$PKG \
+                --disable-update-mime \
+                --disable-schemas-compile \
+                --enable-introspection \
+                --enable-vala
+    make
+    make DESTDIR=$PKG_DIR install
+}

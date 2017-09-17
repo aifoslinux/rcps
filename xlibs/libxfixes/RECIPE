@@ -1,0 +1,13 @@
+PKG=libxfixes
+VER=5.0.3
+SRC=http://xorg.freedesktop.org/releases/individual/lib/libXfixes-$VER.tar.bz2
+
+build() {
+    autoreconf -fiv
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir
+    make
+    make DESTDIR=$PKG_DIR install
+}

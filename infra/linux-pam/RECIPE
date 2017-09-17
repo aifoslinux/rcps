@@ -1,0 +1,33 @@
+PKG=linux-pam
+VER=1.3.0
+SRC=http://www.linux-pam.org/library/Linux-PAM-$VER.tar.bz2
+
+build() {
+    sed -i -e 's/pam_rhosts//g' -i modules/Makefile.am modules/Makefile.in
+    $PATCH/linux-pam-pam_exec.patch
+    $PATCH/linux-pam-lastlog.patch
+
+    case "$CTARGET" in
+        *-musl)
+            export ac_cv_search_crypt=no
+            ;;
+    esac
+
+    autoreconf -fiv
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --sbindir=$bindir \
+                --includedir=$incdir/security \
+                --disable-db \
+                --disable-nls
+    make
+    make DESTDIR=$PKG_DIR SCONFIGDIR=$cfgdir/security install
+
+    # set unix_chkpwd uid
+    chmod +s $BIN_DIR/unix_chkpwd
+
+    install -d $CFG_DIR/pam.d
+    install -t $CFG_DIR/pam.d -m644 $RCP_DIR/{other,system-{auth,login,local-login}}
+}

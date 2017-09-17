@@ -1,0 +1,28 @@
+PKG=gnome-shell
+VER=3.24.2
+SRC=https://download.gnome.org/sources/$PKG/${VER:0:4}/$PKG-$VER.tar.xz
+
+build() {
+    $PATCH/nm-libexecdir.patch
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --libexecdir=$libdir/$PKG \
+                --disable-schemas-compile \
+                --enable-gtk-doc \
+                BROWSER_PLUGIN_DIR=$libdir/epiphany/plugins
+    make
+    make DESTDIR=$PKG_DIR install
+
+    #cd $BLD_DIR
+
+    #meson --prefix=$prefix \
+    #      --buildtype=release \
+    #      --localstatedir=$vardir \
+    #      --libexecdir=lib/$PKG \
+    #      $SRC_DIR
+    #ninja
+    #DESTDIR=$PKG_DIR ninja install
+}

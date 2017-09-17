@@ -1,0 +1,10 @@
+PKG=libxslt
+VER=1.1.30
+SRC=ftp://xmlsoft.org/$PKG/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST
+    make
+    make DESTDIR=$PKG_DIR install
+}

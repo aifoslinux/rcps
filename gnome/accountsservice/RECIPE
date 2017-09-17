@@ -1,0 +1,28 @@
+PKG=accountsservice
+VER=0.6.45
+SRC=http://www.freedesktop.org/software/$PKG/$PKG-$VER.tar.xz
+
+build() {
+    $PATCH/accountsservice-0.6.43-elogind.patch
+    $PATCH/musl-fgetspent_r.patch
+
+    sed -i -e 's,systemd/sd-login.h,elogind/sd-login.h,' src/libaccountsservice/act-user-manager.c
+
+    autoreconf -fiv
+
+    # Patch to check for /var/log/wtmp instead of /var/log/utx.log
+    sed -i configure -e "s;utx\.log;wtmp;g"
+    export ac_cv_file__var_log_utx_log=yes
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --libexecdir=$libdir/$PKG \
+                --disable-static \
+                --disable-systemd \
+                --enable-elogind \
+                --enable-gtk-doc
+    make
+    make DESTDIR=$PKG_DIR install
+}

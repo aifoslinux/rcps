@@ -1,0 +1,4 @@
+#!/bin/sh
+[ ! -d /var/lib/dbus ] && install -d /var/lib/dbus
+/bin/dbus-uuidgen --ensure
+

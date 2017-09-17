@@ -1,0 +1,15 @@
+PKG=libdaemon
+VER=0.14
+SRC=http://0pointer.de/lennart/projects/$PKG/$PKG-$VER.tar.gz
+
+build() {
+    $PATCH/config.patch
+    $PATCH/fix-includes.patch
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --localstatedir=$vardir \
+                --disable-lynx
+    make
+    make DESTDIR=$PKG_DIR install
+}

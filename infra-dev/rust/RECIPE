@@ -1,0 +1,41 @@
+PKG=rust
+VER=1.20.0
+SRC=https://static.rust-lang.org/dist/rustc-$VER-src.tar.gz
+
+build() {
+    cp $RCP_DIR/bootstrap-config.toml config.toml
+
+    sed -i /LD_LIBRARY_PATH/d src/bootstrap/bootstrap.py
+
+    $PATCH/librustc_llvm-with-ffi.patch
+    $PATCH/llvm-with-ffi.patch
+
+    case $CTARGET in
+        *-musl)
+            $PATCH/musl.patch
+            $PATCH/link-musl-dynamically.patch
+            $PATCH/musl-bootstrap-sanity.patch
+            sed -i -e 's,#use-jemalloc,use-jemalloc,' config.toml
+            sed -i -e 's,#musl-root,musl-root,' config.toml
+            ;;
+        *-gnu)
+            # glibc-2.26 fix
+            export CFLAGS="$CFLAGS -D_GLIBCXX_USE_C99_MATH=1"
+            ;;
+    esac
+
+    python ./x.py build --verbose -j ${MAKEFLAGS//-j/}
+    DESTDIR=$PKG_DIR python ./x.py install
+
+    cd $LIB_DIR
+    rm rustlib/{components,manifest-rustc,rust-installer-version}
+
+    case "$CTARGET" in
+        *-musl)
+            ln -sf rustlib/$CARCH-unknown-linux-musl/lib/*.so .
+            ;;
+        *-gnu)
+            ln -sf rustlib/$CARCH-unknown-linux-gnu/lib/*.so .
+            ;;
+    esac
+}

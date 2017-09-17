@@ -1,0 +1,10 @@
+--- a/imports/placesmodel/qmtabparser.cpp	2017-07-09 19:57:52.723825993 +0200
++++ b/imports/placesmodel/qmtabparser.cpp	2017-07-09 19:58:00.423914653 +0200
+@@ -20,6 +20,7 @@
+ #include <qmtabparser.h>
+ 
+ #include <mntent.h>
++#include <paths.h>
+ 
+ #include <QFileInfo>
+ #include <QStringList>

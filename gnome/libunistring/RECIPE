@@ -1,0 +1,13 @@
+PKG=libunistring
+VER=0.9.7
+SRC=ftp://ftp.gnu.org/pub/gnu/$PKG/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}

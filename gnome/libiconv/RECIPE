@@ -1,0 +1,25 @@
+PKG=libiconv
+VER=1.15
+SRC=http://ftp.gnu.org/pub/gnu/$PKG/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --includedir=$incdir/gnu-libiconv \
+                --disable-nls \
+                --disable-static
+    # work around rpath issue
+    sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
+    sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
+
+    make
+    make DESTDIR=$PKG_DIR install
+
+    mv $BIN_DIR/{iconv,libiconv}
+    mv $DAT_DIR/man/man1/{,lib}iconv.1
+    mv $DAT_DIR/man/man3/{,libiconv_}iconv.3
+    mv $DAT_DIR/man/man3/{,libiconv_}iconvctl.3
+    mv $DAT_DIR/man/man3/{,libiconv_}iconv_open.3
+    mv $DAT_DIR/man/man3/{,libiconv_}iconv_close.3
+    mv $DAT_DIR/man/man3/{,libiconv_}iconv_open_into.3
+}

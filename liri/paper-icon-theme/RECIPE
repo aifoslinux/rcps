@@ -1,0 +1,11 @@
+PKG=paper-icon-theme
+VER=20170806
+SRC=git+https://github.com/snwh/$PKG.git
+
+build() {
+    ./autogen.sh --prefix=$prefix
+    make
+    make DESTDIR=$PKG_DIR install
+
+    rm -f $DAT_DIR/icons/gnome/icon-theme.cache
+}

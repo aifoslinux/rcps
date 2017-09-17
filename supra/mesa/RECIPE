@@ -1,0 +1,47 @@
+PKG=mesa
+VER=17.2.0
+SRC=https://mesa.freedesktop.org/archive/$PKG-$VER.tar.xz
+
+build() {
+    $PATCH/musl.patch
+    $PATCH/musl-endian.patch
+
+    autoreconf -fiv
+
+    case $CTARGET in
+        *-gnu)
+            # glibc-2.26 fix
+            export CXXFLAGS="$CXXFLAGS -D_GLIBCXX_USE_C99_MATH=1"
+            ;;
+    esac
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --with-gallium-drivers=r300,r600,radeonsi,nouveau,svga,swrast,virgl \
+                --with-dri-drivers=i915,i965,r200,radeon,nouveau,swrast \
+                --with-dri-driverdir=$libdir/dri \
+                --with-dri-searchpath=$libdir/dri \
+                --with-platforms=x11,drm,wayland \
+                --with-vulkan-drivers=intel,radeon \
+                --enable-llvm \
+                --enable-llvm-shared-libs \
+                --enable-shared-glapi \
+                --enable-gbm \
+                --enable-dri \
+                --enable-dri3 \
+                --enable-egl \
+                --enable-gles1 \
+                --enable-gles2 \
+                --enable-glx \
+                --enable-osmesa \
+                --enable-xa \
+                --enable-vdpau \
+                --enable-texture-float \
+                --enable-opencl \
+                --enable-opencl-icd \
+                --disable-nine \
+                --disable-glx-tls
+    make
+    make DESTDIR=$PKG_DIR install
+}

@@ -1,0 +1,30 @@
+PKG=openldap
+VER=2.4.45
+SRC=ftp://ftp.openldap.org/pub/OpenLDAP/$PKG-release/$PKG-$VER.tgz
+
+build() {
+    $PATCH/libressl.patch
+
+    ./configure --prefix=$prefix \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir/lib/openldap \
+                --sbindir=$bindir \
+                --libexecdir=$libdir \
+                --enable-dynamic \
+                --enable-syslog \
+                --enable-ipv6 \
+                --enable-local \
+                --enable-crypt \
+                --enable-spasswd \
+                --enable-modules \
+                --enable-backends \
+                --disable-ndb \
+                --enable-overlays=mod \
+                --with-cyrus-sasl \
+                --with-threads
+    make
+    make DESTDIR=$PKG_DIR install
+
+    # get rid of duplicate default conf files
+    rm $CFG_DIR/openldap/*.default
+}
