@@ -1,5 +1,5 @@
 PKG=man-pages
-VER=4.12
+VER=4.13
 SRC=http://www.kernel.org/pub/linux/docs/$PKG/$PKG-$VER.tar.xz
 
 build() {
