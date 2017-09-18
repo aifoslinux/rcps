@@ -1,5 +1,5 @@
 PKG=way-cooler
-VER=0.6.0
+VER=0.6.2
 SRC=$PKG-$VER.tar.gz::https://github.com/way-cooler/$PKG/archive/v${VER}.tar.gz
 
 build() {

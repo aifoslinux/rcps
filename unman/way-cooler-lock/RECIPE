@@ -1,5 +1,5 @@
-PKG=way-cooler-bg
-VER=0.2.1
+PKG=way-cooler-lock
+VER=0.1.0
 SRC=$PKG-$VER.tar.gz::https://github.com/way-cooler/$PKG/archive/v${VER}.tar.gz
 
 build() {
@@ -7,5 +7,7 @@ build() {
     #cargo install $PKG --root $PKG_DIR
 
     mkdir -p $BIN_DIR
-    mv target/release/$PKG $BIN_DIR
+    mv target/release/wc-lock $BIN_DIR
+
+    install -Dm644 pam/wc-lock $CFG_DIR/pam.d/wc-lock
 }
