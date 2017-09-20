@@ -11,6 +11,7 @@ build() {
 
     ./configure --prefix=$prefix \
                 --host=$CHOST \
+                --sysconfdir=$cfgdir/X11 \
                 --enable-xorg \
                 --enable-config-udev \
                 --disable-config-hal \
@@ -21,11 +22,16 @@ build() {
                 --disable-xwin \
                 --disable-docs \
                 --disable-devel-docs \
-                --without-systemd-daemon
+                --without-systemd-daemon \
+                --with-xkb-path=$datdir/X11/xkb \
+                --with-xkb-output=$vardir/lib/xkb \
+                --with-fontrootdir=$datdir/fonts
     make
     make DESTDIR=$PKG_DIR install
 
+	install -m644 $RCP_DIR/20-modules.conf $DAT_DIR/X11/xorg.conf.d/
+
+    # conflicts with xwayland
     rm $LIB_DIR/xorg/protocol.txt
     rm $DAT_DIR/man/man1/Xserver.1
-    rm -r $DAT_DIR/X11/xkb
 }

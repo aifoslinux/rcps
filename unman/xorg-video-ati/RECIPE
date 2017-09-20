@@ -1,5 +1,5 @@
 PKG=xorg-video-ati
-VER=7.9.0
+VER=7.10.0
 SRC=https://xorg.freedesktop.org/releases/individual/driver/xf86-video-ati-$VER.tar.bz2
 
 build() {

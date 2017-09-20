@@ -1,0 +1,21 @@
+PKG=openvpn
+VER=2.4.3
+SRC=http://build.openvpn.net/downloads/releases/$PKG-$VER.tar.xz
+
+build() {
+    $PATCH/config.patch
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --sbindir=$bindir \
+                --enable-iproute2 \
+                --disable-systemd
+    make
+    make DESTDIR=$PKG_DIR install
+
+    install -d $CFG_DIR/openvpn/{client,server}
+
+    install -d -m0755 $DAT_DIR/openvpn
+    cp -r sample/sample-config-files $DAT_DIR/openvpn/examples
+}

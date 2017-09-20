@@ -1,0 +1,8 @@
+PKG=vim-colorschemes
+VER=20170920
+SRC=git+https://github.com/flazz/$PKG.git#commit=eab3157
+
+build() {
+    install -dm755 $DAT_DIR/vim/vimfiles/colors
+    install -m644 colors/* $DAT_DIR/vim/vimfiles/colors/
+}

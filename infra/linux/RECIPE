@@ -1,5 +1,5 @@
 PKG=linux
-VER=4.12.13
+VER=4.12.14
 SRC=https://www.kernel.org/pub/$PKG/kernel/v4.x/$PKG-$VER.tar.xz
 
 build() {

@@ -1,5 +1,5 @@
 PKG=nspr
-VER=4.16
+VER=4.17
 SRC=https://ftp.mozilla.org/pub/mozilla.org/$PKG/releases/v${VER}/src/$PKG-$VER.tar.gz
 
 build() {

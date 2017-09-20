@@ -1,9 +1,9 @@
 PKG=nss
-VER=3.32
+VER=3.33
 SRC=https://ftp.mozilla.org/pub/security/nss/releases/NSS_${VER//./_}_RTM/src/$PKG-$VER.tar.gz
 
 build() {
-    _nsprver=4.16
+    _nsprver=4.17
 
     $PATCH/add_spi+cacert_ca_certs.patch
 

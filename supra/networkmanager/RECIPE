@@ -1,5 +1,5 @@
 PKG=networkmanager
-VER=1.8.2
+VER=1.8.4
 SRC=https://download.gnome.org/sources/NetworkManager/${VER:0:3}/NetworkManager-$VER.tar.xz
 
 build() {
