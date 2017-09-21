@@ -1,0 +1,10 @@
+PKG=i3status
+VER=2.11
+SRC=http://i3wm.org/$PKG/$PKG-$VER.tar.bz2
+
+build() {
+    $PATCH/musl-fix.patch
+
+    make PREFIX=$prefix
+    make PREFIX=$prefix DESTDIR=$PKG_DIR install
+}

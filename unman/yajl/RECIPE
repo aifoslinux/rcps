@@ -1,0 +1,9 @@
+PKG=yajl
+VER=2.1.0
+SRC=$PKG-$VER.tar.gz::https://github.com/lloyd/$PKG/archive/$VER.tar.gz
+
+build() {
+    cmake -DCMAKE_INSTALL_PREFIX=$prefix .
+    make
+    make DESTDIR=$PKG_DIR install
+}

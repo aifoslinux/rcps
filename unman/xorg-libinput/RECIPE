@@ -1,0 +1,13 @@
+PKG=xorg-libinput
+VER=0.26.0
+SRC=https://xorg.freedesktop.org/releases/individual/driver/xf86-input-libinput-$VER.tar.bz2
+
+build() {
+    autoreconf -fiv
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir
+    make
+    make DESTDIR=$PKG_DIR install
+}

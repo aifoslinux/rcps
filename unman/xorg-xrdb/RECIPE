@@ -1,0 +1,14 @@
+PKG=xorg-xrdb
+VER=1.1.0
+SRC=https://xorg.freedesktop.org/releases/individual/app/xrdb-$VER.tar.bz2
+
+build() {
+    autoreconf -fiv
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --with-cpp=$bindir/mcpp
+    make
+    make DESTDIR=$PKG_DIR install
+}

@@ -1,0 +1,15 @@
+PKG=i3wm
+VER=4.14
+SRC=http://i3wm.org/downloads/i3-$VER.tar.bz2
+
+build() {
+    $PATCH/musl.patch
+
+    ./configure --prefix=$prefix \
+                --disable-builddir \
+                --sysconfdir=$cfgdir
+    make
+    make DESTDIR=$PKG_DIR install
+
+    install -m644 $RCP_DIR/config $CFG_DIR/i3/config
+}

@@ -1,0 +1,12 @@
+PKG=confuse
+VER=3.2.1
+SRC=https://github.com/martinh/libconfuse/releases/download/v${VER}/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --enable-shared \
+                --disable-nls
+    make
+    make DESTDIR=$PKG_DIR install
+}

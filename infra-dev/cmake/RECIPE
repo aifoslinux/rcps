@@ -1,5 +1,5 @@
 PKG=cmake
-VER=3.9.2
+VER=3.9.3
 SRC=http://www.cmake.org/files/v${VER%.*}/$PKG-$VER.tar.gz
 
 build() {

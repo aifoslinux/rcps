@@ -1,0 +1,13 @@
+PKG=xorg-setxkbmap
+VER=1.3.1
+SRC=https://xorg.freedesktop.org/releases/individual/app/setxkbmap-$VER.tar.bz2
+
+build() {
+    autoreconf -fiv
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir
+    make
+    make DESTDIR=$PKG_DIR install
+}

@@ -1,0 +1,2 @@
+#!/bin/sh
+setcap 'CAP_NET_ADMIN=ep' /bin/i3status

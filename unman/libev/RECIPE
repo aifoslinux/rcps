@@ -1,0 +1,13 @@
+PKG=libev
+VER=4.24
+SRC=http://dist.schmorp.de/$PKG/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir
+    make
+    make DESTDIR=$PKG_DIR install
+
+    rm $INC_DIR/event.h
+}
