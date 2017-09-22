@@ -1,5 +1,5 @@
 PKG=fontconfig
-VER=2.12.5
+VER=2.12.6
 SRC=http://www.fontconfig.org/release/$PKG-$VER.tar.gz
 
 build() {
