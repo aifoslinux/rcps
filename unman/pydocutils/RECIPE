@@ -1,5 +1,5 @@
 PKG=pydocutils
-VER=0.13.1
+VER=0.14
 SRC=http://downloads.sourceforge.net/docutils/docutils-$VER.tar.gz
 
 build() {
@@ -28,4 +28,6 @@ build() {
     for f in $BIN_DIR/*.py; do
         ln -s $(basename $f) $BIN_DIR/$(basename $f .py)
     done
+
+    rm -r $SRC_DIR-py2
 }

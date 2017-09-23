@@ -1,0 +1,7 @@
+#!/bin/sh
+if getent passwd sddm >/dev/null; then
+    userdel sddm
+fi
+if getent group sddm >/dev/null; then
+    groupdel sddm
+fi

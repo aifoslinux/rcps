@@ -1,5 +1,5 @@
 PKG=perl
-VER=5.26.0
+VER=5.26.1
 SRC=http://www.cpan.org/src/5.0/$PKG-$VER.tar.bz2
 
 build() {

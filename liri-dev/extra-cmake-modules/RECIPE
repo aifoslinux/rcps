@@ -1,5 +1,5 @@
 PKG=extra-cmake-modules
-VER=5.36.0
+VER=5.38.0
 SRC=https://download.kde.org/stable/frameworks/${VER%.*}/$PKG-$VER.tar.xz
 
 build() {

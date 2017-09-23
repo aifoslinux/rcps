@@ -1,6 +1,6 @@
 PKG=sddm
-VER=0.14.0-20170715
-SRC=git+https://github.com/$PKG/$PKG.git
+VER=0.15.0
+SRC=$PKG-$VER.tar.gz::https://github.com/$PKG/$PKG/archive/v${VER}.tar.gz
 
 build() {
     find $SRC_DIR -type f -exec sed -i 's,/usr/bin/,/bin/,g' {} +
@@ -14,9 +14,10 @@ build() {
         -DCMAKE_INSTALL_LIBEXECDIR=$libdir/sddm \
         -DCMAKE_INSTALL_BINDIR=$bindir \
         -DCMAKE_INSTALL_DATAROOTDIR=$datdir \
-        -DDBUS_CONFIG_FILENAME=org.freedesktop.sddm.conf \
         -DNO_SYSTEMD=yes -DUSE_ELOGIND=yes \
         -DBUILD_MAN_PAGES=ON
     make
     make DESTDIR=$PKG_DIR install
+
+    install -Dm644 $RCP_DIR/$PKG.finitd $CFG_DIR/finit.d/available/$PKG.conf
 }
