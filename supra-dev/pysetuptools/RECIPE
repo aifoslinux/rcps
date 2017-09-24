@@ -1,5 +1,5 @@
 PKG=pysetuptools
-VER=36.4.0
+VER=36.5.0
 SRC=$PKG-$VER.tar.gz::https://github.com/pypa/setuptools/archive/v${VER}.tar.gz
 
 build() {
@@ -30,4 +30,6 @@ build() {
     # --prefix=$prefix = invalid prefix error
     mv $PKG_DIR/usr/* $PKG_DIR/
     rm -r $PKG_DIR/usr
+
+    rm -r $SRC_DIR-py2
 }
