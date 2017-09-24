@@ -10,6 +10,7 @@ build() {
     ./configure --prefix=$prefix \
                 --host=$CHOST \
                 --without-bash-malloc \
+                --with-curses \
                 --with-installed-readline \
                 --enable-static-link \
                 --disable-nls
