@@ -3,8 +3,10 @@ VER=9.22
 SRC=http://dist.schmorp.de/$PKG/$PKG-$VER.tar.bz2
 
 build() {
-    $PATCH/rxvt-unicode-kerning.patch
     $PATCH/gentables.patch
+    $PATCH/font-width-fix.patch
+    $PATCH/line-spacing-fix.patch
+    $PATCH/enable-wide-glyphs.patch
 
     _URL=https://raw.githubusercontent.com/mina86/urxvt-tabbedex/master/tabbedex
     curl -L -o tabbedex $_URL
@@ -41,6 +43,7 @@ build() {
                 --enable-xim \
                 --enable-pixbuf \
                 --enable-frills \
+                --enable-wide-glyphs \
                 $conf_opts
     make
 
