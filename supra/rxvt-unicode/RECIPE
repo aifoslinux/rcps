@@ -18,6 +18,8 @@ build() {
             ;;
     esac
 
+    autoreconf -fiv
+
     ./configure --prefix=$prefix \
                 --host=$HOST \
                 --with-terminfo=$datdir/terminfo \
