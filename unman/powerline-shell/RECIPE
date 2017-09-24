@@ -1,0 +1,14 @@
+PKG=powerline-shell
+VER=20170924
+SRC=git+https://github.com/banga/powerline-shell.git#commit=3e025e2
+
+build() {
+    python2 setup.py build
+    python2 setup.py install --skip-build --root=$PKG_DIR --optimize='1'
+
+    python3 setup.py build
+    python3 setup.py install --skip-build --root=$PKG_DIR --optimize='1'
+
+    mv $PKG_DIR/usr/* $PKG_DIR
+    rm -r $PKG_DIR/usr
+}
