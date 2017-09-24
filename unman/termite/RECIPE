@@ -9,7 +9,4 @@ build() {
     make PREFIX=$prefix DESTDIR=$PKG_DIR install
 
     install -Dm644 config $CFG_DIR/xdg/termite/config
-
-    install -d $DAT_DIR/terminfo
-    tic -x termite.terminfo -o $DAT_DIR/terminfo
 }
