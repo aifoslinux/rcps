@@ -3,7 +3,18 @@ VER=4.4
 SRC=ftp://ftp.gnu.org/gnu/$PKG/$PKG-$VER.tar.gz
 
 build() {
-    $PATCH/bash-4.4-upstream_fixes-1.patch
+    for i in {1..12}; do
+        curl -o bash${VER//.}-$(printf "%03d" $i) \
+            http://ftp.gnu.org/gnu/bash/bash-$VER-patches/bash${VER//.}-$(printf "%03d" $i)
+        patch -p0 -i bash${VER//.}-$(printf "%03d" $i)
+    done
+
+    _bashconfig=(-DDEFAULT_PATH_VALUE=\'\"$bindir\"\'
+               -DSTANDARD_UTILS_PATH=\'\"$bindir\"\'
+               -DSYS_BASHRC=\'\"$cfgdir/bash.bashrc\"\'
+               -DSYS_BASH_LOGOUT=\'\"$cfgdir/bash.bash_logout\"\'
+               -DNON_INTERACTIVE_LOGIN_SHELLS)
+    export CFLAGS="$CFLAGS ${_bashconfig[@]}"
 
     sed -i -e 's/install-$(SHOBJ_STATUS)/install-unsupported/' examples/loadables/Makefile.in
 
@@ -12,14 +23,16 @@ build() {
                 --without-bash-malloc \
                 --with-curses \
                 --with-installed-readline \
+                --enable-readline \
                 --enable-static-link \
                 --disable-nls
-    make
+    make TERMCAP_LIB=$libdir/libncursesw.a
     make DESTDIR=$PKG_DIR install
 
     install -D -m644 $RCP_DIR/bashrc.skel $CFG_DIR/skel/.bashrc
     install -D -m644 $RCP_DIR/bash_profile.skel $CFG_DIR/skel/.bash_profile
-    install -m644 $RCP_DIR/bashrc.cfg $CFG_DIR/bash.bashrc
+    install -m644 $RCP_DIR/bashrc $CFG_DIR/bash.bashrc
+    install -m644 $RCP_DIR/bash_logout $CFG_DIR/bash.bash_logout
 
     ln -s bash $BIN_DIR/sh
 }
