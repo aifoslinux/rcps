@@ -1,0 +1,14 @@
+PKG=musl-locales
+VER=20170925
+SRC=git+https://github.com/rilian-la-te/musl-locales.git#commit=049c75c
+
+build() {
+    cd $BLD_DIR
+    cmake -DCMAKE_INSTALL_PREFIX=$prefix \
+          $SRC_DIR
+    make
+    make DESTDIR=$PKG_DIR install
+
+    mv $PKG_DIR/i18n $DAT_DIR
+    sed -i -e 's,/usr/share,/share,' $CFG_DIR/profile.d/00locale.sh
+}
