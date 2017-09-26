@@ -1,5 +1,5 @@
 PKG=openvpn
-VER=2.4.3
+VER=2.4.4
 SRC=http://build.openvpn.net/downloads/releases/$PKG-$VER.tar.xz
 
 build() {

@@ -1,5 +1,5 @@
 PKG=git
-VER=2.14.1
+VER=2.14.2
 SRC=https://www.kernel.org/pub/software/scm/$PKG/$PKG-$VER.tar.xz
 
 build() {

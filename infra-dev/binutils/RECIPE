@@ -1,5 +1,5 @@
 PKG=binutils
-VER=2.29
+VER=2.29.1
 SRC=ftp://ftp.gnu.org/gnu/$PKG/$PKG-$VER.tar.gz
 
 build() {
