@@ -6,4 +6,17 @@
 
 alias ls='ls --color=auto'
 
-PS1=$'\\[\e[37;1m\\]\u@\h\\[\e[0m\\] \\[\e[1m\e[32m\\]\w \\[\e[0m\\]'
+if [ -f /bin/gvim ]; then
+    gvim() { command gvim -p --remote-tab-silent "$@" || command gvim "$@"; }
+fi
+
+if [ "$TERM" = "linux" ]; then
+    PS1='[\u@\h \w]\$ '
+elif [ -f /bin/powerline-daemon ]; then
+    powerline-daemon -q
+    POWERLINE_BASH_CONTINUATION=1
+    POWERLINE_BASH_SELECT=1
+    . /share/powerline/bindings/bash/powerline.sh
+else
+    PS1=$'\\[\e[37;1m\\]\u@\h\\[\e[0m\\] \\[\e[1m\e[32m\\]\w \\[\e[0m\\]'
+fi
