@@ -1,0 +1,12 @@
+PKG=libexif
+VER=0.6.21
+SRC=https://downloads.sourceforge.net/sourceforge/$PKG/$PKG-$VER.tar.bz2
+
+build() {
+    $PATCH/config.patch
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST
+    make
+    make DESTDIR=$PKG_DIR install
+}

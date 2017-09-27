@@ -1,0 +1,10 @@
+PKG=feh
+VER=2.20
+SRC=https://feh.finalrewind.org/$PKG-$VER.tar.bz2
+
+build() {
+    make PREFIX=$prefix exif=1 help=1 stat64=1
+    make PREFIX=$prefix \
+         example_dir=$DAT_DIR/doc/$PKG/examples \
+         DESTDIR=$PKG_DIR install
+}

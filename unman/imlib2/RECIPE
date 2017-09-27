@@ -1,0 +1,15 @@
+PKG=imlib2
+VER=1.4.10
+SRC=http://downloads.sourceforge.net/enlightenment/$PKG-$VER.tar.bz2
+
+build() {
+    autoreconf -fiv
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir/imlib2 \
+                --x-libraries=$libdir \
+                --enable-amd64
+    make
+    make DESTDIR=$PKG_DIR install
+}
