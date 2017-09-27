@@ -1,5 +1,5 @@
 PKG=dbus
-VER=1.10.22
+VER=1.10.24
 SRC=http://dbus.freedesktop.org/releases/$PKG/$PKG-$VER.tar.gz
 
 build() {
