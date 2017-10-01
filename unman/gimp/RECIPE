@@ -1,0 +1,32 @@
+PKG=gimp
+VER=2.9.6
+SRC=https://download.gimp.org/pub/$PKG/v2.9/$PKG-$VER.tar.bz2
+
+build() {
+    $PATCH/configure.patch
+    autoreconf -fiv
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --enable-mp \
+                --enable-gimp-console \
+                --disable-python \
+                --with-gif-compression=lzw \
+                --with-libcurl \
+                --without-aa \
+                --without-hal \
+                --without-gvfs \
+                --without-gnomevfs \
+                --disable-gtk-doc
+    make
+    make DESTDIR=$PKG_DIR install
+
+    install -Dm644 $RCP_DIR/linux.gpl $DAT_DIR/gimp/2.0/palettes/Linux.gpl
+
+    case $CTARGET in
+        *-musl)
+            mv $LIB_DIR/locale $DAT_DIR
+            ;;
+    esac
+}

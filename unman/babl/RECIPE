@@ -1,0 +1,10 @@
+PKG=babl
+VER=0.1.30
+SRC=https://download.gimp.org/pub/$PKG/0.1/$PKG-$VER.tar.bz2
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST
+    make
+    make DESTDIR=$PKG_DIR install
+}

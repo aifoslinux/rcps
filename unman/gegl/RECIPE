@@ -1,0 +1,18 @@
+PKG=gegl
+VER=0.3.20
+SRC=https://download.gimp.org/pub/$PKG/0.3/$PKG-$VER.tar.bz2
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --disable-docs \
+                --with-librsvg
+    make
+    make DESTDIR=$PKG_DIR install
+
+    case $CTARGET in
+        *-musl)
+            mv $LIB_DIR/locale $DAT_DIR
+            ;;
+    esac
+}

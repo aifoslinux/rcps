@@ -1,0 +1,12 @@
+PKG=libgexiv2
+VER=0.10.6
+SRC=https://download.gnome.org/sources/${PKG/lib/}/${VER:0:4}/${PKG/lib/}-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --disable-introspection
+    make
+    make DESTDIR=$PKG_DIR install
+}

@@ -1,0 +1,22 @@
+PKG=exiv2
+VER=0.26
+SRC=$PKG-$VER.tar.gz::https://github.com/Exiv2/$PKG/archive/v${VER}.tar.gz
+
+build() {
+    $PATCH/5405d616.patch
+    $PATCH/f9d0be42.patch
+    $PATCH/musl-mutex-initializer.patch
+
+    cd $BLD_DIR
+
+    cmake -DCMAKE_INSTALL_PREFIX=$prefix \
+          -DEXIV2_ENABLE_VIDEO=ON \
+          -DEXIV2_ENABLE_BUILD_PO=ON \
+          -DEXIV2_ENABLE_BUILD_SAMPLES=OFF \
+          -DCMAKE_INSTALL_LIBDIR=$libdir \
+          -DCMAKE_INSTALL_MANDIR=$datdir/man1 \
+          $SRC_DIR
+    make
+    sed -i -e 's,//,/,' po/cmake_install.cmake
+    make DESTDIR=$PKG_DIR install
+}

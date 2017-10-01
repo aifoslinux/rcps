@@ -1,0 +1,13 @@
+PKG=libmypaint
+VER=1.3.0
+SRC=$PKG-$VER.tar.gz::https://github.com/mypaint/$PKG/archive/v${VER}.tar.gz
+
+build() {
+    NOCONFIGURE=1 ./autogen.sh
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --enable-gegl
+    make
+    make DESTDIR=$PKG_DIR install
+}
