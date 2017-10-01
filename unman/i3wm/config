@@ -165,7 +165,7 @@ bar {
 # Volume control
 bindsym Control+Up exec pactl set-sink-volume 0 +10%
 bindsym Control+Down exec pactl set-sink-volume 0 -10%
-exec pulseaudio
+exec pulseaudio -D
 
 #exec xmodmap -e "pointer = 3 2 1"
 #exec "setxkbmap -layout se"

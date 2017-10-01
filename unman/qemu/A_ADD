@@ -1,0 +1,4 @@
+#!/bin/sh
+if ! getent group kvm > /dev/null; then
+    groupadd -r -g 78 kvm
+fi

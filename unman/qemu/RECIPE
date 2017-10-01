@@ -1,0 +1,38 @@
+PKG=qemu
+VER=2.10.0
+SRC=http://wiki.qemu.org/download/$PKG-$VER.tar.bz2
+
+build() {
+    $PATCH/0006-linux-user-signal.c-define-__SIGRTMIN-MAX-for-non-GN.patch
+    $PATCH/SDL2-fix-fullscreen.patch
+    $PATCH/musl-9p-limits_h.patch
+    $PATCH/musl-F_SHLCK-and-F_EXLCK.patch
+    $PATCH/musl-fix-SIOCGSTAMPNS.patch
+    $PATCH/musl-fix-sigevent-and-sigval_t.patch
+
+    case "$CTARGET" in
+	    *-musl)
+            CFLAGS+=" -D_LINUX_SYSINFO_H"
+            ;;
+    esac
+
+    export ARFLAGS="rv"
+    export CFLAGS+=' -fPIC'
+
+    ./configure --prefix=$prefix \
+                --sysconfdir=$cfgdir \
+                --libexecdir=$libdir/qemu \
+                --localstatedir=$vardir \
+                --audio-drv-list='pa alsa sdl' \
+                --enable-modules \
+                --with-gtkabi=3.0 \
+                --with-sdlabi=2.0
+    make
+    make DESTDIR=$PKG_DIR install
+
+    install -Dm644 $RCP_DIR/65-kvm.rules $LIB_DIR/udev/rules.d/65-kvm.rules
+
+    cd $BIN_DIR; ln -sv qemu-system-x86_64 qemu
+
+    rm -r $VAR_DIR
+}
