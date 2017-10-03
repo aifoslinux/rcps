@@ -1,5 +1,5 @@
 PKG=gdk-pixbuf
-VER=2.36.9
+VER=2.36.11
 SRC=https://download.gnome.org/sources/$PKG/${VER:0:4}/$PKG-$VER.tar.xz
 
 build() {

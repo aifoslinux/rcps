@@ -1,5 +1,5 @@
 PKG=qemu
-VER=2.10.0
+VER=2.10.1
 SRC=http://wiki.qemu.org/download/$PKG-$VER.tar.bz2
 
 build() {

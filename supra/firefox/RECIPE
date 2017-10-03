@@ -1,5 +1,5 @@
 PKG=firefox
-VER=55.0.3
+VER=56.0
 SRC=https://ftp.mozilla.org/pub/mozilla.org/$PKG/releases/$VER/source/$PKG-$VER.source.tar.xz
 
 build() {
@@ -55,7 +55,6 @@ EOF
             $PATCH/fix-fortify-system-wrappers.patch
             $PATCH/fix-musl.patch
             $PATCH/fix-seccomp-bpf.patch
-            $PATCH/fix-seccomp-musl.patch
             $PATCH/fix-toolkit.patch
             $PATCH/fix-tools.patch
             $PATCH/fix-xpcom.patch
@@ -72,15 +71,11 @@ EOF
             ;;
     esac
 
-    MOZ_OPT_FLAGS="-O2 -fno-delete-null-pointer-checks -fno-schedule-insns2"
-    export CFLAGS=$MOZ_OPT_FLAGS
-    export CXXFLAGS=$MOZ_OPT_FLAGS
+    CPPFLAGS+=" -O2"
 
-    # set rpath so linker finds the libs
-    export LDFLAGS="$LDFLAGS -Wl,-rpath,$libdir/firefox"
-
-    make -f client.mk build MOZ_MAKE_FLAGS="$MAKEFLAGS"
-    make -f client.mk DESTDIR=$PKG_DIR INSTALL_SDK= install
+    ./mach build
+    ./mach buildsymbols
+    DESTDIR=$PKG_DIR ./mach install
 
     for i in 16x16 22x22 24x24 32x32 48x48 256x256; do
         install -Dm644 browser/branding/official/default${i%x*}.png \

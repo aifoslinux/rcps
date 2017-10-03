@@ -1,5 +1,5 @@
 PKG=gtk+3
-VER=3.22.21
+VER=3.22.22
 SRC=https://download.gnome.org/sources/gtk+/${VER:0:4}/gtk+-$VER.tar.xz
 
 build() {

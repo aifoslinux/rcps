@@ -26,17 +26,3 @@
    return base;
  }
  
---- a/tools/profiler/core/platform-linux-android.cpp 2017-07-10 21:25:45.268686593 +0200
-+++ b/tools/profiler/core/platform-linux-android.cpp  2017-07-10 21:27:35.889908844 +0200
-@@ -504,9 +504,10 @@
- {
-   MOZ_ASSERT(mIsSynchronous);
-   MOZ_ASSERT(aContext);
--
-+#if defined(__GLIBC__)
-   if (!getcontext(aContext)) {
-     FillInSample(*this, aContext);
-   }
-+#endif
- }
- 
