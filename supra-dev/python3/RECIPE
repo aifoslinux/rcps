@@ -1,5 +1,5 @@
 PKG=python3
-VER=3.6.2
+VER=3.6.3
 SRC=http://www.python.org/ftp/python/$VER/Python-$VER.tar.xz
 
 build() {

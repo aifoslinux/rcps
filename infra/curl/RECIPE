@@ -1,8 +1,14 @@
 PKG=curl
-VER=7.55.1
+VER=7.56.0
 SRC=http://curl.haxx.se/download/$PKG-$VER.tar.gz
 
 build() {
+    case $CTARGET in
+        *-musl)
+            export PATH_SEPARATOR=":"
+            ;;
+    esac
+
     ./configure --prefix=$prefix \
                 --host=$CHOST \
                 --without-libidn \
