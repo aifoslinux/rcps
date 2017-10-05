@@ -1,10 +1,10 @@
 PKG=xwayland
-VER=1.19.99
-#SRC=https://xorg.freedesktop.org/releases/individual/xserver/xorg-server-$VER.tar.bz2
-SRC=git+https://anongit.freedesktop.org/git/xorg/xserver.git
+VER=1.19.4
+SRC=https://xorg.freedesktop.org/releases/individual/xserver/xorg-server-$VER.tar.bz2
+#SRC=git+https://anongit.freedesktop.org/git/xorg/xserver.git
 
 build() {
-    NOCONFIGURE=1 ./autogen.sh
+    #NOCONFIGURE=1 ./autogen.sh
 
     ./configure --prefix=$prefix \
                 --host=$CHOST \
