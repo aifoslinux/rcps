@@ -1,5 +1,5 @@
 PKG=lvm2
-VER=2.02.174
+VER=2.02.175
 SRC=https://mirrors.kernel.org/sourceware/$PKG/releases/LVM2.$VER.tgz
 
 build() {

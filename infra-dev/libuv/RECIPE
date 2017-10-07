@@ -1,5 +1,5 @@
 PKG=libuv
-VER=1.14.1
+VER=1.15.0
 SRC=https://github.com/$PKG/$PKG/archive/v${VER}/$PKG-$VER.tar.gz
 
 build() {
