@@ -1,5 +1,5 @@
 PKG=firefox
-VER=57.0b5
+VER=57.0b6
 SRC=https://ftp.mozilla.org/pub/mozilla.org/$PKG/releases/$VER/source/$PKG-$VER.source.tar.xz
 
 build() {
@@ -43,10 +43,11 @@ ac_add_options --disable-profiling
 ac_add_options --disable-jemalloc
 ac_add_options --disable-elf-hack
 
+ac_add_options --disable-stylo
+
 STRIP_FLAGS="--strip-debug"
 EOF
 
-    #$PATCH/0002-Use-C99-math-isfinite.patch
     $PATCH/firefox-install-dir.patch
 
     case $CTARGET in
@@ -62,9 +63,6 @@ EOF
             $PATCH/disable-moz-stackwalk.patch
 
             cp $RCP_DIR/stab.h toolkit/crashreporter/google-breakpad/src/
-
-            # firefox-57
-            sed -i -e 's,ioc as libc::c_ulong,ioc as libc::c_int,' dom/webauthn/u2f-hid-rs/src/linux/hidraw.rs
 
             sed -i -e 's,x86_64-unknown-linux-gnu,x86_64-unknown-linux-musl,' build/moz.configure/rust.configure
             ;;

@@ -26,3 +26,17 @@
    return base;
  }
  
+--- a/tools/profiler/core/platform-linux-android.cpp	2017-10-07 16:37:34.849613590 +0200
++++ b/tools/profiler/core/platform-linux-android.cpp	2017-10-07 16:38:06.952946010 +0200
+@@ -535,9 +535,11 @@
+ void
+ Registers::SyncPopulate()
+ {
++#if defined(__GLIBC__)
+   if (!getcontext(&sSyncUContext)) {
+     PopulateRegsFromContext(*this, &sSyncUContext);
+   }
++#endif
+ }
+ #endif
+ 
