@@ -1,5 +1,5 @@
 PKG=openssh
-VER=7.5p1
+VER=7.6p1
 SRC=https://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/$PKG-$VER.tar.gz
 
 build() {

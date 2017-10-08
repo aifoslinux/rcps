@@ -1,5 +1,5 @@
 PKG=qt5-base
-VER=5.9.1
+VER=5.9.2
 SRC=http://download.qt.io/official_releases/qt/${VER%.*}/$VER/submodules/${PKG/5-/}-opensource-src-$VER.tar.xz
 
 build() {
@@ -19,8 +19,6 @@ build() {
 
     # Fix missing private includes https://bugreports.qt.io/browse/QTBUG-37417
     sed -e '/CMAKE_NO_PRIVATE_INCLUDES\ \=\ true/d' -i mkspecs/features/create_cmake.prf
-    # Fix accessibility build 
-    $PATCH/qtbase-5.9.1-atspi.patch
 
     ./configure -confirm-license \
                 -opensource \
