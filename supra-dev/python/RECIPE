@@ -1,4 +1,4 @@
-PKG=python3
+PKG=python
 VER=3.6.3
 SRC=http://www.python.org/ftp/python/$VER/Python-$VER.tar.xz
 
@@ -33,4 +33,11 @@ build() {
 
     mv $PKG_DIR/usr/* $PKG_DIR
     rm -r $PKG_DIR/usr
+
+    # Why are these not done by default...
+    ln -s python3               $BIN_DIR/python
+    ln -s python3-config        $BIN_DIR/python-config
+    ln -s idle3                 $BIN_DIR/idle
+    ln -s pydoc3                $BIN_DIR/pydoc
+    ln -s python${VER%.*}.1     $DAT_DIR/man/man1/python.1
 }
