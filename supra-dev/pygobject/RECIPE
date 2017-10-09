@@ -3,26 +3,9 @@ VER=3.24.1
 SRC=https://download.gnome.org/sources/$PKG/${VER:0:4}/$PKG-$VER.tar.xz
 
 build() {
-    mkdir $SRC_DIR/build-py2 $SRC_DIR/build-py3
-
-
-    cd $SRC_DIR/build-py2
-    $SRC_DIR/configure --prefix=$prefix \
-                       --with-python=$bindir/python2 \
-                       --enable-compile-warnings=minimum
+    ./configure --prefix=$prefix \
+                --with-python=$bindir/python3 \
+                --enable-compile-warnings=minimum
     make
-
-    cd $SRC_DIR/build-py3
-    $SRC_DIR/configure --prefix=$prefix \
-                       --with-python=$bindir/python3 \
-                       --enable-compile-warnings=minimum
-    make
-
-    cd $SRC_DIR/build-py2
-    make DESTDIR=$PKG_DIR install
-    python2 -m compileall $LIB_DIR/python2.7/site-packages/gi
-    rm -r $PKG_DIR/{include,lib/pkgconfig}
-
-    cd $SRC_DIR/build-py3
     make DESTDIR=$PKG_DIR install
 }
