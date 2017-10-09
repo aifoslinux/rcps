@@ -1,5 +1,5 @@
 PKG=sway
-VER=0.14.0-20170930
+VER=0.14.0-20171009
 #SRC=$PKG-$VER.tar.gz::https://github.com/SirCmpwn/$PKG/archive/$VER.tar.gz
 SRC=git+https://github.com/swaywm/sway.git#commit=a82aa2a
 
