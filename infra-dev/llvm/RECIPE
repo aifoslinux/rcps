@@ -3,13 +3,38 @@ VER=5.0.0
 SRC=http://llvm.org/releases/$VER/$PKG-$VER.src.tar.xz
 
 build() {
+    _URL=https://releases.llvm.org/$VER
+    for FILE in cfe clang-tools-extra compiler-rt lld lldb; do
+        if [ ! -f /src/arc/$FILE-$VER.src.tar.xz ]; then
+            curl -L -o /src/arc/$FILE-$VER.src.tar.xz $_URL/$FILE-$VER.src.tar.xz
+        fi
+    done
+
+    _OPT=--strip-components=1
+    mkdir -p $SRC_DIR/{projects/compiler-rt,tools/{lld,clang/tools/extra}}
+    tar -C $SRC_DIR/tools/clang -xpf /src/arc/cfe-$VER.src.tar.xz $_OPT
+    tar -C $SRC_DIR/tools/clang/tools/extra -xpf /src/arc/clang-tools-extra-$VER.src.tar.xz $_OPT
+    tar -C $SRC_DIR/tools/lld -xpf /src/arc/lld-$VER.src.tar.xz $_OPT
+    tar -C $SRC_DIR/projects/compiler-rt -xpf /src/arc/compiler-rt-$VER.src.tar.xz $_OPT
+
+    #llvm
     $PATCH/cmake-fix-libLLVM-name.patch
     $PATCH/disable-FileSystemTest.CreateDir-perms-assert.patch
     $PATCH/disable-llvm-symbolizer-test.patch
+    #clang
+    (cd tools/clang
+        $PATCH/cfe-001-fix-stdint.patch
+        $PATCH/cfe-003-fix-unwind-chain-inclusion.patch
+    )
+    #compiler-rt
+    (cd projects/compiler-rt
+        $PATCH/compiler-rt-002-musl-no-dlvsym.patch
+    )
 
     case $CTARGET in
         *-musl)
             $PATCH/llvm-fix-build-with-musl-libc.patch
+            sed -i 's/set(COMPILER_RT_HAS_SANITIZER_COMMON TRUE)/set(COMPILER_RT_HAS_SANITIZER_COMMON FALSE)/' projects/compiler-rt/cmake/config-ix.cmake
             ;;
         *-gnu)
             # glibc-2.26 fix
@@ -22,15 +47,31 @@ build() {
     CC=gcc CXX=g++ \
     cmake -DCMAKE_INSTALL_PREFIX=$prefix \
           -DCMAKE_BUILD_TYPE=Release \
+          -DLLVM_INSTALL_UTILS=ON \
           -DLLVM_BUILD_LLVM_DYLIB=ON \
-          -DLLVM_DYLIB_EXPORT_ALL=ON \
           -DLLVM_LINK_LLVM_DYLIB=ON \
           -DLLVM_ENABLE_RTTI=ON \
           -DLLVM_ENABLE_FFI=ON \
+          -DLLVM_ENABLE_PYTHON=OFF \
           -DLLVM_ENABLE_DOXYGEN=OFF \
           -DFFI_INCLUDE_DIR=$incdir \
           -DLLVM_BINUTILS_INCDIR=$incdir \
           -Wno-dev $SRC_DIR
     make
     make DESTDIR=$PKG_DIR install
+
+    sed -i 's|/usr/bin/env python|&2|' \
+        $DAT_DIR/clang/{clang-tidy-diff,run-clang-tidy,run-find-all-symbols}.py
+
+    sed -i 's|/usr/bin/env python|&2|' \
+        $BIN_DIR/scan-view \
+        $BIN_DIR/git-clang-format \
+        $DAT_DIR/clang/clang-format-diff.py
+
+    mv $PKG_DIR/libexec/* $LIB_DIR/clang/
+    sed -i 's|libexec|lib/clang|' $BIN_DIR/scan-build
+    rm -r $PKG_DIR/libexec
+
+    mv $PKG_DIR/usr/share/man $DAT_DIR
+    rm -r $PKG_DIR/usr
 }

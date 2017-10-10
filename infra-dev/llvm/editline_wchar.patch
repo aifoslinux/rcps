@@ -1,0 +1,12 @@
+--- a/lldb/include/lldb/Host/Editline.h	2017-10-10 18:09:03.533571390 +0200
++++ b/lldb/include/lldb/Host/Editline.h	2017-10-10 18:09:09.476904858 +0200
+@@ -44,7 +44,7 @@
+ // used in cases where this is true.  This is a compile time dependecy, for now
+ // selected per target Platform
+ #if defined(__APPLE__) || defined(__FreeBSD__) || defined(__NetBSD__) ||       \
+-    defined(__OpenBSD__)
++    defined(__OpenBSD__) || defined(__LINUX__)
+ #define LLDB_EDITLINE_USE_WCHAR 1
+ #include <codecvt>
+ #else
+

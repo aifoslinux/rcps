@@ -1,5 +1,5 @@
 PKG=firefox
-VER=57.0b6
+VER=57.0b7
 SRC=https://ftp.mozilla.org/pub/mozilla.org/$PKG/releases/$VER/source/$PKG-$VER.source.tar.xz
 
 build() {
@@ -41,9 +41,11 @@ ac_add_options --disable-tests
 ac_add_options --disable-pulseaudio
 ac_add_options --disable-profiling
 ac_add_options --disable-jemalloc
+ac_add_options --disable-gold
 ac_add_options --disable-elf-hack
 
-ac_add_options --disable-stylo
+ac_add_options BINDGEN_CFLAGS='-I/include/nspr -I/include/pixman-1'
+ac_add_options --enable-stylo
 
 STRIP_FLAGS="--strip-debug"
 EOF
@@ -71,6 +73,11 @@ EOF
             export CPPFLAGS="$CPPFLAGS -D_GLIBCXX_USE_C99_MATH=1"
             ;;
     esac
+
+    # use python2
+    mkdir path
+    ln -s $bindir/python2 path/python
+    export PATH="$SRC_DIR/path:$PATH"
 
     CPPFLAGS+=" -O2"
 
