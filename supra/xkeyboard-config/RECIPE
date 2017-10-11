@@ -1,5 +1,5 @@
 PKG=xkeyboard-config
-VER=2.21
+VER=2.22
 SRC=http://xorg.freedesktop.org/archive/individual/data/$PKG/$PKG-$VER.tar.bz2
 
 build() {

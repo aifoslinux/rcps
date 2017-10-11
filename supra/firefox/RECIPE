@@ -44,8 +44,7 @@ ac_add_options --disable-jemalloc
 ac_add_options --disable-gold
 ac_add_options --disable-elf-hack
 
-ac_add_options BINDGEN_CFLAGS='-I/include/nspr -I/include/pixman-1'
-ac_add_options --enable-stylo
+ac_add_options --disable-stylo
 
 STRIP_FLAGS="--strip-debug"
 EOF
