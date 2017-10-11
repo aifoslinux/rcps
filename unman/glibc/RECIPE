@@ -1,7 +1,7 @@
 PKG=glibc
 VER=2.26
 #SRC=ftp://ftp.gnu.org/gnu/$PKG/$PKG-$VER.tar.xz
-SRC=git+https://sourceware.org/git/glibc.git#commit=8a1adb5
+SRC=git+https://sourceware.org/git/glibc.git#commit=d5c6dea2
 
 build() {
     cd $BLD_DIR

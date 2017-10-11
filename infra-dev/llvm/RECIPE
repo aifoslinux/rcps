@@ -56,6 +56,8 @@ build() {
           -DLLVM_ENABLE_DOXYGEN=OFF \
           -DFFI_INCLUDE_DIR=$incdir \
           -DLLVM_BINUTILS_INCDIR=$incdir \
+          -DGCC_INSTALL_PREFIX=$prefix \
+          -DLLVM_DEFAULT_TARGET_TRIPLE=$CTARGET \
           -Wno-dev $SRC_DIR
     make
     make DESTDIR=$PKG_DIR install
