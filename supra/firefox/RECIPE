@@ -15,19 +15,10 @@ ac_add_options --enable-optimize="-O2"
 
 ac_add_options --enable-official-branding
 ac_add_options --enable-update-channel=release
-export BUILD_OFFICIAL=1
 export MOZILLA_OFFICIAL=1
 
-ac_add_options --with-system-nspr
-ac_add_options --with-system-nss
-ac_add_options --with-system-icu
-ac_add_options --with-system-jpeg
 ac_add_options --with-system-zlib
 ac_add_options --with-system-bz2
-ac_add_options --with-system-libvpx
-ac_add_options --with-system-png
-ac_add_options --with-pthreads
-ac_add_options --enable-system-pixman
 ac_add_options --enable-system-hunspell
 ac_add_options --enable-system-sqlite
 ac_add_options --enable-system-ffi
@@ -38,13 +29,8 @@ ac_add_options --disable-gconf
 ac_add_options --disable-crashreporter
 ac_add_options --disable-updater
 ac_add_options --disable-tests
-ac_add_options --disable-pulseaudio
 ac_add_options --disable-profiling
-ac_add_options --disable-jemalloc
-ac_add_options --disable-gold
 ac_add_options --disable-elf-hack
-
-ac_add_options --disable-stylo
 
 STRIP_FLAGS="--strip-debug"
 EOF
@@ -66,6 +52,9 @@ EOF
             cp $RCP_DIR/stab.h toolkit/crashreporter/google-breakpad/src/
 
             sed -i -e 's,x86_64-unknown-linux-gnu,x86_64-unknown-linux-musl,' build/moz.configure/rust.configure
+            echo "ac_add_options --disable-jemalloc" >> .mozconfig
+            echo "ac_add_options --disable-gold" >> .mozconfig
+            echo "ac_add_options --disable-stylo" >> .mozconfig
             ;;
         *-gnu)
             # glibc-2.26 fix
@@ -77,8 +66,6 @@ EOF
     mkdir path
     ln -s $bindir/python2 path/python
     export PATH="$SRC_DIR/path:$PATH"
-
-    CPPFLAGS+=" -O2"
 
     ./mach build
     ./mach buildsymbols
