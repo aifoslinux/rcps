@@ -3,11 +3,7 @@ VER=7.56.0
 SRC=http://curl.haxx.se/download/$PKG-$VER.tar.gz
 
 build() {
-    case $CTARGET in
-        *-musl)
-            export PATH_SEPARATOR=":"
-            ;;
-    esac
+    export PATH_SEPARATOR=":"
 
     ./configure --prefix=$prefix \
                 --host=$CHOST \

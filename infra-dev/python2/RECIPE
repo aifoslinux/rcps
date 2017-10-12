@@ -1,6 +1,6 @@
 PKG=python2
 VER=2.7.14
-SRC=http://www.python.org/ftp/$PKG/$VER/Python-$VER.tar.xz
+SRC=http://www.python.org/ftp/python/$VER/Python-$VER.tar.xz
 
 build() {
     $PATCH/unchecked-ioctl.patch
