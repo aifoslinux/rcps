@@ -1,14 +1,12 @@
 PKG=ninja
-VER=1.8.1
+VER=1.8.2
 SRC=$PKG-$VER.tar.gz::https://github.com/martine/$PKG/archive/v${VER}.tar.gz
 
 build() {
     python2 ./configure.py --bootstrap
-    asciidoc doc/manual.asciidoc
 
     install -Dm755 ninja $BIN_DIR/ninja
     install -Dm644 doc/manual.asciidoc $DAT_DIR/doc/ninja/manual.asciidoc
-    install -Dm644 doc/manual.html $DAT_DIR/doc/ninja/manual.html
     
     install -m644 -D misc/bash-completion $DAT_DIR/bash-completion/completions/ninja
 }
