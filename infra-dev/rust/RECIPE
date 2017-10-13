@@ -14,9 +14,10 @@ build() {
         *-musl)
             $PATCH/musl.patch
             $PATCH/link-musl-dynamically.patch
-            $PATCH/musl-bootstrap-sanity.patch
             sed -i -e 's,#use-jemalloc,use-jemalloc,' config.toml
             sed -i -e 's,#musl-root,musl-root,' config.toml
+            sed -i -e 's,#target =,target =,' config.toml
+            sed -i -e 's,#host =,host =,' config.toml
             ;;
         *-gnu)
             # glibc-2.26 fix
