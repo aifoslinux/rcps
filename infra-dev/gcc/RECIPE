@@ -31,6 +31,8 @@ build() {
                        --with-system-zlib \
                        --with-linker-hash-style=gnu \
                        --enable-checking=release \
+                       --enable-default-pie \
+                       --enable-default-ssp \
                        $conf_opts
     make
     make DESTDIR=$PKG_DIR install

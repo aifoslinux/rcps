@@ -18,13 +18,16 @@ build() {
     tar -C $SRC_DIR/projects/compiler-rt -xpf /src/arc/compiler-rt-$VER.src.tar.xz $_OPT
 
     #llvm
-    $PATCH/cmake-fix-libLLVM-name.patch
-    $PATCH/disable-FileSystemTest.CreateDir-perms-assert.patch
     $PATCH/disable-llvm-symbolizer-test.patch
+    $PATCH/llvm-003-musl.patch
+
     #clang
     (cd tools/clang
         $PATCH/cfe-001-fix-stdint.patch
         $PATCH/cfe-003-fix-unwind-chain-inclusion.patch
+        $PATCH/cfe-004-add-musl-triples.patch
+        $PATCH/0007-clang-Enable-SSP-and-PIE-by-default.patch
+        $PATCH/0008-clang-Default-to-gnu-14-for-c-standard.patch
     )
     #compiler-rt
     (cd projects/compiler-rt
@@ -33,7 +36,6 @@ build() {
 
     case $CTARGET in
         *-musl)
-            $PATCH/llvm-fix-build-with-musl-libc.patch
             sed -i 's/set(COMPILER_RT_HAS_SANITIZER_COMMON TRUE)/set(COMPILER_RT_HAS_SANITIZER_COMMON FALSE)/' projects/compiler-rt/cmake/config-ix.cmake
             ;;
         *-gnu)
