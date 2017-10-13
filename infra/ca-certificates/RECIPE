@@ -5,6 +5,7 @@ SRC=http://ftp.se.debian.org/debian/pool/main/c/$PKG/${PKG}_${VER}.tar.xz
 build() {
     sed -i -e 's/\/usr\/share/\/share/' Makefile
     sed -i -e 's/\/usr\/sbin/\/bin/' sbin/Makefile
+    sed -i -e 's/python/python2/' mozilla/Makefile
 
     ${CC:-gcc} $CFLAGS -o update-ca-certificates $RCP_DIR/update-ca.c $LDFLAGS
     ${CC:-gcc} $CFLAGS -o c_rehash $RCP_DIR/c_rehash.c -lcrypto $LDFLAGS
