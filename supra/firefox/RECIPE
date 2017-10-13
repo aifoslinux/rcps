@@ -54,7 +54,6 @@ EOF
             sed -i -e 's,x86_64-unknown-linux-gnu,x86_64-unknown-linux-musl,' build/moz.configure/rust.configure
             echo "ac_add_options --disable-jemalloc" >> .mozconfig
             echo "ac_add_options --disable-gold" >> .mozconfig
-            echo "ac_add_options --disable-stylo" >> .mozconfig
             ;;
         *-gnu)
             # glibc-2.26 fix

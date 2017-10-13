@@ -1,5 +1,5 @@
 PKG=xwayland
-VER=1.19.4
+VER=1.19.5
 SRC=https://xorg.freedesktop.org/releases/individual/xserver/xorg-server-$VER.tar.bz2
 #SRC=git+https://anongit.freedesktop.org/git/xorg/xserver.git
 
