@@ -1,6 +1,6 @@
 PKG=finit
 VER=3.0-rc2
-SRC=git+https://github.com/troglobit/$PKG.git#commit=9b5f238
+SRC=git+https://github.com/troglobit/$PKG.git#commit=510b53e
 
 build() {
     NOCONFIGURE=1 ./autogen.sh
