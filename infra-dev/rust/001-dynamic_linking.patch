@@ -1,0 +1,14 @@
+--- a/src/liblibc/src/unix/mod.rs	2017-10-14 12:59:43.589674818 +0200
++++ b/src/liblibc/src/unix/mod.rs	2017-10-14 13:02:03.069672044 +0200
+@@ -228,9 +228,8 @@
+     } else if #[cfg(feature = "use_std")] {
+         // cargo build, don't pull in anything extra as the libstd dep
+         // already pulls in all libs.
+-    } else if #[cfg(any(all(target_env = "musl", not(target_arch = "mips"))))] {
+-        #[link(name = "c", kind = "static", cfg(target_feature = "crt-static"))]
+-        #[link(name = "c", cfg(not(target_feature = "crt-static")))]
++    } else if #[cfg(target_env = "musl")] {
++        #[link(name = "c")]
+         extern {}
+     } else if #[cfg(target_os = "emscripten")] {
+         #[link(name = "c")]

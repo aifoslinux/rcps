@@ -4,10 +4,10 @@ rustc = "/bin/rustc"
 docs = false
 python = "python2.7"
 extended = true
-verbose = 1
-#build = "amd64-linux-musl"
-#host = ["amd64-linux-musl"]
-#target = ["amd64-linux-musl"]
+verbose = 0
+#build = "x86_64-unknown-linux-musl"
+#host = ["x86_64-unknown-linux-musl"]
+#target = ["x86_64-unknown-linux-musl"]
 
 [install]
 prefix = "/"
@@ -15,10 +15,13 @@ sysconfdir = "/etc"
 
 [rust]
 codegen-units = 0
-debuginfo = true
-backtrace = true
+debuginfo = false
 channel = "stable"
 rpath = false
-#use-jemalloc = false
 #musl-root = "/"
+[target.x86_64-unknown-linux-gnu]
+llvm-config = "/bin/llvm-config"
+[target.x86_64-unknown-linux-musl]
+llvm-config = "/bin/llvm-config"
+crt-static = false
 

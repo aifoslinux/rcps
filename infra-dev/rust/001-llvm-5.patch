@@ -1,0 +1,43 @@
+From f41e761c1094f7278e323e9133f660c680ceb2c3 Mon Sep 17 00:00:00 2001
+From: Alex Crichton <alex@alexcrichton.com>
+Date: Mon, 24 Jul 2017 16:30:31 -0700
+Subject: [PATCH] TMP: Ignore a declare_local in mir trans
+
+More info at https://github.com/rust-lang/rust/issues/43370#issuecomment-317111044
+---
+ src/librustc_trans/mir/mod.rs | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
+
+diff --git a/src/librustc_trans/mir/mod.rs b/src/librustc_trans/mir/mod.rs
+index 5206ad74e205..55dcffda46cc 100644
+--- a/src/librustc_trans/mir/mod.rs
++++ b/src/librustc_trans/mir/mod.rs
+@@ -583,16 +583,18 @@ fn arg_local_refs<'a, 'tcx>(bcx: &Builder<'a, 'tcx>,
+                     alloca: env_ptr,
+                     address_operations: &ops
+                 };
+-                declare_local(
+-                    bcx,
+-                    &mircx.debug_context,
+-                    decl.debug_name,
+-                    ty,
+-                    scope,
+-                    variable_access,
+-                    VariableKind::CapturedVariable,
+-                    DUMMY_SP
+-                );
++                if false {
++                    declare_local(
++                        bcx,
++                        &mircx.debug_context,
++                        decl.debug_name,
++                        ty,
++                        scope,
++                        variable_access,
++                        VariableKind::CapturedVariable,
++                        DUMMY_SP
++                    );
++                }
+             }
+         });
+         LocalRef::Lvalue(LvalueRef::new_sized(llval, LvalueTy::from_ty(arg_ty),

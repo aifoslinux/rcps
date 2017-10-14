@@ -1,0 +1,49 @@
+--- a/src/bootstrap/compile.rs	2017-10-14 14:57:34.766200863 +0200
++++ b/src/bootstrap/compile.rs	2017-10-14 15:01:12.492863197 +0200
+@@ -78,13 +78,6 @@
+             });
+             println!("Uplifting stage1 std ({} -> {})", from.host, target);
+ 
+-            // Even if we're not building std this stage, the new sysroot must
+-            // still contain the musl startup objects.
+-            if target.contains("musl") && !target.contains("mips") {
+-                let libdir = builder.sysroot_libdir(compiler, target);
+-                copy_musl_third_party_objects(build, target, &libdir);
+-            }
+-
+             builder.ensure(StdLink {
+                 compiler: from,
+                 target_compiler: compiler,
+@@ -97,11 +90,6 @@
+         println!("Building stage{} std artifacts ({} -> {})", compiler.stage,
+                 &compiler.host, target);
+ 
+-        if target.contains("musl") && !target.contains("mips") {
+-            let libdir = builder.sysroot_libdir(compiler, target);
+-            copy_musl_third_party_objects(build, target, &libdir);
+-        }
+-
+         let out_dir = build.cargo_out(compiler, Mode::Libstd, target);
+         build.clear_if_dirty(&out_dir, &builder.rustc(compiler));
+         let mut cargo = builder.cargo(compiler, Mode::Libstd, target, "build");
+@@ -118,20 +106,6 @@
+     }
+ }
+ 
+-/// Copies the crt(1,i,n).o startup objects
+-///
+-/// Since musl supports fully static linking, we can cross link for it even
+-/// with a glibc-targeting toolchain, given we have the appropriate startup
+-/// files. As those shipped with glibc won't work, copy the ones provided by
+-/// musl so we have them on linux-gnu hosts.
+-fn copy_musl_third_party_objects(build: &Build,
+-                                 target: Interned<String>,
+-                                 into: &Path) {
+-    for &obj in &["crt1.o", "crti.o", "crtn.o"] {
+-        copy(&build.musl_root(target).unwrap().join("lib").join(obj), &into.join(obj));
+-    }
+-}
+-
+ /// Configure cargo to compile the standard library, adding appropriate env vars
+ /// and such.
+ pub fn std_cargo(build: &Build,

@@ -9,15 +9,19 @@ build() {
 
     $PATCH/librustc_llvm-with-ffi.patch
     $PATCH/llvm-with-ffi.patch
+    $PATCH/001-llvm-5.patch
 
     case $CTARGET in
         *-musl)
             $PATCH/musl.patch
-            $PATCH/link-musl-dynamically.patch
-            sed -i -e 's,#use-jemalloc,use-jemalloc,' config.toml
+            $PATCH/001-dynamic_linking.patch
+            $PATCH/002-dynamic_linking.patch
+            $PATCH/003-dynamic_linking.patch
+
             sed -i -e 's,#musl-root,musl-root,' config.toml
-            sed -i -e 's,#target =,target =,' config.toml
+            sed -i -e 's,#build =,build =,' config.toml
             sed -i -e 's,#host =,host =,' config.toml
+            sed -i -e 's,#target =,target =,' config.toml
             ;;
         *-gnu)
             # glibc-2.26 fix
@@ -25,7 +29,7 @@ build() {
             ;;
     esac
 
-    python2 ./x.py build --verbose -j ${MAKEFLAGS//-j/}
+    python2 ./x.py build -j ${MAKEFLAGS//-j/}
     DESTDIR=$PKG_DIR python2 ./x.py install
 
     cd $LIB_DIR
