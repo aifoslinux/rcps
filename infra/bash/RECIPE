@@ -1,13 +1,13 @@
 PKG=bash
-VER=4.4
+VER=4.4.12
 SRC=ftp://ftp.gnu.org/gnu/$PKG/$PKG-$VER.tar.gz
 
 build() {
-    for i in {1..12}; do
-        curl -o bash${VER//.}-$(printf "%03d" $i) \
-            http://ftp.gnu.org/gnu/bash/bash-$VER-patches/bash${VER//.}-$(printf "%03d" $i)
-        patch -p0 -i bash${VER//.}-$(printf "%03d" $i)
-    done
+    #for i in {1..12}; do
+    #    curl -o bash${VER//.}-$(printf "%03d" $i) \
+    #        http://ftp.gnu.org/gnu/bash/bash-$VER-patches/bash${VER//.}-$(printf "%03d" $i)
+    #    patch -p0 -i bash${VER//.}-$(printf "%03d" $i)
+    #done
 
     _bashconfig=(-DDEFAULT_PATH_VALUE=\'\"$bindir\"\'
                -DSTANDARD_UTILS_PATH=\'\"$bindir\"\'

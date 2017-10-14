@@ -66,9 +66,16 @@ EOF
     ln -s $bindir/python2 path/python
     export PATH="$SRC_DIR/path:$PATH"
 
+    # workaround 'nm: libxul.so: no symbols'"
+    unset CFLAGS
+    unset CXXFLAGS
+
     ./mach build
     ./mach buildsymbols
     DESTDIR=$PKG_DIR ./mach install
+
+    #make -f client.mk build
+    #make -f client.mk DESTDIR=$PKG_DIR install
 
     for i in 16x16 22x22 24x24 32x32 48x48 256x256; do
         install -Dm644 browser/branding/official/default${i%x*}.png \
@@ -93,6 +100,7 @@ EOF
 
     install -Dm755 /dev/stdin $BIN_DIR/firefox <<END
 #!/bin/sh
+LD_LIBRARY_PATH=$libdir/firefox \
 exec $libdir/firefox/firefox "\$@"
 END
 
