@@ -1,4 +1,7 @@
 ## Linux kernel modules to load
-#module button
-#module evdev
+module vfat
+module fuse
+module tun
+module nls_cp437
+module nls_iso8859-1
 
