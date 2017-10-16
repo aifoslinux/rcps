@@ -1,5 +1,5 @@
 PKG=pciutils
-VER=3.5.4
+VER=3.5.5
 SRC=http://www.kernel.org/pub/software/utils/$PKG/$PKG-$VER.tar.xz
 
 build() {
