@@ -1,5 +1,5 @@
 PKG=ffmpeg
-VER=3.3.4
+VER=3.4
 SRC=http://ffmpeg.org/releases/ffmpeg-$VER.tar.xz
 
 build() {
