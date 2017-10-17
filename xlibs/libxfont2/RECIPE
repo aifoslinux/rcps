@@ -1,5 +1,5 @@
 PKG=libxfont2
-VER=2.0.1
+VER=2.0.2
 SRC=http://xorg.freedesktop.org/releases/individual/lib/libXfont2-$VER.tar.bz2
 
 build() {
