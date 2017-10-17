@@ -1,5 +1,5 @@
 PKG=e2fsprogs
-VER=1.43.6
+VER=1.43.7
 SRC=http://downloads.sourceforge.net/$PKG/$PKG-$VER.tar.gz
 
 build() {
