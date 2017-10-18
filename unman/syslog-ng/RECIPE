@@ -1,0 +1,26 @@
+PKG=syslog-ng
+VER=3.11.1
+SRC=https://github.com/balabit/$PKG/releases/download/$PKG-$VER/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=/usr \
+                --sysconfdir=$cfgdir/$PKG \
+                --bindir=$bindir \
+                --sbindir=$bindir \
+                --libdir=$libdir \
+                --libexecdir=$libdir \
+                --datadir=$datdir \
+                --includedir=$incdir \
+                --localstatedir=$vardir/lib/$PKG \
+                --with-pidfile-dir=$rundir \
+                --enable-ipv6 \
+                --enable-ssl
+    make
+    make -j1 DESTDIR=$PKG_DIR install
+
+    install -Dm644 $RCP_DIR/syslog-ng.conf $CFG_DIR/syslog-ng/syslog-ng.conf
+
+    mv $PKG_DIR/usr/lib/$PKG/* $LIB_DIR/$PKG/
+    mv $PKG_DIR/usr/lib/python* $LIB_DIR/
+    rm -r $PKG_DIR/usr
+}

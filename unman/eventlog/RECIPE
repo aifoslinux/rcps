@@ -1,0 +1,11 @@
+PKG=eventlog
+VER=0.2.12
+SRC=http://www.balabit.com/downloads/files/$PKG/${VER%.*}/${PKG}_${VER}.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir
+    make
+    make DESTDIR=$PKG_DIR install
+}
