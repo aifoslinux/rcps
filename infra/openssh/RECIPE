@@ -23,4 +23,6 @@ build() {
         -e '/^#PrintMotd yes$/c PrintMotd no # pam does that' \
         -e '/^#UsePAM no$/c UsePAM yes' \
         -i $CFG_DIR/ssh/sshd_config
+
+    install -Dm644 $RCP_DIR/sshd.finitd $CFG_DIR/finit.d/available/sshd.conf
 }

@@ -1,0 +1,2 @@
+#dmeventd
+service [S12345] /bin/dmeventd -f -- Device mapper event daemon

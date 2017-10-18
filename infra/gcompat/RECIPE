@@ -1,0 +1,11 @@
+PKG=gcompat
+VER=0.1.0
+SRC=https://distfiles.adelielinux.org/source/$PKG-$VER.tar.xz
+
+build() {
+    make LINKER_PATH="/lib/ld-musl-${CARCH}.so.1" \
+         LOADER_NAME="ld-linux-x86-64.so.2"
+    make LINKER_PATH="/lib/ld-musl-${CARCH}.so.1" \
+         LOADER_NAME="ld-linux-x86-64.so.2" \
+         DESTDIR=$PKG_DIR install
+}

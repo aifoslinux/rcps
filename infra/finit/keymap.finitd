@@ -1,3 +1,2 @@
 # keymap
-run [S] /bin/loadkeys sv-latin1 -- default layout
-
+task [S] /bin/loadkeys sv-latin1 -- default layout

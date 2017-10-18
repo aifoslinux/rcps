@@ -16,11 +16,6 @@ build() {
 
     ln -sf libc.so $LIB_DIR/ld-musl-x86_64.so.1
     ln -sf ../lib/ld-musl-x86_64.so.1 $BIN_DIR/ldd
-    ln -sf ld-musl-x86_64.so.1 $LIB_DIR/ld-linux-x86-64.so.2
-
-    for i in libc.so.6 libcrypt.so.1 libm.so.6 libpthread.so.0 librt.so.1 libutil.so.1; do
-        ln -sf ld-musl-x86_64.so.1 $LIB_DIR/$i
-    done
 
     gcc $RCP_DIR/getent.c -o getent
     gcc $RCP_DIR/getconf.c -o getconf

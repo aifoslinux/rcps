@@ -1,0 +1,2 @@
+#sshd
+service [2345] <net/lo/up> /bin/sshd -D -- OpenSSH daemon
