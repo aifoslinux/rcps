@@ -1,0 +1,52 @@
+--- a/plugins/dbus.c	2017-10-19 14:40:34.759996315 +0200
++++ b/plugins/dbus.c	2017-10-19 14:42:09.829995375 +0200
+@@ -1,6 +1,6 @@
+ /* Setup and start system message bus, D-Bus
+  *
+- * Copyright (c) 2012-2017  Joachim Nilsson <troglobit@gmail.com>
++ * Copyright (c) 2012  Joachim Nilsson <troglobit@gmail.com>
+  *
+  * Permission is hereby granted, free of charge, to any person obtaining a copy
+  * of this software and associated documentation files (the "Software"), to deal
+@@ -28,25 +28,17 @@
+ #include "config.h"
+ #include "helpers.h"
+ #include "plugin.h"
+-#include "service.h"
+-
+-#define DAEMON "dbus-daemon"
+-#define ARGS   "--nofork --system"
+-#define DESC   "D-Bus message bus daemon"
+ 
+ static void setup(void *arg)
+ {
+-	char *cmd;
+-	char line[80];
+-
+-	cmd = which(DAEMON);
+-	if (!cmd) {
+-		_d("Skipping plugin, %s is not installed.", DAEMON);
++	if (!whichp("dbus-daemon")) {
++		_d("Skipping D-Bus plugin, dbus-daemon is not installed.");
+ 		return;
+ 	}
+ 
+ 	umask(0);
+ 
++	_d("Starting D-Bus ...");
+ 	makedir("/var/run/dbus", 0755);
+ 	makedir("/var/lock/subsys", 0755);
+ 	makedir("/var/lock/subsys/messagebus", 0755);
+@@ -56,11 +48,7 @@
+ 	/* Clean up from any previous pre-bootstrap run */
+ 	erase("/var/run/dbus/pid");
+ 
+-	/* Register service with Finit */
+-	snprintf(line, sizeof(line), "[S12345] %s %s -- %s", cmd, ARGS, DESC);
+-	if (service_register(SVC_TYPE_SERVICE, line, NULL))
+-		_pe("Failed registering %s", DAEMON);
+-	free(cmd);
++	run_interactive("dbus-daemon --system", "Starting D-Bus");
+ 
+ 	umask(022);
+ }

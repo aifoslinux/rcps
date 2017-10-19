@@ -6,6 +6,8 @@ SRC=https://github.com/troglobit/$PKG/releases/download/$VER/$PKG-$VER.tar.xz
 build() {
     #NOCONFIGURE=1 ./autogen.sh
 
+    $PATCH/dbus.patch
+
     sed -i -e 's,ensure,ensure=/etc/machine-id,' plugins/dbus.c
     sed -i -e 's,dbus/pid,dbus.pid,' plugins/dbus.c
     sed -i -e 's,/sbin/,/bin/,' plugins/procps.c
