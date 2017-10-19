@@ -1,0 +1,37 @@
+PKG=syslinux
+VER=6.04-pre1
+SRC=https://www.kernel.org/pub/linux/utils/boot/$PKG/Testing/${VER%-pre*}/$PKG-$VER.tar.xz
+
+build() {
+    # do not swallow efi compilation output to make debugging easier
+    sed 's|> /dev/null 2>&1||' -i efi/check-gnu-efi.sh
+
+    # disable debug and development flags to reduce bootloader size
+    truncate --size 0 mk/devel.mk
+
+	# Do not try to build the Windows or DOS installers and DIAG files
+	sed 's|diag libinstaller dos win32 win64 dosutil txt|libinstaller txt|g' -i Makefile
+	sed 's|win32/syslinux.exe win64/syslinux64.exe||g' -i Makefile
+	sed 's|dosutil/\*.com dosutil/\*.sys||g' -i Makefile
+	sed 's|dos/syslinux.com||g' -i Makefile
+	sed 's|INSTALLSUBDIRS = com32 utils dosutil|INSTALLSUBDIRS = com32 utils|g' -i Makefile
+    sed 's|install -m 644 -c $(INSTALL_DIAG) $(INSTALLROOT)$(DIAGDIR)|# install -m 644 -c $(INSTALL_DIAG) $(INSTALLROOT)$(DIAGDIR)|g' -i Makefile
+
+    unset CFLAGS LDFLAGS
+    make bios efi64 PYTHON=python2 -j1 installer
+    make bios efi64 \
+        INSTALLROOT=$PKG_DIR \
+        BINDIR=$bindir \
+        SBINDIR=$bindir \
+        MANDIR=$datdir/man \
+        AUXDIR=$libdir/syslinux \
+        -j1 install
+
+    rm -r $LIB_DIR/syslinux/{com32,diag}
+
+    install -d $DAT_DIR/doc
+    cp -ar doc $DAT_DIR/doc/syslinux
+
+    install -d $LIB_DIR/syslinux/bios
+    mv $LIB_DIR/syslinux/{*.bin,*.c32,*.0,memdisk} $LIB_DIR/syslinux/bios
+}

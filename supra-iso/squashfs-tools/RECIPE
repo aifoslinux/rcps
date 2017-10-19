@@ -1,0 +1,19 @@
+PKG=squashfs-tools
+VER=4.3
+SRC=http://downloads.sourceforge.net/sourceforge/squashfs/squashfs${VER}.tar.gz
+
+build() {
+    $PATCH/0001-mksquashfs-fix-rare-race-in-fragment-waiting-in-file.patch
+    $PATCH/0002-mksquashfs.c-get-inline-functions-work-with-C99.patch
+    $PATCH/squashfs-tools-4.3-sysmacros.patch
+    $PATCH/CVE-2015-4645.patch
+    $PATCH/fix-compat.patch
+    $PATCH/vla-overlow.patch
+
+    cd squashfs-tools
+
+    make XZ_SUPPORT=1 LZO_SUPPORT=0 LZ4_SUPPORT=0 LZMA_XZ_SUPPORT=1
+
+    install -Dm755 mksquashfs $BIN_DIR/mksquashfs
+    install -m755 unsquashfs $BIN_DIR/unsquashfs
+}
