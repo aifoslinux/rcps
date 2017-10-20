@@ -1,0 +1,25 @@
+PKG=lm_sensors
+VER=3.4.0
+SRC=$PKG-$VER.tar.gz::https://github.com/groeck/lm-sensors/archive/V${VER//\./-}.tar.gz
+
+build() {
+    sed -i -e 's:^# \(PROG_EXTRA\):\1:' Makefile
+	# Respect LDFLAGS
+	sed -i -e 's/\$(LIBDIR)$/\$(LIBDIR) \$(LDFLAGS)/g' Makefile
+	sed -i -e 's/\$(LIBSHSONAME) -o/$(LIBSHSONAME) \$(LDFLAGS) -o/g' \
+		lib/Module.mk
+
+	# do not check for libiconv in ldconfig cache
+	sed -i -e 's/^LIBICONV.*/LIBICONV ?=/' prog/sensors/Module.mk
+
+    $PATCH/musl-fix-includes.patch
+    $PATCH/lm_sensors-fancontrol.patch
+
+    make PREFIX=$prefix
+    make PROG_EXTRA=sensord \
+         BUILD_STATIC_LIB=0 \
+         PREFIX=$prefix \
+         SBINDIR=$bindir \
+         MANDIR=$datdir/man \
+         DESTDIR=$PKG_DIR install
+}

@@ -1,5 +1,5 @@
 PKG=gawk
-VER=4.1.4
+VER=4.2.0
 SRC=ftp://ftp.gnu.org/gnu/$PKG/$PKG-$VER.tar.xz
 
 build() {

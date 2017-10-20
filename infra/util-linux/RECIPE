@@ -1,6 +1,6 @@
 PKG=util-linux
-VER=2.30.2
-SRC=https://www.kernel.org/pub/linux/utils/$PKG/v2.30/$PKG-$VER.tar.xz
+VER=2.31
+SRC=https://www.kernel.org/pub/linux/utils/$PKG/v2.31/$PKG-$VER.tar.xz
 
 build() {
     sed -i -e 's/\/sbin/\/bin/' configure

@@ -1,0 +1,18 @@
+PKG=rrdtool
+VER=1.7.0
+SRC=http://oss.oetiker.ch/$PKG/pub/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --localstatedir=$vardir \
+                --disable-rpath \
+                --enable-perl \
+                --enable-perl-site-install \
+                --with-perl-options='INSTALLDIRS=vendor' \
+                --enable-python \
+                --disable-lua \
+                --disable-libwrap
+    make -j1
+    make DESTDIR=$PKG_DIR includedir=$incdir install
+}

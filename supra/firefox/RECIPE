@@ -1,5 +1,5 @@
 PKG=firefox
-VER=57.0b8
+VER=57.0b10
 SRC=https://ftp.mozilla.org/pub/mozilla.org/$PKG/releases/$VER/source/$PKG-$VER.source.tar.xz
 
 build() {
