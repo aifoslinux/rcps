@@ -1,8 +1,13 @@
 PKG=musl
-VER=1.1.16
+VER=1.1.17
 SRC=http://www.musl-libc.org/releases/$PKG-$VER.tar.gz
 
 build() {
+    $PATCH/0001-posix_spawn-use-larger-stack-to-cover-worst-case-in-.patch
+    $PATCH/1000-implement-strftime-GNU-extension-padding-specifiers-.patch
+    $PATCH/2000-pthread-internals-increase-DEFAULT_GUARD_SIZE-to-2-p.patch
+    $PATCH/3002-stdio-implement-fopencookie-3.patch
+
     sed -i -e 's#x86_64\*)#amd64\*)#' configure
 
     ./configure --prefix=$prefix \
