@@ -23,6 +23,7 @@ copy()
 }
 
 if [ -n $1 ] ; then KERNEL_VERSION=$1; fi
+if [ -n $2 ] ; then ROOTDIR=$2; fi
 
 if [ -n "$KERNEL_VERSION" ] && [ ! -d "/lib/modules/$1" ] ; then
   echo "No modules directory named $1"
@@ -30,14 +31,22 @@ if [ -n "$KERNEL_VERSION" ] && [ ! -d "/lib/modules/$1" ] ; then
 fi
 
 if [[ "$KERNEL_VERSION" == *-lts ]]; then
-    INITRAMFS_FILE=/boot/initramfs-lts
+    if [ -n $ROOTDIR ]; then
+        INITRAMFS_FILE=$ROOTDIR/initramfs-lts
+    else
+        INITRAMFS_FILE=/boot/initramfs-lts
+    fi
 else
-    INITRAMFS_FILE=/boot/initramfs
+    if [ -n $ROOTDIR ]; then
+        INITRAMFS_FILE=$ROOTDIR/initramfs
+    else
+        INITRAMFS_FILE=/boot/initramfs
+    fi
 fi
 
 printf "  creating $INITRAMFS_FILE... "
 
-binfiles="sh blkid dmsetup killall ls lvm mkdir mknod mount umount udevd udevadm switch_root"
+binfiles="sh blkid dmsetup killall ls losetup lvm mkdir mknod mount umount udevd udevadm switch_root"
 
 unsorted=$(mktemp /tmp/unsorted.XXXXXXXXXX)
 

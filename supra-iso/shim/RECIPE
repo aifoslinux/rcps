@@ -1,0 +1,20 @@
+PKG=shim
+VER=13
+SRC=https://github.com/rhboot/$PKG/releases/download/$VER/$PKG-$VER.tar.bz2
+
+build() {
+    unset CFLAGS
+    unset CPPFLAGS
+    unset CXXFLAGS
+    unset LDFLAGS
+    unset MAKEFLAGS
+
+
+    make ARCH=$CARCH LIBDIR=$libdir
+
+    install -Dm0644 shimx64.efi $LIB_DIR/shim/shimx64.efi
+    install -m0644 mmx64.efi $LIB_DIR/shim/mmx64.efi
+    install -m0644 fbx64.efi $LIB_DIR/shim/fbx64.efi
+
+    install -Dm0644 shimx64.efi $PKG_DIR/boot/efi/ai\\os/bootx64.efi
+}

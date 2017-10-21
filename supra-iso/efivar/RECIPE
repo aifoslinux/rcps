@@ -1,0 +1,33 @@
+PKG=efivar
+VER=31
+SRC=https://github.com/rhinstaller/$PKG/releases/download/$VER/$PKG-$VER.tar.bz2
+
+build() {
+    $PATCH/musl-bswap.patch
+    $PATCH/musl-strndupa.patch
+
+    sed 's|-O0|-Os|g' -i Make.defaults
+    sed 's|-rpath=$(TOPDIR)/src/|-rpath=$(libdir)|g' -i src/test/Makefile
+
+    #Disable efivar-static build
+    sed 's|efivar efivar-static|efivar|g' -i Makefile
+    sed 's|BINTARGETS=efivar efivar-static|BINTARGETS=efivar|g' -i src/Makefile
+    sed 's| $(STATICLIBTARGETS) | |g' -i src/Makefile
+
+    make -j1 \
+     libdir="$libdir/" \
+     bindir="$bindir/" \
+     mandir="$datdir/man/" \
+     includedir="$incdir/" \
+     V=1 -j1 \
+     CFLAGS="$CFLAGS -flto" \
+     LDFLAGS="$LDFLAGS -flto"
+    make -j1 \
+     V=1 \
+     DESTDIR=$PKG_DIR \
+     libdir="$libdir/" \
+     bindir="$bindir/" \
+     mandir="$datdir/man/" \
+     includedir="$incdir/" \
+     install
+}

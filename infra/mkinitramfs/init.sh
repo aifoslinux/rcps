@@ -32,10 +32,17 @@ do_mount_root()
    rootflags="$rootflags$ro"
 
    case "$root" in
-      /dev/* ) device=$root ;;
-      UUID=* ) eval $root; device="/dev/disk/by-uuid/$UUID"  ;;
-      LABEL=*) eval $root; device="/dev/disk/by-label/$LABEL" ;;
-      ""     ) echo "No root device specified." ; problem    ;;
+      /dev/*   ) device=$root ;;
+      UUID=*   ) eval $root; device="/dev/disk/by-uuid/$UUID"  ;;
+      LABEL=*  ) eval $root; device="/dev/disk/by-label/$LABEL" ;;
+      CDLABEL=*)
+                 eval $root; mkdir /.live /.rootfs
+                 mount /dev/disk/by-label/$CDLABEL /.live
+                 losetup /dev/loop0 /.live/LiveOS/squashfs.img
+                 mount /dev/loop0 /.rootfs
+                 losetup /dev/loop1 /.rootfs/LiveOS/rootfs.img
+                 device="/dev/loop1" ;;
+      ""       ) echo "No root device specified." ; problem    ;;
    esac
 
    while [ ! -b "$device" ] ; do

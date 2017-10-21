@@ -1,0 +1,9 @@
+PKG=ovmf
+VER=15214
+
+build() {
+    curl -L -o ovmf.zip http://downloads.sourceforge.net/edk2/OVMF/OVMF-X64-r${VER}.zip
+    unzip ovmf.zip
+
+    install -Dm644 OVMF.fd $DAT_DIR/ovmf/bios.bin
+}

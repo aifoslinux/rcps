@@ -1,0 +1,18 @@
+PKG=dosfstools
+VER=4.1
+SRC=https://github.com/$PKG/$PKG/releases/download/v${VER}/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --sbindir=$bindir \
+                --libexecdir=$libdir \
+                --mandir=$datdir/man \
+                --docdir=$datdir/doc/$PKG \
+                --localstatedir=$vardir \
+                --enable-compat-symlinks \
+                --disable-nls
+    make
+    make DESTDIR=$PKG_DIR install
+}

@@ -1,0 +1,13 @@
+PKG=libisofs
+VER=1.4.8
+SRC=http://files.libburnia-project.org/releases/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --enable-libacl \
+                --enable-xattr \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}

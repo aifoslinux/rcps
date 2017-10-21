@@ -1,0 +1,27 @@
+PKG=gnu-efi
+VER=3.0.6
+SRC=http://download.sourceforge.net/$PKG/$PKG-$VER.tar.bz2
+
+build() {
+    sed -i -e "s/-Werror//" Make.defaults
+    sed -i -e 's,$(prefix)gcc,$(prefix)/bin/gcc,' Make.defaults
+    sed -i -e 's,$(CROSS_COMPILE),/bin/,' Make.defaults
+
+    unset CFLAGS
+    unset CPPFLAGS
+    unset LDFLAGS
+
+    make -j1 lib gnuefi inc apps
+
+    make -j1 \
+         INSTALLROOT=$PKG_DIR \
+         PREFIX=$prefix \
+         LIBDIR=$libdir \
+         install
+
+    mkdir $LIB_DIR/gnuefi
+    mv $LIB_DIR/*.lds $LIB_DIR/*.o $LIB_DIR/gnuefi
+
+    install -d $DAT_DIR/gnu-efi/apps/x86_64/
+    install -Dm0644 x86_64/apps/*.efi $DAT_DIR/gnu-efi/apps/x86_64/
+}

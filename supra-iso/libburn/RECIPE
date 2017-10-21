@@ -1,0 +1,11 @@
+PKG=libburn
+VER=1.4.8
+SRC=http://files.libburnia-project.org/releases/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}

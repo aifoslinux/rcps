@@ -1,0 +1,20 @@
+PKG=mtools
+VER=4.0.18
+SRC=http://ftp.gnu.org/gnu/$PKG/$PKG-$VER.tar.bz2
+
+build() {
+    $PATCH/config.patch
+
+    sed -i '/^SAMPLE FILE$/s:^:# :' mtools.conf
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --mandir=$datdir/man \
+                --infodir=$datdir/info \
+                --without-x
+    make
+    make -j1 DESTDIR=$PKG_DIR install
+
+    install -Dm644 mtools.conf $CFG_DIR/mtools.conf
+}

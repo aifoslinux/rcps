@@ -1,0 +1,12 @@
+PKG=libisoburn
+VER=1.4.8
+SRC=http://files.libburnia-project.org/releases/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir
+    make
+    make DESTDIR=$PKG_DIR install
+}
