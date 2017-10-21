@@ -86,15 +86,7 @@ for param in $cmdline ; do
   esac
 done
 
-# udevd location depends on version
-if [ -x /bin/udevd ]; then
-  UDEVD=/bin/udevd
-else
-  echo "Cannot find udevd"
-  problem
-fi
-
-${UDEVD} --daemon --resolve-names=never
+udevd --daemon --resolve-names=never
 udevadm trigger
 udevadm settle
 

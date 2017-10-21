@@ -7,9 +7,6 @@ build() {
     $PATCH/002-libc-compat.patch
 
     cp -v $RCP_DIR/config .config
-    ##make defconfig
-    #make bzImage
-    #install -Dm644 arch/x86/boot/bzImage $PKG_DIR/boot/vmlinuz
 
     sed -i '2iexit 0' scripts/depmod.sh
 

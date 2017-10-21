@@ -4,8 +4,6 @@ SRC=https://www.kernel.org/pub/linux/kernel/v4.x/linux-$VER.tar.xz
 
 build() {
     cp -v $RCP_DIR/config .config
-    #make bzImage
-    #install -Dm644 arch/x86/boot/bzImage $PKG_DIR/boot/vmlinuz-lts
 
     # don't run depmod on 'make install'.
     sed -i '2iexit 0' scripts/depmod.sh

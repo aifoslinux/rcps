@@ -140,7 +140,7 @@ fi
 if [ -n "$KERNEL_VERSION" ]; then
   find                                                                        \
      /lib/modules/$KERNEL_VERSION/kernel/{crypto,fs,lib}                      \
-     /lib/modules/$KERNEL_VERSION/kernel/drivers/{block,ata,md,firewire}      \
+     /lib/modules/$KERNEL_VERSION/kernel/drivers/{input,block,ata,md,firewire}      \
      /lib/modules/$KERNEL_VERSION/kernel/drivers/{scsi,message,pcmcia,virtio} \
      /lib/modules/$KERNEL_VERSION/kernel/drivers/usb/{host,storage}           \
      -type f 2>/dev/null | cpio --make-directories -p --quiet $WDIR
