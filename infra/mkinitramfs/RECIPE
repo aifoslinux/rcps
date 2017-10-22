@@ -1,5 +1,5 @@
 PKG=mkinitramfs
-VER=1.1
+VER=1.2
 
 build() {
     mkdir -p $BIN_DIR $DAT_DIR/mkinitramfs

@@ -2,6 +2,7 @@
 module vfat
 module fuse
 module tun
+module isofs
 module loop
 module nls_cp437
 module nls_iso8859-1

@@ -30,23 +30,19 @@ if [ -n "$KERNEL_VERSION" ] && [ ! -d "/lib/modules/$1" ] ; then
   exit 1
 fi
 
+INITRAMFS_FILE=/boot/initramfs
+
 if [[ "$KERNEL_VERSION" == *-lts ]]; then
-    if [ -n $ROOTDIR ]; then
-        INITRAMFS_FILE=$ROOTDIR/initramfs-lts
-    else
-        INITRAMFS_FILE=/boot/initramfs-lts
-    fi
-else
-    if [ -n $ROOTDIR ]; then
-        INITRAMFS_FILE=$ROOTDIR/initramfs
-    else
-        INITRAMFS_FILE=/boot/initramfs
-    fi
+    INITRAMFS_FILE=/boot/initramfs-lts
+fi
+
+if [ -n "$ROOTDIR" ]; then
+    INITRAMFS_FILE=$ROOTDIR
 fi
 
 printf "  creating $INITRAMFS_FILE... "
 
-binfiles="sh blkid dmsetup killall ls losetup lvm mkdir mknod mount umount udevd udevadm switch_root"
+binfiles="mksh blkid dmsetup killall ls lvm mkdir mknod mount umount udevd udevadm switch_root"
 
 unsorted=$(mktemp /tmp/unsorted.XXXXXXXXXX)
 
@@ -71,6 +67,9 @@ fi
 for file in $(find /etc/udev/rules.d/ -type f) ; do
   cp $file $WDIR/etc/udev/rules.d
 done
+
+# /bin/sh symlink to mksh
+ln -s mksh $WDIR/bin/sh
 
 # lib64 symlink required if not on musl
 if [ ! -f  /lib/ld-musl-x86_64.so.1 ]; then
@@ -140,7 +139,8 @@ fi
 if [ -n "$KERNEL_VERSION" ]; then
   find                                                                        \
      /lib/modules/$KERNEL_VERSION/kernel/{crypto,fs,lib}                      \
-     /lib/modules/$KERNEL_VERSION/kernel/drivers/{input,block,ata,md,firewire}      \
+     /lib/modules/$KERNEL_VERSION/kernel/drivers/{cdrom,input,hid,vhost}      \
+     /lib/modules/$KERNEL_VERSION/kernel/drivers/{block,ata,md,firewire}      \
      /lib/modules/$KERNEL_VERSION/kernel/drivers/{scsi,message,pcmcia,virtio} \
      /lib/modules/$KERNEL_VERSION/kernel/drivers/usb/{host,storage}           \
      -type f 2>/dev/null | cpio --make-directories -p --quiet $WDIR

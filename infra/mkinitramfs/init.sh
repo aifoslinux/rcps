@@ -25,23 +25,26 @@ no_mount()
    printf "Available partitions:\n"
 }
 
+do_mount_live()
+{
+    mkdir /.{live,rootfs}
+
+    modprobe isofs
+    modprobe loop
+    modprobe squashfs
+
+    eval $root
+    mount -o loop /dev/disk/by-label/$CDLABEL /.live
+    mount -o loop /.live/LiveOS/squashfs.img /.rootfs
+    mount -n -t "$rootfstype" -o "$rootflags" /.rootfs/LiveOS/rootfs.img /.root
+}
+
 do_mount_root()
 {
-   mkdir /.root
-   [ -n "$rootflags" ] && rootflags="$rootflags,"
-   rootflags="$rootflags$ro"
-
    case "$root" in
       /dev/*   ) device=$root ;;
       UUID=*   ) eval $root; device="/dev/disk/by-uuid/$UUID"  ;;
       LABEL=*  ) eval $root; device="/dev/disk/by-label/$LABEL" ;;
-      CDLABEL=*)
-                 eval $root; mkdir /.live /.rootfs
-                 mount /dev/disk/by-label/$CDLABEL /.live
-                 losetup /dev/loop0 /.live/LiveOS/squashfs.img
-                 mount /dev/loop0 /.rootfs
-                 losetup /dev/loop1 /.rootfs/LiveOS/rootfs.img
-                 device="/dev/loop1" ;;
       ""       ) echo "No root device specified." ; problem    ;;
    esac
 
@@ -93,8 +96,15 @@ udevadm settle
 if [ -x /bin/vgchange  ] ; then /bin/vgchange -a y > /dev/null ; fi
 if [ -n "$rootdelay"    ] ; then sleep "$rootdelay"              ; fi
 
-do_mount_root
+mkdir /.root
+[ -n "$rootflags" ] && rootflags="$rootflags,"
+rootflags="$rootflags$ro"
 
-killall -w ${UDEVD##*/}
+case "$root" in
+      CDLABEL=*) do_mount_live ;;
+      *        ) do_mount_root ;;
+esac
+
+killall -w udevd
 
 exec switch_root /.root "$init" "$@"
