@@ -24,6 +24,7 @@ build() {
                 --libexecdir=$libdir/qemu \
                 --localstatedir=$vardir \
                 --audio-drv-list='pa alsa sdl' \
+                --python=$bindir/python2 \
                 --enable-modules \
                 --with-gtkabi=3.0 \
                 --with-sdlabi=2.0
