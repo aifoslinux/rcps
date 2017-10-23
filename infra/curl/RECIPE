@@ -1,5 +1,5 @@
 PKG=curl
-VER=7.56.0
+VER=7.56.1
 SRC=http://curl.haxx.se/download/$PKG-$VER.tar.gz
 
 build() {

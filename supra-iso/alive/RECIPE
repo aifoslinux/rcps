@@ -1,5 +1,5 @@
 PKG=alive
-VER=0.2.0
+VER=0.3.0
 SRC=https://github.com/aifoslinux/alive/archive/$PKG-$VER.tar.gz
 
 build() {

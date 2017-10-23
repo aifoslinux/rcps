@@ -27,25 +27,42 @@ no_mount()
 
 do_mount_live()
 {
-    mkdir /.{live,rootfs}
+   mount -n -t tmpfs none /.root
 
-    modprobe isofs
-    modprobe loop
-    modprobe squashfs
+   mkdir /.{temp,live}
+   mkdir /.root/{up,wrk}
 
-    eval $root
-    mount -o loop /dev/disk/by-label/$CDLABEL /.live
-    mount -o loop /.live/LiveOS/squashfs.img /.rootfs
-    mount -n -t "$rootfstype" -o "$rootflags" /.rootfs/LiveOS/rootfs.img /.root
+   modprobe isofs
+   modprobe loop
+   modprobe overlay
+   modprobe squashfs
+
+   eval $root
+   mount -o loop /dev/disk/by-label/$CDLABEL /.temp
+
+   if ! mount -n -t squashfs /.temp/LiveOS/rootfs.sfs /.live; then
+       problem
+   fi
+
+   olay_args="rw,lowerdir=/.live,upperdir=/.root/up,workdir=/.root/wrk"
+
+   if ! mount -n -t overlay overlay -o "$olay_args" /.root; then
+       problem
+   else
+       echo "Successfully mounted device $root"
+   fi
+
+   umount /.temp
+   umount /.live
 }
 
 do_mount_root()
 {
    case "$root" in
-      /dev/*   ) device=$root ;;
-      UUID=*   ) eval $root; device="/dev/disk/by-uuid/$UUID"  ;;
-      LABEL=*  ) eval $root; device="/dev/disk/by-label/$LABEL" ;;
-      ""       ) echo "No root device specified." ; problem    ;;
+       /dev/*   ) device=$root ;;
+       UUID=*   ) eval $root; device="/dev/disk/by-uuid/$UUID"  ;;
+       LABEL=*  ) eval $root; device="/dev/disk/by-label/$LABEL" ;;
+       ""       ) echo "No root device specified." ; problem    ;;
    esac
 
    while [ ! -b "$device" ] ; do
@@ -101,8 +118,8 @@ mkdir /.root
 rootflags="$rootflags$ro"
 
 case "$root" in
-      CDLABEL=*) do_mount_live ;;
-      *        ) do_mount_root ;;
+    CDLABEL=*) do_mount_live ;;
+    *        ) do_mount_root ;;
 esac
 
 killall -w udevd
