@@ -1,0 +1,12 @@
+PKG=x11-dri3proto
+VER=1.0
+SRC=http://xorg.freedesktop.org/releases/individual/proto/${PKG//x11-}-$VER.tar.bz2
+
+build() {
+    $PATCH/config.patch
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST
+    make
+    make DESTDIR=$PKG_DIR install
+}

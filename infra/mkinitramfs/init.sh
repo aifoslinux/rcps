@@ -51,9 +51,6 @@ do_mount_live()
    else
        echo "Successfully mounted device $root"
    fi
-
-   umount /.temp
-   umount /.live
 }
 
 do_mount_root()

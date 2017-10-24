@@ -1,0 +1,12 @@
+PKG=gptfdisk
+VER=1.0.3
+SRC=http://downloads.sourceforge.net/project/$PKG/$PKG/$VER/$PKG-$VER.tar.gz
+
+build() {
+    make CXX="${CXX:-g++}" CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS"
+
+    install -d $PKG_DIR/{bin,share/{doc/gdisk,man/man8}}
+    install -t $BIN_DIR {,c,s}gdisk fixparts
+    install -m644 -t $DAT_DIR/man/man8 {{,c,s}gdisk,fixparts}.8
+    install -m644 -t $DAT_DIR/doc/gdisk README NEWS
+}

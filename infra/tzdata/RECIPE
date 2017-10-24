@@ -1,5 +1,5 @@
 PKG=tzdata
-VER=2017b
+VER=2017c
 
 build() {
     cd $SRC_DIR
