@@ -8,8 +8,6 @@ build() {
     $PATCH/2000-pthread-internals-increase-DEFAULT_GUARD_SIZE-to-2-p.patch
     $PATCH/3002-stdio-implement-fopencookie-3.patch
 
-    sed -i -e 's#x86_64\*)#amd64\*)#' configure
-
     ./configure --prefix=$prefix \
                 --host=$CHOST \
                 --build=$CBUILD \

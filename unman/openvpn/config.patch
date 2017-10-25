@@ -9,23 +9,6 @@
    linux-musl* | linux-uclibc* | uclinux-uclibc* | uclinux-gnu* | kfreebsd*-gnu* | \
    knetbsd*-gnu* | netbsd*-gnu* | netbsd*-eabi* | \
    kopensolaris*-gnu* | \
-@@ -359,7 +359,7 @@
- 	# We use `pc' rather than `unknown'
- 	# because (1) that's what they normally are, and
- 	# (2) the word "unknown" tends to confuse beginning users.
--	i*86 | x86_64)
-+	i*86 | x86_64 | amd64)
- 	  basic_machine=$basic_machine-pc
- 	  ;;
- 	# Object if more than one company name word.
-@@ -369,6 +369,7 @@
- 		;;
- 	# Recognize the basic CPU types with company name.
- 	580-* \
-+    | amd64-* \
- 	| a29k-* \
- 	| aarch64-* | aarch64_be-* \
- 	| alpha-* | alphaev[4-8]-* | alphaev56-* | alphaev6[78]-* \
 @@ -1417,6 +1418,9 @@
  	-linux-dietlibc)
  		os=-linux-dietlibc
