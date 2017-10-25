@@ -1,0 +1,7 @@
+PKG=apkg
+VER=0.12.0
+SRC=https://github.com/aifoslinux/apkg/archive/$PKG-$VER.tar.gz
+
+build() {
+    sh install.sh rootdir=$PKG_DIR
+}
