@@ -1,5 +1,5 @@
 PKG=sqlite
-VER=3200100
+VER=3210000
 SRC=http://www.sqlite.org/2017/$PKG-autoconf-$VER.tar.gz
 
 build() {

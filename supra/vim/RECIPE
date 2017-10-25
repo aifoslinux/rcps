@@ -1,5 +1,5 @@
 PKG=vim
-VER=8.0.1127
+VER=8.0.1216
 SRC=$PKG-$VER.tar.gz::http://github.com/vim/vim/archive/v${VER}.tar.gz
 
 build() {
