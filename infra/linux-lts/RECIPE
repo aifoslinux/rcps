@@ -1,5 +1,5 @@
 PKG=linux-lts
-VER=4.9.55
+VER=4.9.58
 SRC=https://www.kernel.org/pub/linux/kernel/v4.x/linux-$VER.tar.xz
 
 build() {

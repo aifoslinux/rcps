@@ -1,0 +1,12 @@
+PKG=x11-libxdamage
+VER=1.1.4
+SRC=http://xorg.freedesktop.org/releases/individual/lib/libXdamage-$VER.tar.bz2
+
+build() {
+    autoreconf -fiv
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir
+    make
+    make DESTDIR=$PKG_DIR install
+}

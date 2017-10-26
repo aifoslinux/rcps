@@ -1,0 +1,12 @@
+PKG=x11-libxext
+VER=1.3.3
+SRC=http://xorg.freedesktop.org/releases/individual/lib/libXext-$VER.tar.bz2
+
+build() {
+    autoreconf -fiv
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir
+    make
+    make DESTDIR=$PKG_DIR install
+}

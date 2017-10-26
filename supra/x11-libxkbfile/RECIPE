@@ -1,0 +1,13 @@
+PKG=x11-libxkbfile
+VER=1.0.9
+SRC=http://xorg.freedesktop.org/releases/individual/lib/libxkbfile-$VER.tar.bz2
+
+build() {
+    autoreconf -fiv
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}
