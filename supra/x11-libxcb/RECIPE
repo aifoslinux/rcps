@@ -3,6 +3,8 @@ VER=1.12
 SRC=http://xcb.freedesktop.org/dist/libxcb-$VER.tar.bz2
 
 build() {
+    $PATCH/libxcb-1.12-python3-1.patch
+
     sed -e 's/pthread-stubs//' -i configure.ac
     autoreconf -fiv
 

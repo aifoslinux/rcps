@@ -11,7 +11,9 @@ build() {
     $PATCH/ucm_add_limits_h.patch
 
     ./configure --prefix=$prefix \
-                --host=$CHOST
+                --host=$CHOST \
+                --with-pythonlibs="-lpthread -lm -ldl -lpython2.7" \
+                --with-pythonincludes=-I$incdir/python2.7
     make
     make DESTDIR=$PKG_DIR install
 }

@@ -1,5 +1,5 @@
 PKG=sdl2
-VER=2.0.6
+VER=2.0.7
 SRC=https://www.libsdl.org/release/SDL2-$VER.tar.gz
 
 build() {
