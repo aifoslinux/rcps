@@ -3,6 +3,12 @@ VER=8.6.9
 SRC=http://downloads.sourceforge.net/asciidoc/asciidoc-$VER.tar.gz
 
 build() {
+    # python2 fix
+    for file in asciidocapi.py a2x.py asciidoc.py filters/music/music2png.py filters/latex/latex2png.py \
+	    filters/code/code-filter.py filters/graphviz/graphviz2png.py; do
+        sed -i 's_#!/usr/bin/env python_#!/usr/bin/env python2_' $file
+    done
+
     ./configure --prefix=$prefix \
                 --host=$CHOST \
                 --sysconfdir=$cfgdir \
