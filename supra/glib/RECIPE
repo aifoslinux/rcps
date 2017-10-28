@@ -23,5 +23,5 @@ build() {
             ;;
     esac
 
-    install -t $DAT_DIR/apm/hooks/ -Dm644 $RCP_DIR/*.hook
+    install -t $DAT_DIR/apkg/hooks/ -Dm644 $RCP_DIR/*.hook
 }

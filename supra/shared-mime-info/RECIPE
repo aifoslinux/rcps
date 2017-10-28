@@ -11,5 +11,5 @@ build() {
     make -j1 DESTDIR=$PKG_DIR install
 
     install -Dm644 $RCP_DIR/update-mime-database.hook \
-        $DAT_DIR/apm/hooks/update-mime-database.hook
+        $DAT_DIR/apkg/hooks/update-mime-database.hook
 }

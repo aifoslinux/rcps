@@ -1,12 +1,12 @@
 PKG=finit
 VER=3.0
-SRC=https://github.com/troglobit/$PKG/releases/download/$VER/$PKG-$VER.tar.xz
-#SRC=git+https://github.com/troglobit/$PKG.git#commit=5b53f00
+#SRC=https://github.com/troglobit/$PKG/releases/download/$VER/$PKG-$VER.tar.xz
+SRC=git+https://github.com/troglobit/$PKG.git#commit=b45c3d5
 
 build() {
-    #NOCONFIGURE=1 ./autogen.sh
+    NOCONFIGURE=1 ./autogen.sh
 
-    $PATCH/dbus.patch
+    #$PATCH/dbus.patch
 
     sed -i -e 's,ensure,ensure=/etc/machine-id,' plugins/dbus.c
     sed -i -e 's,dbus/pid,dbus.pid,' plugins/dbus.c

@@ -10,5 +10,5 @@ build() {
     make DESTDIR=$PKG_DIR install
 
     install -Dm644 $RCP_DIR/gdk-pixbuf-query-loaders.hook \
-            $DAT_DIR/apm/hooks/gdk-pixbuf-query-loaders.hook
+            $DAT_DIR/apkg/hooks/gdk-pixbuf-query-loaders.hook
 }

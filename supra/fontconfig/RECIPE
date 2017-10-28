@@ -14,5 +14,5 @@ build() {
     make
     make DESTDIR=$PKG_DIR install
 
-    install -Dm644 $RCP_DIR/fontconfig.hook $DAT_DIR/apm/hooks/fontconfig.hook
+    install -Dm644 $RCP_DIR/fontconfig.hook $DAT_DIR/apkg/hooks/fontconfig.hook
 }

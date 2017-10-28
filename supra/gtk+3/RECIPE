@@ -14,5 +14,5 @@ build() {
     make DESTDIR=$PKG_DIR install
 
     install -Dm644 $RCP_DIR/settings.ini $CFG_DIR/gtk-3.0/settings.ini
-    install -t $DAT_DIR/apm/hooks/ -Dm644 $RCP_DIR/*.hook
+    install -t $DAT_DIR/apkg/hooks/ -Dm644 $RCP_DIR/*.hook
 }
