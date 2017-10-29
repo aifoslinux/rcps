@@ -1,5 +1,5 @@
 PKG=pango
-VER=1.40.12
+VER=1.40.13
 SRC=https://download.gnome.org/sources/$PKG/${VER:0:4}/$PKG-$VER.tar.xz
 
 build() {
