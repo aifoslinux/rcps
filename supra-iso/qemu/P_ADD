@@ -1,6 +1,9 @@
 #!/bin/sh
+if ! getent group kvm > /dev/null; then
+    groupadd -r -g 78 kvm
+fi
+
 # trigger events on modules files when already loaded
 for _f in /sys/devices/virtual/misc/{kvm,vhost-net}; do
     [[ -e "$_f" ]] &&  udevadm trigger "$_f"
 done
-:

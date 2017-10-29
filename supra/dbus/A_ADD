@@ -1,6 +1,0 @@
-#!/bin/sh
-if ! getent passwd dbus &>/dev/null; then
-    groupadd -r -g 82 dbus
-    useradd -r -u 82 -g dbus -d / -s /bin/nologin -c dbus dbus
-fi
-

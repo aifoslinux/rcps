@@ -1,4 +1,9 @@
 #!/bin/sh
-[ ! -d /var/lib/dbus ] && install -d /var/lib/dbus
-/bin/dbus-uuidgen --ensure
+if ! getent passwd dbus &>/dev/null; then
+    groupadd -r -g 82 dbus
+    useradd -r -u 82 -g dbus -d / -s /bin/nologin -c dbus dbus
+fi
 
+/bin/dbus-uuidgen --ensure=/etc/machine-id
+[ ! -d /var/lib/dbus ] && install -d /var/lib/dbus
+[ ! -f /var/lib/dbus/machine-id ] && ln -s /etc/machine-id /var/lib/dbus/machine-id

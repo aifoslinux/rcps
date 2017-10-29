@@ -26,4 +26,5 @@ build() {
     chmod 1777 tmp
 
     ln -s . usr
+    ln -s ../proc/self/mounts etc/mtab
 }
