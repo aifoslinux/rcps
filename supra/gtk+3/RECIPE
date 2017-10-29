@@ -1,8 +1,11 @@
 PKG=gtk+3
-VER=3.22.24
+VER=3.22.25
 SRC=https://download.gnome.org/sources/gtk+/${VER:0:4}/gtk+-$VER.tar.xz
+#SRC=$PKG-$VER.tar.gz::https://github.com/GNOME/gtk/archive/$VER.tar.gz
 
 build() {
+    #NOCONFIGURE=1 ./autogen.sh
+
     ./configure --prefix=$prefix \
                 --host=$CHOST \
                 --sysconfdir=$cfgdir \

@@ -1,5 +1,5 @@
 PKG=wayland-protocols
-VER=1.10
+VER=1.11
 SRC=https://wayland.freedesktop.org/releases/$PKG-$VER.tar.xz
 
 build() {
