@@ -1,0 +1,10 @@
+PKG=autoconf-archive
+VER=2017.09.28
+SRC=https://ftpmirror.gnu.org/$PKG/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST
+    make
+    make DESTDIR=$PKG_DIR install
+}

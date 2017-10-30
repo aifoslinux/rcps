@@ -1,9 +1,13 @@
 PKG=dbus
-VER=1.10.24
+VER=1.12.0
 SRC=http://dbus.freedesktop.org/releases/$PKG/$PKG-$VER.tar.gz
 
 build() {
     $PATCH/dbus-enable-elogind.patch
+
+    # Reduce docs size
+    printf '%s\n' >>Doxyfile.in \
+        HAVE_DOT=yes DOT_IMAGE_FORMAT=svg INTERACTIVE_SVG=yes
 
     autoreconf -fiv
 

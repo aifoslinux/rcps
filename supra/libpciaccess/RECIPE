@@ -1,5 +1,5 @@
 PKG=libpciaccess
-VER=0.13.5
+VER=0.14
 SRC=http://xorg.freedesktop.org/releases/individual/lib/$PKG-$VER.tar.bz2
 
 build() {
