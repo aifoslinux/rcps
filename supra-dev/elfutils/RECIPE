@@ -1,4 +1,4 @@
-PKG=libelf
+PKG=elfutils
 VER=0.170
 SRC=https://sourceware.org/elfutils/ftp/$VER/elfutils-$VER.tar.bz2
 
@@ -56,4 +56,6 @@ EOF
                 --disable-nls
     make
     make DESTDIR=$PKG_DIR install
+
+    rm -r $INC_DIR $LIB_DIR
 }

@@ -3,6 +3,8 @@ VER=7.2.0
 SRC=ftp://gcc.gnu.org/pub/gcc/releases/gcc-$VER/gcc-$VER.tar.xz
 
 build() {
+    $PATCH/libcilkrts.patch
+
     sed -i '/m64=/s/lib64/lib/' gcc/config/i386/t-linux64
     sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" {libiberty,gcc}/configure
 
@@ -31,6 +33,8 @@ build() {
                        --with-system-zlib \
                        --with-linker-hash-style=gnu \
                        --enable-checking=release \
+                       --enable-default-pie \
+                       --enable-default-ssp \
                        $conf_opts
     make
     make DESTDIR=$PKG_DIR install
