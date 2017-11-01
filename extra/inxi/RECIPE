@@ -1,0 +1,14 @@
+PKG=inxi
+VER=2.3.43
+
+build() {
+    git clone https://github.com/smxi/inxi.git \
+        --branch master-plain \
+        --single-branch \
+        $SRC_DIR
+    cd $SRC_DIR
+    git checkout 0485418
+
+    install -Dm755 inxi $BIN_DIR/inxi
+    install -Dm644 inxi.1 $DAT_DIR/man/man1/inxi.1
+}
