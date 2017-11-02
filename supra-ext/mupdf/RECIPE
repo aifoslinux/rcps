@@ -1,0 +1,23 @@
+PKG=mupdf
+VER=1.11
+SRC=https://mupdf.com/downloads/$PKG-${VER/_/}-source.tar.gz
+
+build() {
+    $PATCH/0001-mupdf-openjpeg.patch
+    $PATCH/0002-mupdf-shared-libs.patch
+
+    rm -rf thirdparty/{curl,freetype,harfbuzz,libjpeg,zlib,openjpeg}
+
+    CFLAGS+=' -fPIC'
+    CXXFLAGS+=' -fPIC'
+    export CFLAGS CXXFLAGS
+
+    make build=release
+    make build=release DESTDIR=$PKG_DIR install
+
+    ln -s mupdf-x11-curl $BIN_DIR/mupdf
+    install -Dm0644 docs/man/mupdf.1 $DAT_DIR/man/man1/mupdf.1
+
+    install -Dm0644 $RCP_DIR/mupdf.desktop $DAT_DIR/applications/mupdf.desktop
+    install -Dm0644 $RCP_DIR/mupdf.xpm $DAT_DIR/pixmaps/mupdf.xpm
+}
