@@ -1,5 +1,5 @@
 PKG=expat
-VER=2.2.3
+VER=2.2.5
 SRC=http://downloads.sourceforge.net/$PKG/$PKG-$VER.tar.bz2
 
 build() {
