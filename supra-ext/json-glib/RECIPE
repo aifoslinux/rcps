@@ -1,5 +1,5 @@
 PKG=json-glib
-VER=1.2.8
+VER=1.4.2
 SRC=https://download.gnome.org/sources/$PKG/${VER:0:3}/$PKG-$VER.tar.xz
 
 build() {

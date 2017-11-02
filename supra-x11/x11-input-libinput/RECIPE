@@ -1,6 +1,6 @@
-PKG=xorg-xauth
-VER=1.0.10
-SRC=https://xorg.freedesktop.org/releases/individual/app/xauth-$VER.tar.bz2
+PKG=x11-input-libinput
+VER=0.26.0
+SRC=https://xorg.freedesktop.org/releases/individual/driver/xf86-input-libinput-$VER.tar.bz2
 
 build() {
     autoreconf -fiv

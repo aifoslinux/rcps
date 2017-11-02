@@ -1,13 +1,13 @@
-PKG=xorg-video-amdgpu
-VER=1.4.0
-SRC=https://xorg.freedesktop.org/releases/individual/driver/xf86-video-amdgpu-$VER.tar.bz2
+PKG=x11-video-ati
+VER=7.10.0
+SRC=https://xorg.freedesktop.org/releases/individual/driver/xf86-video-ati-$VER.tar.bz2
 
 build() {
     export LDFLAGS="$LDFLAGS -Wl,-z,lazy"
 
     ./configure --prefix=$prefix \
                 --host=$CHOST \
-                --enable-glamor
+                --with-glamor
     make
     make DESTDIR=$PKG_DIR install
 }

@@ -1,0 +1,9 @@
+PKG=x11-xcb-util-xrm
+VER=1.2
+SRC=https://github.com/Airblader/${PKG/x11-/}/releases/download/v${VER}/${PKG/x11-/}-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix
+    make
+    make DESTDIR=$PKG_DIR install
+}

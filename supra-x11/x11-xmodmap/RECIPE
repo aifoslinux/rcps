@@ -1,10 +1,9 @@
-PKG=xorg-evdev
-VER=2.10.5
-SRC=https://xorg.freedesktop.org/releases/individual/driver/xf86-input-evdev-$VER.tar.bz2
+PKG=x11-xmodmap
+VER=1.0.9
+SRC=https://xorg.freedesktop.org/releases/individual/app/xmodmap-$VER.tar.bz2
 
 build() {
     autoreconf -fiv
-    export LDFLAGS="$LDFLAGS -Wl,-z,lazy"
     ./configure --prefix=$prefix \
                 --host=$CHOST \
                 --sysconfdir=$cfgdir \

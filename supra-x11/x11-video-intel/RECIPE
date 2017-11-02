@@ -1,0 +1,16 @@
+PKG=x11-video-intel
+VER=1.99.917
+SRC=git+https://anongit.freedesktop.org/git/xorg/driver/xf86-video-intel#commit=4798e18
+
+build() {
+    NOCONFIGURE=1 ./autogen.sh
+
+    export LDFLAGS="$LDFLAGS -Wl,-z,lazy"
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --libexecdir=$libdir \
+                --with-default-dri=3
+    make
+    make DESTDIR=$PKG_DIR install
+}
