@@ -1,4 +1,4 @@
-PKG=qt5-quickcontrols2
+PKG=qt5-x11extras
 VER=5.9.2
 SRC=http://download.qt.io/official_releases/qt/${VER%.*}/$VER/submodules/${PKG/5-/}-opensource-src-$VER.tar.xz
 

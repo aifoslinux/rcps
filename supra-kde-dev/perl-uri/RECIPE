@@ -1,0 +1,11 @@
+PKG=perl-uri
+VER=1.72
+SRC=http://cpan.metacpan.org/authors/id/E/ET/ETHER/URI-$VER.tar.gz
+
+build() {
+    perl Makefile.PL INSTALLDIRS=vendor
+    make
+    make DESTDIR=$PKG_DIR install
+
+    rm -r $LIB_DIR/perl5/core_perl
+}

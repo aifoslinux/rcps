@@ -1,0 +1,11 @@
+PKG=libassuan
+VER=2.4.3
+SRC=ftp://ftp.gnupg.org/gcrypt/$PKG/$PKG-$VER.tar.bz2
+
+build() {
+    ac_cv_func_fopencookie=no \
+    ./configure --prefix=$prefix \
+                --host=$CHOST
+    make
+    make DESTDIR=$PKG_DIR install
+}

@@ -1,0 +1,15 @@
+PKG=polkit-qt
+VER=0.112.0
+SRC=http://download.kde.org/stable/apps/KDE4.x/admin/$PKG-1-$VER.tar.bz2
+
+build() {
+    cd $BLD_DIR
+
+    cmake $SRC_DIR \
+        -DCMAKE_INSTALL_PREFIX=$prefix \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DLIB_DESTINATION=$libdir \
+        -DCMAKE_INSTALL_INCLUDEDIR=$incdir
+    make
+    make DESTDIR=$PKG_DIR install
+}

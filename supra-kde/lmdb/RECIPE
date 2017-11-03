@@ -1,0 +1,18 @@
+PKG=lmdb
+VER=0.9.21
+SRC=$PKG-$VER.tar.gz::https://github.com/LMDB/lmdb/archive/LMDB_$VER.tar.gz
+
+build() {
+    cd libraries/liblmdb
+
+    make prefix=$prefix
+
+    install -dm755 $PKG_DIR/{bin,lib,include,man/man1,share}
+
+    make DESTDIR=$PKG_DIR prefix=$prefix install
+
+    mv $PKG_DIR/man $DAT_DIR/man
+
+    install -Dm644 $RCP_DIR/lmdb.pc $LIB_DIR/pkgconfig/lmdb.pc
+    sed -e "s|@VER@|$VER|" -i $LIB_DIR/pkgconfig/lmdb.pc
+}

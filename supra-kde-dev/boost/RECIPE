@@ -1,0 +1,73 @@
+PKG=boost
+VER=1.65.1
+SRC=http://downloads.sourceforge.net/boost/boost_${VER//./_}.tar.bz2
+
+build() {
+    $PATCH/fix-ublas-storage.patch
+    $PATCH/musl-memset.patch
+
+    export _stagedir=$SRC_DIR/stagedir
+    local JOBS=$(sed -e 's/.*\(-j *[0-9]\+\).*/\1/' <<< ${MAKEFLAGS})
+
+    ./bootstrap.sh --prefix=$prefix \
+                   --with-toolset=gcc \
+                   --with-icu \
+                   --with-python=$bindir/python2
+
+    install -Dm755 tools/build/src/engine/bin.linuxx86_64/b2 ${_stagedir}/bin/b2
+
+    # boostbook is needed by quickbook
+    install -dm755 ${_stagedir}/share/boostbook
+    cp -a tools/boostbook/{xsl,dtd} ${_stagedir}/share/boostbook/
+
+    ${_stagedir}/bin/b2 \
+        variant=release \
+        debug-symbols=off \
+        threading=multi \
+        runtime-link=shared \
+        link=shared,static \
+        toolset=gcc \
+        python=2.7 \
+        cflags="${CPPFLAGS} ${CFLAGS} -fPIC -O3" \
+        cxxflags="${CPPFLAGS} ${CXXFLAGS} -std=c++14 -fPIC -O3" \
+        linkflags=${LDFLAGS} \
+        --layout=system \
+        --prefix=${_stagedir} \
+        ${JOBS} \
+        install
+
+    # Fix a bug with the header files path, when Python3 is used
+    sed -e '/using python/ s@;@: /usr/include/python${PYTHON_VERSION/3*/${PYTHON_VERSION}m} ;@' \
+        -i bootstrap.sh
+
+    ./bootstrap.sh --prefix=$prefix \
+                   --with-toolset=gcc \
+                   --with-icu \
+                   --with-python=$bindir/python3 \
+                   --with-libraries=python
+
+    ${_stagedir}/bin/b2 clean
+    ${_stagedir}/bin/b2 \
+        variant=release \
+        debug-symbols=off \
+        threading=multi \
+        runtime-link=shared \
+        link=shared,static \
+        toolset=gcc \
+        python=3.6 \
+        cflags="${CPPFLAGS} ${CFLAGS} -fPIC -O3" \
+        cxxflags="${CPPFLAGS} ${CXXFLAGS} -std=c++14 -fPIC -O3" \
+        linkflags=${LDFLAGS} \
+        --layout=system \
+        --prefix=${_stagedir}/python3 \
+        --with-python \
+        ${JOBS} \
+        install
+
+    install -dm755 $PKG_DIR
+    cp -a ${_stagedir}/{bin,include,share} $PKG_DIR
+    cp -a ${_stagedir}/lib $PKG_DIR
+    cp -a ${_stagedir}/python3/lib/libboost_python3* $LIB_DIR
+
+    ln -s $bindir/b2 $BIN_DIR/bjam
+}

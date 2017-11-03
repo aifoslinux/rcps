@@ -1,0 +1,14 @@
+PKG=upower
+VER=0.99.6
+SRC=http://upower.freedesktop.org/releases/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --localstatedir=$vardir \
+                --libexecdir=$libdir/upower \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}

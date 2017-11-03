@@ -1,0 +1,15 @@
+PKG=gpgme
+VER=1.9.0
+SRC=ftp://ftp.gnupg.org/gcrypt/$PKG/$PKG-$VER.tar.bz2
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --enable-fd-passing \
+                --disable-gpgconf-test \
+                --disable-gpg-test \
+                --disable-gpgsm-test \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}
