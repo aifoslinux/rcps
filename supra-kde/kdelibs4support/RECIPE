@@ -9,6 +9,7 @@ build() {
         -DCMAKE_INSTALL_PREFIX=$prefix \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_LIBDIR=$libdir \
+        -DKDE_INSTALL_LIBEXECDIR=$libdir \
         -DBUILD_TESTING=OFF
     make
     make DESTDIR=$PKG_DIR install

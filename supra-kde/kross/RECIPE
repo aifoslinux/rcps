@@ -1,6 +1,6 @@
-PKG=frameworkintegration
+PKG=kross
 VER=5.39.0
-SRC=https://download.kde.org/stable/frameworks/${VER%.*}/$PKG-$VER.tar.xz
+SRC=https://download.kde.org/stable/frameworks/${VER%.*}/portingAids/$PKG-$VER.tar.xz
 
 build() {
     cd $BLD_DIR
@@ -9,7 +9,6 @@ build() {
         -DCMAKE_INSTALL_PREFIX=$prefix \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_LIBDIR=$libdir \
-        -DKDE_INSTALL_LIBEXECDIR=$libdir \
         -DBUILD_TESTING=OFF
     make
     make DESTDIR=$PKG_DIR install
