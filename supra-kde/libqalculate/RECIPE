@@ -1,0 +1,9 @@
+PKG=libqalculate
+VER=2.1.0
+SRC=https://github.com/Qalculate/libqalculate/releases/download/v${VER}/$PKG-$VER.tar.gz
+
+build() {
+    ./configure --prefix=$prefix
+    make
+    make DESTDIR=$PKG_DIR install
+}
