@@ -1,2 +1,0 @@
-# elogind
-service [2345] /bin/sddm -- sddm

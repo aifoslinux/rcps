@@ -1,4 +1,4 @@
-PKG=plasma-desktop
+PKG=sddm-kcm
 VER=5.11.2
 SRC=https://download.kde.org/stable/plasma/$VER/$PKG-$VER.tar.xz
 
@@ -9,9 +9,8 @@ build() {
         -DCMAKE_INSTALL_PREFIX=$prefix \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_LIBDIR=$libdir \
-        -DCMAKE_INSTALL_LIBEXECDIR=$libdir \
         -DBUILD_TESTING=OFF
     make
-    find . -name cmake_install.cmake -exec sed -i -e 's,//share,/share,g' {} +
+    sed -i -e 's,//share,/share,g' cmake_install.cmake
     make DESTDIR=$PKG_DIR install
 }

@@ -1,0 +1,9 @@
+PKG=hicolor-icon-theme
+VER=0.15
+SRC=https://icon-theme.freedesktop.org/releases/$PKG-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix
+    make
+    make DESTDIR=$PKG_DIR install
+}

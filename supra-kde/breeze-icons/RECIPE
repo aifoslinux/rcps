@@ -1,6 +1,6 @@
-PKG=plasma-desktop
-VER=5.11.2
-SRC=https://download.kde.org/stable/plasma/$VER/$PKG-$VER.tar.xz
+PKG=breeze-icons
+VER=5.39.0
+SRC=https://download.kde.org/stable/frameworks/${VER%.*}/$PKG-$VER.tar.xz
 
 build() {
     cd $BLD_DIR
@@ -9,7 +9,6 @@ build() {
         -DCMAKE_INSTALL_PREFIX=$prefix \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_LIBDIR=$libdir \
-        -DCMAKE_INSTALL_LIBEXECDIR=$libdir \
         -DBUILD_TESTING=OFF
     make
     find . -name cmake_install.cmake -exec sed -i -e 's,//share,/share,g' {} +

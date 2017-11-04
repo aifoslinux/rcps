@@ -1,5 +1,5 @@
 PKG=sddm
-VER=0.15.0
+VER=0.16.0
 SRC=$PKG-$VER.tar.gz::https://github.com/$PKG/$PKG/archive/v${VER}.tar.gz
 
 build() {
@@ -14,8 +14,7 @@ build() {
         -DCMAKE_INSTALL_LIBEXECDIR=$libdir/sddm \
         -DCMAKE_INSTALL_BINDIR=$bindir \
         -DCMAKE_INSTALL_DATAROOTDIR=$datdir \
-        -DNO_SYSTEMD=yes -DUSE_ELOGIND=yes \
-        -DBUILD_MAN_PAGES=ON
+        -DNO_SYSTEMD=yes -DUSE_ELOGIND=yes
     make
     make DESTDIR=$PKG_DIR install
 
