@@ -1,0 +1,15 @@
+PKG=qt5-virtualkeyboard
+VER=5.9.2
+SRC=http://download.qt.io/official_releases/qt/${VER%.*}/$VER/submodules/${PKG/5-/}-opensource-src-$VER.tar.xz
+
+build() {
+    cd $BLD_DIR
+
+    qmake $SRC_DIR
+    make
+    make INSTALL_ROOT=$PKG_DIR install
+
+    # Drop QMAKE_PRL_BUILD_DIR because reference the build dir
+    find $LIB_DIR -type f -name '*.prl' \
+        -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
+}
