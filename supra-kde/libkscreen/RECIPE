@@ -1,6 +1,6 @@
-PKG=networkmanager-qt
-VER=5.36.0
-SRC=https://download.kde.org/stable/frameworks/${VER%.*}/$PKG-$VER.tar.xz
+PKG=libkscreen
+VER=5.11.2
+SRC=https://download.kde.org/stable/plasma/$VER/$PKG-$VER.tar.xz
 
 build() {
     cd $BLD_DIR
@@ -9,8 +9,8 @@ build() {
         -DCMAKE_INSTALL_PREFIX=$prefix \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_LIBDIR=$libdir \
-        -DBUILD_TESTING=OFF \
-        -DBUILD_QCH=OFF
+        -DCMAKE_INSTALL_LIBEXECDIR=$libdir \
+        -DBUILD_TESTING=OFF
     make
     make DESTDIR=$PKG_DIR install
 }

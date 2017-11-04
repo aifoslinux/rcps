@@ -1,0 +1,11 @@
+PKG=mobile-broadband-provider-info
+VER=20170310
+SRC=git+https://git.gnome.org/browse/mobile-broadband-provider-info#commit=befcbbc
+
+build() {
+    NOCONFIGURE=1 ./autogen.sh
+
+    ./configure --prefix=$prefix
+    make
+    make DESTDIR=$PKG_DIR install
+}

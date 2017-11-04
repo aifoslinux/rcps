@@ -1,0 +1,11 @@
+PKG=x11-xsetroot
+VER=1.1.1
+SRC=https://xorg.freedesktop.org/releases/individual/app/xsetroot-$VER.tar.bz2
+
+build() {
+    autoreconf -fiv
+    ./configure --prefix=$prefix \
+                --host=$CHOST
+    make
+    make DESTDIR=$PKG_DIR install
+}

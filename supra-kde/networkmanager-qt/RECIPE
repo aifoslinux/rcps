@@ -1,5 +1,5 @@
-PKG=modemmanager-qt
-VER=5.36.0
+PKG=networkmanager-qt
+VER=5.39.0
 SRC=https://download.kde.org/stable/frameworks/${VER%.*}/$PKG-$VER.tar.xz
 
 build() {
@@ -9,8 +9,7 @@ build() {
         -DCMAKE_INSTALL_PREFIX=$prefix \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_LIBDIR=$libdir \
-        -DBUILD_TESTING=OFF \
-        -DBUILD_QCH=OFF
+        -DBUILD_TESTING=OFF
     make
     make DESTDIR=$PKG_DIR install
 }

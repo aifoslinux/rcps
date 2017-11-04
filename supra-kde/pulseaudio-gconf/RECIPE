@@ -1,4 +1,4 @@
-PKG=pulseaudio
+PKG=pulseaudio-gconf
 VER=11.1
 SRC=http://freedesktop.org/software/pulseaudio/releases/pulseaudio-$VER.tar.xz
 
@@ -23,8 +23,13 @@ build() {
                 --disable-systemd-journal \
                 --disable-default-build-tests 
     make
-    make -j1 DESTDIR=$PKG_DIR install
+    make -j1 DESTDIR=$PKG_DIR/temp install
 
-    sed -e '/flat-volumes/iflat-volumes=no' -i $CFG_DIR/pulse/daemon.conf
-    sed -e '/autospawn/iautospawn=no' -i $CFG_DIR/pulse/client.conf
+    mkdir -p $LIB_DIR/pulse{,-$VER/modules}
+
+    mv $PKG_DIR/temp/$libdir/pulse-$VER/modules/module-gconf.so \
+       $LIB_DIR/pulse-$VER/modules/
+    mv $PKG_DIR/temp/$libdir/pulse/gconf-helper $LIB_DIR/pulse/
+
+    rm -r $PKG_DIR/temp
 }

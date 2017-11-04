@@ -1,0 +1,13 @@
+PKG=x11-xset
+VER=1.2.3
+SRC=https://xorg.freedesktop.org/releases/individual/app/xset-$VER.tar.bz2
+
+build() {
+    autoreconf -fiv
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --without-fontcache \
+                --without-xf86misc
+    make
+    make DESTDIR=$PKG_DIR install
+}

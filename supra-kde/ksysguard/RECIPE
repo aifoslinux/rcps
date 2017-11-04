@@ -1,0 +1,16 @@
+PKG=ksysguard
+VER=5.11.2
+SRC=https://download.kde.org/stable/plasma/$VER/$PKG-$VER.tar.xz
+
+build() {
+    cd $BLD_DIR
+
+    cmake $SRC_DIR \
+        -DCMAKE_INSTALL_PREFIX=$prefix \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_LIBDIR=$libdir \
+        -DBUILD_TESTING=OFF
+    make
+    sed -i -e 's,//etc,/etc,g' example/cmake_install.cmake
+    make DESTDIR=$PKG_DIR install
+}

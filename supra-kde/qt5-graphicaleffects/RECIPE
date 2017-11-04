@@ -1,5 +1,5 @@
 PKG=qt5-graphicaleffects
-VER=5.9.1
+VER=5.9.2
 SRC=http://download.qt.io/official_releases/qt/${VER%.*}/$VER/submodules/${PKG/5-/}-opensource-src-$VER.tar.xz
 
 build() {

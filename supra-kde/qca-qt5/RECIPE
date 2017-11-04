@@ -1,0 +1,17 @@
+PKG=qca-qt5
+VER=2.1.3
+SRC=https://download.kde.org/stable/qca/$VER/src/qca-$VER.tar.xz
+
+build() {
+    cd $BLD_DIR
+
+    cmake $SRC_DIR \
+        -DCMAKE_INSTALL_PREFIX=$prefix \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_LIBDIR=$libdir \
+        -DQCA_INSTALL_IN_QT_PREFIX=ON \
+        -DQCA_MAN_INSTALL_DIR=$datdir/man \
+        -DBUILD_TESTING=OFF
+    make
+    make DESTDIR=$PKG_DIR install
+}
