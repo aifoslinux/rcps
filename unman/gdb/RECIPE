@@ -1,0 +1,27 @@
+PKG=gdb
+VER=8.0.1
+SRC=https://ftp.gnu.org/gnu/$PKG/$PKG-$VER.tar.xz
+
+build() {
+    $PATCH/gdb-linux_nat.patch
+
+    # hack! - libiberty configure tests for header files using "$CPP $CPPFLAGS"
+    sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" libiberty/configure
+
+    AR=ar LD=ld AS=as \
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --disable-nls \
+                --with-system-zlib \
+                --with-system-readline \
+                --with-python=$bindir/python3 \
+                --with-system-gdbinit=$cfgdir/gdb/gdbinit
+    make
+    make DESTDIR=$PKG_DIR install
+
+    rm -r $LIB_DIR $INC_DIR
+
+    for f in bfd configure standards; do
+		rm -f $DAT_DIR/info/${f}.info*
+    done
+}
