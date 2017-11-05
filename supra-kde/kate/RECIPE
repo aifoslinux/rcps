@@ -10,6 +10,10 @@ build() {
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_LIBDIR=$libdir \
         -DBUILD_TESTING=OFF
+
+    #FIXME
+    find -name flags.make -exec sed -i "{}" -e "s;-isystem;-I;g" \;
+
     make
     make DESTDIR=$PKG_DIR install
 }

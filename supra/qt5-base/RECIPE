@@ -10,6 +10,10 @@ build() {
             ;;
     esac
 
+    # Change -isystem to -I to avoid "#include_next <stdlib.h>" errors
+	sed -i -e '/^QMAKE_CFLAGS_ISYSTEM/s;-isystem;-I;' \
+        mkspecs/common/gcc-base.conf
+
     # Build qmake using Arch {C,LD}FLAGS
     # This also sets default {C,CXX,LD}FLAGS for projects built using qmake
     sed -i -e "s|^\(QMAKE_CFLAGS_RELEASE.*\)|\1 ${CFLAGS}|" \
