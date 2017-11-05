@@ -5,14 +5,20 @@ SRC=ftp://gcc.gnu.org/pub/gcc/releases/gcc-$VER/gcc-$VER.tar.xz
 build() {
     $PATCH/libcilkrts.patch
 
+    $PATCH/bug81829.patch
+    $PATCH/fix-cxxflags-passing.patch
+    $PATCH/fix-musl-execinfo.patch
+    $PATCH/no-stack_chk_fail_local.patch
+
     sed -i '/m64=/s/lib64/lib/' gcc/config/i386/t-linux64
+    sed -i 's/lib64/lib/' gcc/config/i386/linux64.h
     sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" {libiberty,gcc}/configure
 
     cd $BLD_DIR
 
     case $CTARGET in
         *-musl)
-            conf_opts="--disable-libmpx --disable-libmudflap --disable-libsanitizer"
+            conf_opts="--disable-libsanitizer --disable-symvers libat_cv_have_ifunc=no"
             ;;
     esac
 
@@ -35,6 +41,8 @@ build() {
                        --enable-checking=release \
                        --enable-default-pie \
                        --enable-default-ssp \
+                       --enable-linker-build-id \
+                       --disable-libstdcxx-pch \
                        $conf_opts
     make
     make DESTDIR=$PKG_DIR install

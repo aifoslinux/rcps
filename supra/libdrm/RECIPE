@@ -1,5 +1,5 @@
 PKG=libdrm
-VER=2.4.87
+VER=2.4.88
 SRC=http://dri.freedesktop.org/$PKG/$PKG-$VER.tar.bz2
 
 build() {
