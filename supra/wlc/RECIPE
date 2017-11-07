@@ -1,10 +1,8 @@
 PKG=wlc
-VER=0.0.10
+VER=0.0.11
 SRC=https://github.com/Cloudef/$PKG/releases/download/v${VER}/$PKG-$VER.tar.bz2
 
 build() {
-    $PATCH/elogind-support.patch
-
     cd $BLD_DIR
 
     cmake $SRC_DIR \
