@@ -1,5 +1,5 @@
 PKG=feh
-VER=2.22
+VER=2.22.1
 SRC=https://feh.finalrewind.org/$PKG-$VER.tar.bz2
 
 build() {
