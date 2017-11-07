@@ -1,5 +1,5 @@
 PKG=sddm-kcm
-VER=5.11.2
+VER=5.11.3
 SRC=https://download.kde.org/stable/plasma/$VER/$PKG-$VER.tar.xz
 
 build() {

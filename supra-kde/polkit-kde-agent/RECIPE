@@ -1,5 +1,5 @@
 PKG=polkit-kde-agent
-VER=5.11.2
+VER=5.11.3
 SRC=https://download.kde.org/stable/plasma/$VER/$PKG-1-$VER.tar.xz
 
 build() {
