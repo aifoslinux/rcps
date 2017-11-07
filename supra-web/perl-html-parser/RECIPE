@@ -1,0 +1,19 @@
+PKG=perl-html-parser
+VER=3.72
+SRC=http://www.cpan.org/authors/id/G/GA/GAAS/HTML-Parser-$VER.tar.gz
+
+build() {
+    perl Makefile.PL INSTALLDIRS=vendor
+    make
+    make DESTDIR=$PKG_DIR install
+
+    rm -r $LIB_DIR/perl5/core_perl
+
+    # template start; name=perl-binary-module-dependency; version=1;
+    if [[ $(find "$pkgdir/usr/lib/perl5/" -name "*.so") ]]; then
+	    _perlver_min=$(perl -e '$v = $^V->{version}; print $v->[0].".".($v->[1]);')
+	    _perlver_max=$(perl -e '$v = $^V->{version}; print $v->[0].".".($v->[1]+1);')
+	    depends+=("perl>=$_perlver_min" "perl<$_perlver_max")
+    fi
+    # template end;
+}

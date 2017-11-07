@@ -1,0 +1,13 @@
+PKG=netsurf-buildsystem
+VER=1.6
+SRC=http://download.netsurf-browser.org/libs/releases/buildsystem-$VER.tar.gz
+
+build() {
+    sed -i 's:-Werror::' Makefile
+
+    make HOST_CC=cc COMPONENT_TYPE=lib-shared PREFIX=$prefix
+    make HOST_CC=cc COMPONENT_TYPE=lib-static PREFIX=$prefix
+
+    make COMPONENT_TYPE=lib-shared PREFIX=$prefix DESTDIR=$PKG_DIR install
+    make COMPONENT_TYPE=lib-static PREFIX=$prefix DESTDIR=$PKG_DIR install
+}

@@ -1,0 +1,12 @@
+PKG=duktape
+VER=2.2.0
+SRC=https://github.com/svaarala/$PKG/releases/download/v${VER}/$PKG-$VER.tar.xz
+
+build() {
+    $PATCH/makefile.patch
+
+    mkdir $LIB_DIR $INC_DIR
+
+    make -f Makefile.sharedlibrary
+    make -f Makefile.sharedlibrary INSTALL_PREFIX=$PKG_DIR DESTDIR=$PKG_DIR install
+}

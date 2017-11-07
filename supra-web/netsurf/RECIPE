@@ -1,0 +1,26 @@
+PKG=netsurf
+VER=3.7
+SRC=http://download.netsurf-browser.org/$PKG/releases/source/$PKG-$VER-src.tar.gz
+
+build() {
+    make PREFIX=$prefix \
+         NETSURF_GTK_MAJOR=3 \
+         TARGET=gtk \
+         NETSURF_USE_DUKTAPE=YES \
+         NETSURF_USE_WEBP=YES \
+         NETSURF_USE_VIDEO=NO \
+         NETSURF_USE_HARU_PDF=NO
+
+    make PREFIX=$prefix \
+         NETSURF_GTK_MAJOR=3 \
+         TARGET=gtk \
+         NETSURF_USE_DUKTAPE=YES \
+         NETSURF_USE_WEBP=YES \
+         NETSURF_USE_VIDEO=NO \
+         NETSURF_USE_HARU_PDF=NO \
+         DESTDIR=$PKG_DIR install
+
+    install -Dm644 $RCP_DIR/$PKG.png $DAT_DIR/pixmaps/$PKG.png
+    install -Dm644 $RCP_DIR/$PKG.desktop $DAT_DIR/applications/$PKG.desktop
+    install -Dm755 $RCP_DIR/$PKG.sh $BIN_DIR/$PKG
+    }

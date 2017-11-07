@@ -1,0 +1,11 @@
+PKG=libnsutils
+VER=0.0.3
+SRC=http://download.netsurf-browser.org/libs/releases/$PKG-$VER-src.tar.gz
+
+build() {
+    make HOST_CC=cc COMPONENT_TYPE=lib-shared PREFIX=$prefix
+    make HOST_CC=cc COMPONENT_TYPE=lib-static PREFIX=$prefix
+
+    make COMPONENT_TYPE=lib-shared PREFIX=$prefix DESTDIR=$PKG_DIR install
+    make COMPONENT_TYPE=lib-static PREFIX=$prefix DESTDIR=$PKG_DIR install
+}

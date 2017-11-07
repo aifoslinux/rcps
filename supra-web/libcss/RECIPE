@@ -1,0 +1,14 @@
+PKG=libcss
+VER=0.7.0
+SRC=http://download.netsurf-browser.org/libs/releases/$PKG-$VER-src.tar.gz
+
+build() {
+    export CFLAGS="$CFLAGS -Wno-error=unused-but-set-variable -w" 
+    sed 's^_BSD_SOURCE^_DEFAULT_SOURCE^' -i Makefile
+
+    make HOST_CC=cc COMPONENT_TYPE=lib-shared LIBDIR=$libdir PREFIX=$prefix
+    make HOST_CC=cc COMPONENT_TYPE=lib-static LIBDIR=$libdir PREFIX=$prefix
+
+    make COMPONENT_TYPE=lib-shared LIBDIR=$libdir PREFIX=$prefix DESTDIR=$PKG_DIR install
+    make COMPONENT_TYPE=lib-static LIBDIR=$libdir PREFIX=$prefix DESTDIR=$PKG_DIR install
+}

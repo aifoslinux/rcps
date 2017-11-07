@@ -1,0 +1,8 @@
+PKG=nsgenbind
+VER=0.5
+SRC=http://download.netsurf-browser.org/libs/releases/$PKG-$VER-src.tar.gz
+
+build() {
+    make PREFIX=$prefix
+    make PREFIX=$prefix DESTDIR=$PKG_DIR install
+}
