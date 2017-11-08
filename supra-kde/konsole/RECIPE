@@ -8,6 +8,7 @@ build() {
     cmake $SRC_DIR \
         -DCMAKE_INSTALL_PREFIX=$prefix \
         -DCMAKE_BUILD_TYPE=Release \
+        -DSYSCONF_INSTALL_DIR=$cfgdir \
         -DCMAKE_INSTALL_LIBDIR=$libdir \
         -DBUILD_TESTING=OFF
     make
