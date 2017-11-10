@@ -1,6 +1,7 @@
-PKG=kfind
-VER=17.08.3
-SRC=https://download.kde.org/stable/applications/$VER/src/$PKG-$VER.tar.xz
+PKG=yakuake
+VER=3.0.4
+#SRC=https://download.kde.org/stable/$PKG/$VER/src/$PKG-$VER.tar.xz
+SRC=git+https://github.com/KDE/yakuake.git#commit=ca460bf5
 
 build() {
     cd $BLD_DIR

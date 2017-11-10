@@ -1,5 +1,5 @@
 PKG=babl
-VER=0.1.30
+VER=0.1.36
 SRC=https://download.gimp.org/pub/$PKG/0.1/$PKG-$VER.tar.bz2
 
 build() {

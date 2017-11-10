@@ -1,5 +1,5 @@
 PKG=qupzilla
-VER=2.1.2
+VER=2.2.1
 SRC=$PKG-$VER.tar.gz::https://github.com/QupZilla/$PKG/archive/v${VER}.tar.gz
 
 build() {

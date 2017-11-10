@@ -1,5 +1,5 @@
 PKG=lcms2
-VER=2.8
+VER=2.9
 SRC=http://downloads.sourceforge.net/sourceforge/lcms/$PKG-$VER.tar.gz
 
 build() {

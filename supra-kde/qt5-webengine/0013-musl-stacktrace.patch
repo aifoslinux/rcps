@@ -1,0 +1,11 @@
+--- a/src/3rdparty/chromium/base/debug/stack_trace.cc	2017-09-19 18:15:15.000000000 +0200
++++ b/src/3rdparty/chromium/base/debug/stack_trace.cc	2017-10-09 19:56:45.437523571 +0200
+@@ -211,7 +211,7 @@
+ 
+ std::string StackTrace::ToString() const {
+   std::stringstream stream;
+-#if !defined(__UCLIBC__)
++#if defined(__GLIBC__) && !defined(__UCLIBC__)
+   OutputToStream(&stream);
+ #endif
+   return stream.str();

@@ -1,0 +1,45 @@
+--- a/src/3rdparty/chromium/base/trace_event/malloc_dump_provider.cc	2017-09-19 18:15:15.000000000 +0200
++++ b/src/3rdparty/chromium/base/trace_event/malloc_dump_provider.cc	2017-10-09 11:33:59.924251048 +0200
+@@ -248,7 +248,7 @@
+   resident_size = all_heap_info.committed_size;
+   allocated_objects_size = all_heap_info.allocated_size;
+   allocated_objects_count = all_heap_info.block_count;
+-#else
++#elif defined(__GLIBC__)
+   struct mallinfo info = mallinfo();
+   DCHECK_GE(info.arena + info.hblkhd, info.uordblks);
+ 
+--- a/src/3rdparty/chromium/content/child/content_child_helpers.cc	2017-01-03 10:28:53.000000000 +0100
++++ b/src/3rdparty/chromium/content/child/content_child_helpers.cc	2017-02-21 22:09:13.161343477 +0100
+@@ -25,7 +25,7 @@
+ // though, this provides only a partial and misleading value.
+ // Unfortunately some telemetry benchmark rely on it and these need to
+ // be refactored before getting rid of this. See crbug.com/581365 .
+-#if defined(OS_LINUX) || defined(OS_ANDROID)
++#if (defined(OS_LINUX) || defined(OS_ANDROID)) && defined(__GLIBC__)
+ size_t GetMemoryUsageKB() {
+   struct mallinfo minfo = mallinfo();
+   uint64_t mem_usage =
+--- a/src/3rdparty/chromium/content/renderer/render_thread_impl.cc	2017-09-19 18:15:15.000000000 +0200
++++ b/src/3rdparty/chromium/content/renderer/render_thread_impl.cc	2017-10-09 23:56:52.996026318 +0200
+@@ -1840,7 +1840,7 @@
+                           blink_stats.partitionAllocTotalAllocatedBytes / 1024);
+   UMA_HISTOGRAM_MEMORY_KB("PurgeAndSuspend.Memory.BlinkGCKB",
+                           blink_stats.blinkGCTotalAllocatedBytes / 1024);
+-#if defined(OS_LINUX) || defined(OS_ANDROID)
++#if (defined(OS_LINUX) || defined(OS_ANDROID)) && defined(__GLIBC__)
+   struct mallinfo minfo = mallinfo();
+ #if defined(USE_TCMALLOC)
+   size_t malloc_usage = minfo.uordblks;
+@@ -1847,8 +1847,10 @@
+ #else
+   size_t malloc_usage = minfo.hblkhd + minfo.arena;
+ #endif
+-#else
++#elif defined(__GLIBC__)
+   size_t malloc_usage = GetMallocUsage();
++#else
++  size_t malloc_usage = 0;
+ #endif
+   UMA_HISTOGRAM_MEMORY_MB("PurgeAndSuspend.Memory.MallocMB",
+                           malloc_usage / 1024 / 1024);

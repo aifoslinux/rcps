@@ -1,5 +1,5 @@
 PKG=hicolor-icon-theme
-VER=0.15
+VER=0.17
 SRC=https://icon-theme.freedesktop.org/releases/$PKG-$VER.tar.xz
 
 build() {

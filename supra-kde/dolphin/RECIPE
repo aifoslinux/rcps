@@ -1,5 +1,5 @@
 PKG=dolphin
-VER=17.08.2
+VER=17.08.3
 SRC=https://download.kde.org/stable/applications/$VER/src/$PKG-$VER.tar.xz
 
 build() {

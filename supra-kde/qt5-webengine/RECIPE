@@ -1,0 +1,62 @@
+PKG=qt5-webengine
+VER=5.9.2
+SRC=http://download.qt.io/official_releases/qt/${VER%.*}/$VER/submodules/${PKG/5-/}-opensource-src-$VER.tar.xz
+
+build() {
+    $PATCH/0005-hack-compiler_version_echo.patch
+    $PATCH/0006-musl-off_t.patch
+    $PATCH/0007-musl-pvalloc.patch
+    $PATCH/0008-musl-resolve.patch
+    $PATCH/0009-musl-serialio.patch
+    $PATCH/0010-musl-siginfo_t.patch
+    $PATCH/0011-musl-system-libs.patch
+    $PATCH/0012-musl-sys_errno_h.patch
+    $PATCH/0013-musl-stacktrace.patch
+    $PATCH/0014-musl-stackframe.patch
+    $PATCH/0015-musl-mallinfo.patch
+    $PATCH/0016-musl-no-execinfo.patch
+    $PATCH/0017-musl-gn_bootstrap.patch
+    $PATCH/0018-musl-sandbox.patch
+    $PATCH/0019-musl-dispatch_to_musl.patch
+    $PATCH/0020-musl-no-gold.patch
+
+	# Compatibility functions res_ninit() and res_nclose() for musl libc
+	cp $RCP_DIR/resolv_compat.h src/3rdparty/chromium/net/dns
+
+	case "$CTARGET" in
+	    *-musl)
+		    # Patch .../linux/*/config.{h,asm} to define HAVE_SYSCTL 0
+		    local config chromium=src/3rdparty/chromium/third_party
+		    for config in $(find ${chromium}/ffmpeg/chromium/config -name "config\.*" | grep linux); do
+			    sed -i ${config} -e "s;HAVE_SYSCTL 1;HAVE_SYSCTL 0;"
+		    done
+
+            # Do not use experimental allocator shim (incompatible with musl libc)
+            sed -i src/3rdparty/chromium/build/common.gypi \
+                -e "s;\('use_experimental_allocator_shim%':\) 1,;\1 0,;"
+    esac
+
+    ln -s $bindir/ninja src/3rdparty/ninja/ninja
+
+    cd $BLD_DIR
+
+    # Hack to force using python2
+    mkdir -p bin
+    ln -s $bindir/python2 bin/python
+    export PATH="$BLD_DIR/bin:$PATH"
+  
+    qmake $SRC_DIR \
+        CONFIG+="proprietary-codecs" \
+        WEBENGINE_CONFIG+="use_proprietary_codecs use_system_ffmpeg use_system_icu"
+    make
+    make INSTALL_ROOT=$PKG_DIR install
+
+    # Drop QMAKE_PRL_BUILD_DIR because reference the build dir
+    find $LIB_DIR -type f -name '*.prl' \
+        -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
+
+    # strip unneeded symbols
+    #strip --strip-unneeded $BIN_DIR/qwebengine_convert_dict
+    #strip --strip-unneeded $LIB_DIR/qt/libexec/QtWebEngineProcess
+    #strip --strip-unneeded $LIB_DIR/libQt5WebEngine{Core,Widgets,}.so.$VER
+}
