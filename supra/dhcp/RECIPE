@@ -1,0 +1,23 @@
+PKG=dhcp
+VER=4.3.6
+SRC=http://ftp.isc.org/isc/$PKG/$VER/$PKG-$VER.tar.gz
+
+build() {
+    $PATCH/dhcp-3.0-fix-perms.patch
+    $PATCH/fix-includes.patch
+
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --sbindir=$bindir \
+                --enable-paranoia \
+                --with-srv-lease-file=$vardir/lib/dhcp/dhcpd.leases \
+                --with-srv6-lease-file=$vardir/lib/dhcp/dhcpd6.leases \
+                --with-cli-lease-file=$vardir/lib/dhclient/dhclient.leases \
+                --with-cli6-lease-file=$vardir/lib/dhclient/dhclient6.leases
+    make -j1
+    make DESTDIR=$PKG_DIR install
+
+    mv $CFG_DIR/dhcpd.conf.example $CFG_DIR/dhcpd.conf
+    cp $CFG_DIR/dhcpd.conf $CFG_DIR/dhcpd6.conf
+}

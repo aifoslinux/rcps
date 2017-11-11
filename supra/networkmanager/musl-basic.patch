@@ -24,4 +24,32 @@ Usual fix for musl libc
 +
  size_t page_size(void) _pure_;
  #define PAGE_ALIGN(l) ALIGN_TO((l), page_size())
+
+--- a/src/systemd/src/basic/process-util.c.orig	2017-11-11 10:58:13.710159215 +0100
++++ b/src/systemd/src/basic/process-util.c	2017-11-11 10:59:46.790160931 +0100
+@@ -1018,7 +1018,9 @@
+ /* We use glibc __register_atfork() + __dso_handle directly here, as they are not included in the glibc
+  * headers. __register_atfork() is mostly equivalent to pthread_atfork(), but doesn't require us to link against
+  * libpthread, as it is part of glibc anyway. */
++#if defined(__GLIBC__)
+ extern int __register_atfork(void (*prepare) (void), void (*parent) (void), void (*child) (void), void * __dso_handle);
++#endif
+ extern void* __dso_handle __attribute__ ((__weak__));
  
+ pid_t getpid_cached(void) {
+@@ -1041,13 +1043,13 @@
+                 pid_t new_pid;
+ 
+                 new_pid = getpid();
+-
++#if defined(__GLIBC__)
+                 if (__register_atfork(NULL, NULL, reset_cached_pid, __dso_handle) != 0) {
+                         /* OOM? Let's try again later */
+                         cached_pid = CACHED_PID_UNSET;
+                         return new_pid;
+                 }
+-
++#endif
+                 cached_pid = new_pid;
+                 return new_pid;
+         }

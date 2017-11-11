@@ -1,0 +1,14 @@
+PKG=networkmanager-openvpn
+VER=1.8.0
+SRC=https://download.gnome.org/sources/NetworkManager-openvpn/${VER:0:3}/NetworkManager-openvpn-$VER.tar.xz
+
+build() {
+    ./configure --prefix=$prefix \
+                --host=$CHOST \
+                --sysconfdir=$cfgdir \
+                --libexecdir=$libdir/NetworkManager \
+                --localstatedir=$vardir \
+                --disable-static
+    make
+    make DESTDIR=$PKG_DIR install
+}

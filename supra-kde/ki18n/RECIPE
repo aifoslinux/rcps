@@ -1,5 +1,5 @@
 PKG=ki18n
-VER=5.39.0
+VER=5.40.0
 SRC=https://download.kde.org/stable/frameworks/${VER%.*}/$PKG-$VER.tar.xz
 
 build() {

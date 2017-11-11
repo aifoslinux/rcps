@@ -1,0 +1,4 @@
+#!/bin/sh
+if ! getent passwd nm-openvpn >/dev/null; then
+    useradd -r -U -d / -c 'NetworkManager OpenVPN' -s /bin/nologin nm-openvpn
+fi

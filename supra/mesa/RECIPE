@@ -1,5 +1,5 @@
 PKG=mesa
-VER=17.2.4
+VER=17.2.5
 SRC=https://mesa.freedesktop.org/archive/$PKG-$VER.tar.xz
 
 build() {

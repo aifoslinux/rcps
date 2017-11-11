@@ -1,6 +1,6 @@
 PKG=networkmanager
-VER=1.8.4
-SRC=https://download.gnome.org/sources/NetworkManager/${VER:0:3}/NetworkManager-$VER.tar.xz
+VER=1.10.0
+SRC=https://download.gnome.org/sources/NetworkManager/${VER:0:4}/NetworkManager-$VER.tar.xz
 
 build() {
     $PATCH/musl-basic.patch
@@ -15,7 +15,10 @@ build() {
             ;;
     esac
 
-    sed -e "s/HAVE_LIBSYSTEMD/0/" -i src/devices/wwan/nm-modem-manager.c
+    sed -i -e 's,libsystemd-login,libelogind,g' configure
+    sed -i -e 's,systemd,elogind,' src/devices/wwan/nm-modem-manager.c
+    sed -i -e 's,systemd,elogind,' src/nm-session-monitor.c
+    sed -i -e 's,systemd,elogind,' src/nm-logging.c
 
     ./configure --prefix=$prefix \
                 --sysconfdir=$cfgdir \
@@ -41,25 +44,26 @@ build() {
                 --enable-wifi \
                 --enable-polkit \
                 --enable-polkit-agent \
-                --with-config-dhcp-default=dhcpcd \
+                --with-config-dhcp-default=internal \
                 --with-config-dns-rc-manager-default=resolvconf \
                 --with-config-plugins-default=keyfile,ibft \
                 --with-crypto=nss \
                 --with-nmcli \
                 --with-nmtui \
                 --with-wext \
-                --with-dhcpcd \
                 --with-resolvconf=$bindir/resolvconf \
+                --with-systemdsystemunitdir=no \
                 --with-systemd-journal=no \
-                --with-systemd-logind=no \
                 --with-session-tracking=elogind \
                 --with-suspend-resume=elogind \
+                --with-dhclient=$bindir/dhclient \
                 --with-system-ca-path=$cfg/ssl/certs \
                 --with-udev-dir=$libdir/udev \
                 --with-dbus-sys-dir=$datdir/dbus-1/system.d \
                 --with-kernel-firmware-dir=$libdir/firmware \
                 --with-modem-manager-1 \
                 --without-consolekit \
+                --without-dhcpcd \
                 --without-libaudit \
                 --without-netconfig \
                 --without-ofono \
