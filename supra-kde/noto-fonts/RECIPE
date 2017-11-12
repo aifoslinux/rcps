@@ -1,0 +1,12 @@
+PKG=noto-fonts
+VER=20171112
+SRC=$PKG-$VER.tar.gz::https://github.com/googlei18n/$PKG/archive/8ef14e6c606a7a0ef3943b9ca01fd49445620d79.tar.gz
+
+build() {
+    install -Dm644 unhinted/Noto*.tt[fc] -t $DAT_DIR/fonts/noto
+    install -Dm644 hinted/Noto*.tt[fc] -t $DAT_DIR/fonts/noto
+
+    rm -f $DAT_DIR/fonts/noto/Noto*{Condensed,SemiBold,Extra}*.ttf
+
+    install -Dm644 $RCP_DIR/*.conf -t $CFG_DIR/fonts/conf.avail/
+}
