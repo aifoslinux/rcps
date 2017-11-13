@@ -1,5 +1,5 @@
 PKG=firefox
-VER=57.0b12
+VER=57.0
 SRC=https://ftp.mozilla.org/pub/mozilla.org/$PKG/releases/$VER/source/$PKG-$VER.source.tar.xz
 
 build() {
@@ -22,6 +22,7 @@ ac_add_options --with-system-bz2
 ac_add_options --enable-system-hunspell
 ac_add_options --enable-system-sqlite
 ac_add_options --enable-system-ffi
+ac_add_options --with-system-icu
 
 ac_add_options --enable-alsa
 ac_add_options --enable-startup-notification
@@ -73,9 +74,6 @@ EOF
     ./mach build
     ./mach buildsymbols
     DESTDIR=$PKG_DIR ./mach install
-
-    #make -f client.mk build
-    #make -f client.mk DESTDIR=$PKG_DIR install
 
     for i in 16x16 22x22 24x24 32x32 48x48 256x256; do
         install -Dm644 browser/branding/official/default${i%x*}.png \
