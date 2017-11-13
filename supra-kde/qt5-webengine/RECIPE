@@ -47,16 +47,11 @@ build() {
   
     qmake $SRC_DIR \
         CONFIG+="proprietary-codecs" \
-        WEBENGINE_CONFIG+="use_proprietary_codecs use_system_ffmpeg use_system_icu"
+        WEBENGINE_CONFIG+="use_proprietary_codecs use_system_ffmpeg"
     make
     make INSTALL_ROOT=$PKG_DIR install
 
     # Drop QMAKE_PRL_BUILD_DIR because reference the build dir
     find $LIB_DIR -type f -name '*.prl' \
         -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
-
-    # strip unneeded symbols
-    #strip --strip-unneeded $BIN_DIR/qwebengine_convert_dict
-    #strip --strip-unneeded $LIB_DIR/qt/libexec/QtWebEngineProcess
-    #strip --strip-unneeded $LIB_DIR/libQt5WebEngine{Core,Widgets,}.so.$VER
 }
