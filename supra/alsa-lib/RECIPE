@@ -1,13 +1,10 @@
 PKG=alsa-lib
-VER=1.1.4.1
+VER=1.1.5
 SRC=ftp://ftp.alsa-project.org/pub/lib/$PKG-$VER.tar.bz2
 
 build() {
     $PATCH/config.patch
 
-    $PATCH/0001-snd_user_file-avoid-use-wordexp.patch
-    $PATCH/alsa-lib-poll.patch
-    $PATCH/alsa-lib-stdint.patch
     $PATCH/ucm_add_limits_h.patch
 
     ./configure --prefix=$prefix \

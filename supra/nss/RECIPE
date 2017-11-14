@@ -1,5 +1,5 @@
 PKG=nss
-VER=3.33
+VER=3.34
 SRC=https://ftp.mozilla.org/pub/security/nss/releases/NSS_${VER//./_}_RTM/src/$PKG-$VER.tar.gz
 
 build() {

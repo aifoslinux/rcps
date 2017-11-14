@@ -1,5 +1,5 @@
 PKG=alsa-plugins
-VER=1.1.4
+VER=1.1.5
 SRC=ftp://ftp.alsa-project.org/pub/plugins/$PKG-$VER.tar.bz2
 
 build() {
