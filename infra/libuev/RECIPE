@@ -1,5 +1,5 @@
 PKG=libuev
-VER=1.6.0
+VER=2.1.0
 SRC=https://github.com/troglobit/$PKG/releases/download/v${VER}/$PKG-$VER.tar.xz
 
 build() {
