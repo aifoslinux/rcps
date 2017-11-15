@@ -1,5 +1,5 @@
 PKG=libpipeline
-VER=1.4.2
+VER=1.5.0
 SRC=http://download.savannah.gnu.org/releases/$PKG/$PKG-$VER.tar.gz
 
 build() {

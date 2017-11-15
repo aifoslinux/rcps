@@ -1,5 +1,5 @@
 PKG=libinput
-VER=1.9.1
+VER=1.9.2
 SRC=https://freedesktop.org/software/$PKG/$PKG-$VER.tar.xz
 
 build() {
